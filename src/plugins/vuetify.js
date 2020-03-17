@@ -1,7 +1,23 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+// src/plugins/vuetify.js
 
-Vue.use(Vuetify);
+import Vue from 'vue'
+import Vuetify from 'vuetify/lib'
+import { preset } from 'vue-cli-plugin-vuetify-preset-shrine/preset'
+
+Vue.use(Vuetify)
+
+const options = {
+  breakpoint: { scrollbarWidth: 12 },
+  theme: {
+    themes: {
+      light: { primary: 'blue' },
+    },
+  },
+}
 
 export default new Vuetify({
-});
+  // The provided global preset is first merged with defaults
+  preset,
+  // User options are then merged, overwriting defaults and the global preset
+  ...options,
+})
