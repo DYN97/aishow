@@ -4,6 +4,8 @@ import ExhibitionList from '../views/ExhibitionList.vue'
 import TicketIndex from '../views/TicketIndex.vue'
 import Oath from '../views/oath.vue'
 import MainFrom from '../components/MainForm.vue'
+import Result from '../views/Result.vue'
+import VipTicketIndex from '../views/VipTicketIndex.vue'
 
 Vue.use(VueRouter)
 
@@ -24,6 +26,14 @@ const routes = [{
         path:"/mainForm",
         name: "mainForm",
         component: MainFrom
+    },{
+        path:"/Result",
+        name: "Result",
+        component: Result
+    },{
+        path:"/VipTicketIndex",
+        name: "VipTicketIndex",
+        component: VipTicketIndex
     }
 
 ]
