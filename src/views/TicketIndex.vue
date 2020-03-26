@@ -2,13 +2,13 @@
   <div>
     <airshowCarousel :imgs="imgs"></airshowCarousel>
 
-    <v-container>
+    <v-container  class="listbox">
       <v-tabs grow v-model="tabIndex">
         <v-tab :key="0" @click="tabIndex=0">申请赠票</v-tab>
         <v-tab :key="1"  @click="tabIndex=1">购买门票</v-tab>
         <v-tab :key="2"  @click="tabIndex=2">观展套餐</v-tab>
       </v-tabs>
-      <div style="width:100%;border:1px #ccc solid;height:70vh;overflow-y:auto">
+      <div style="width:100%;border:1px #ccc solid;">
         <v-subheader isnet>{{action}}基本信息：</v-subheader>
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
@@ -20,9 +20,7 @@
             >观展日期:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.applyDate">
-                <option>2020-05-05</option>
-                <option>2020-05-06</option>
-                <option>2020-05-07</option>
+                <option  v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </v-col>
           </v-row>
@@ -193,6 +191,10 @@ export default {
       YZMloading: false,
       CountDown: 60,
       tabIndex:null,
+      exhibition:{
+
+        "exhibition_code":"","exhibition_name":"","tickets":[{"ticket_code":"ZH000320001","exhibition_code":"ZH00032","ticket_name":"A区门票","out_ticket_name":"A区门票","ticket_type":0,"row_num":"","column_num":"","ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320002","exhibition_code":"ZH00032","ticket_name":"B区门票","out_ticket_name":"B区门票","ticket_type":0,"row_num":"","column_num":"","ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320003","exhibition_code":"ZH00032","ticket_name":"东嘉宾区17日","out_ticket_name":"17日东嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:12:10"},{"ticket_code":"ZH000320004","exhibition_code":"ZH00032","ticket_name":"西嘉宾区17日","out_ticket_name":"17日西嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:13:02"},{"ticket_code":"ZH000320005","exhibition_code":"ZH00032","ticket_name":"东观礼台","out_ticket_name":"东观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:13:34"},{"ticket_code":"ZH000320006","exhibition_code":"ZH00032","ticket_name":"西观礼台","out_ticket_name":"西观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:13:48"},{"ticket_code":"ZH000320007","exhibition_code":"ZH00032","ticket_name":"东嘉宾区18-21","out_ticket_name":"18-21东嘉宾","ticket_type":1,"row_num":16,"column_num":125,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:15:30"},{"ticket_code":"ZH000320008","exhibition_code":"ZH00032","ticket_name":"西嘉宾区18-21","out_ticket_name":"18-21西嘉宾","ticket_type":1,"row_num":16,"column_num":125,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320009","exhibition_code":"ZH00032","ticket_name":"东嘉宾区14日","out_ticket_name":"14日东嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"14日坐票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320010","exhibition_code":"ZH00032","ticket_name":"西嘉宾区14日","out_ticket_name":"14日西嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"14日坐票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320011","exhibition_code":"ZH00032","ticket_name":"东观礼台14日","out_ticket_name":"14日东观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320012","exhibition_code":"ZH00032","ticket_name":"西观礼台14日","out_ticket_name":"14日西观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"","deleted":0,"modifier":"","modify_time":""}],"days":["2019-10-17","2019-10-18","2019-10-20","2019-10-21"]
+      },
       lookUp:"0",
       form: {
         fullname: "",
@@ -228,6 +230,19 @@ export default {
       }
     }
   },
+  mounted(){
+    var me =this;
+    let exhibition_code = this.$route.query.exhibition_code;
+    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res=>{
+      if(res.status=="200"){
+        if(res.data.statusCode=="200"){
+          me.exhibition = res.data.data;
+          me.form.applyDate = res.data.data.days[0];
+        }
+      }
+      console.log(res);
+    });
+  },
   components:{
       airshowCarousel
     }
@@ -244,5 +259,9 @@ export default {
 .mainForm {
   padding-bottom: 12px;
   width: 95%;
+}
+.listbox{
+  height: calc(100vh - 150px);
+  overflow: auto;
 }
 </style>

@@ -15,29 +15,48 @@
     <span class="ad" v-if="img.isguanggao">广告</span>
     </v-carousel-item>
   </v-carousel>
-   <v-list three-line>
+   <v-list three-line class="listbox">
       <template v-for="(item, index) in items">
         <v-divider
-          v-if="item.divider"
+          v-if="index>0"
           :key="index"
           :inset="item.inset"
         ></v-divider>
 
-        <v-list-item
-          v-else
+        <v-list-item @click="toDetail(item.exhibition_code,item.exhibition_type,item.jump_url)"
           :key="item.title"
         >
           <v-list-item-avatar :size="80">
-            <v-img :src="item.avatar"></v-img>
+            <v-img :src="item.cover_photo"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content style="margin-left:20px">
-            <v-list-item-title v-html="item.title"></v-list-item-title>
-            <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+            <v-list-item-title style="white-space:unset;font-size:18px" v-html="item.exhibition_name"></v-list-item-title>
+            <v-list-item-subtitle>{{item.begin_time}}-{{item.end_time}}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </template>
     </v-list>
+    <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline" style="text-align:center">温馨提示</v-card-title>
+        <v-card-actions>
+ <v-card-text>
+          服务准备中，敬请期待！
+        </v-card-text>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialog = false"
+          >
+            返回
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     </div>
 </template>
 <script>
@@ -56,38 +75,35 @@ export default {
             }
             
             
-        ],items: [
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-        },
-        { divider: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-        },
-        { divider: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-        },
-        { divider: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-          title: 'Birthday gift',
-          subtitle: "<span class='text--primary'>Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?",
-        },
-        { divider: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-          title: 'Recipe to try',
-          subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-        },
-      ],
+        ],items: [],dialog:false
+        
       }
+   },mounted(){
+     var me = this;
+     this.$api.exhibitionapi.GetExhibitionList().then(res=>{
+       if(res.status=="200"){
+         if(res.data.statusCode=="200"){
+           if(res.data.data&&res.data.data.length>0){
+              me.items = res.data.data;
+           }
+         }
+       }
+     });
+
+
+   },methods:{
+     toDetail(exhibition_code,type,url){
+       switch(type){
+         case 0:console.log('正常;');
+          this.$router.push({
+            path: "TicketIndex", query: {exhibition_code:exhibition_code }
+          });       
+         break;
+         case 1:console.log('筹备;');this.dialog=true;break;
+         case 2:location.href = url;break;
+       }
+
+     }
    }
 
 }
@@ -99,5 +115,9 @@ export default {
     bottom:20px;
     right:10px;
     font-size:10px;
+}
+.listbox{
+  height: calc(100vh - 150px);
+  overflow: auto;
 }
 </style>
