@@ -1,16 +1,18 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import ExhibitionList from '../views/ExhibitionList.vue'
-import TicketIndex from '../views/TicketIndex.vue'
-import Oath from '../views/oath.vue'
-import MainFrom from '../components/MainForm.vue'
-import Result from '../views/Result.vue'
-import VipTicketIndex from '../views/VipTicketIndex.vue'
+ /* jshint esversion: 6 */
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import ExhibitionList from '../views/ExhibitionList.vue';
+import TicketIndex from '../views/TicketIndex.vue';
+import Oath from '../views/oath.vue';
+import MainFrom from '../components/MainForm.vue';
+import Result from '../views/Result.vue';
+import VipTicketIndex from '../views/VipTicketIndex.vue';
+import Invitation from '../views/Invitation.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [{
-        path: '/ExhibitionList',
+        path: '/ExhibitionList/:type',
         name: 'ExhibitionList',
         component: ExhibitionList
     },
@@ -31,17 +33,21 @@ const routes = [{
         name: "Result",
         component: Result
     },{
+        path:"/Invitation",
+        name: "Invitation",
+        component: Invitation
+    },{
         path:"/VipTicketIndex",
         name: "VipTicketIndex",
         component: VipTicketIndex
     }
 
-]
+];
 
 const router = new VueRouter({
     routes,
     mode: "history"
-})
+});
 router.beforeEach((to, from, next) => {
     //console.log(to, from)
     // if (to.name != "oath") {
@@ -56,5 +62,5 @@ router.beforeEach((to, from, next) => {
     // }
 
     next();
-})
-export default router
+});
+export default router;

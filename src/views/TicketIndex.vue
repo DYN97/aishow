@@ -2,11 +2,11 @@
   <div>
     <airshowCarousel :imgs="imgs"></airshowCarousel>
 
-    <v-container  class="listbox">
+    <v-container class="listbox">
       <v-tabs grow v-model="tabIndex">
         <v-tab :key="0" @click="tabIndex=0">申请赠票</v-tab>
-        <v-tab :key="1"  @click="tabIndex=1">购买门票</v-tab>
-        <v-tab :key="2"  @click="tabIndex=2">观展套餐</v-tab>
+        <v-tab :key="1" @click="tabIndex=1">购买门票</v-tab>
+        <v-tab :key="2" @click="tabIndex=2">观展套餐</v-tab>
       </v-tabs>
       <div style="width:100%;border:1px #ccc solid;">
         <v-subheader isnet>{{action}}基本信息：</v-subheader>
@@ -20,11 +20,11 @@
             >观展日期:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.applyDate">
-                <option  v-for="date in exhibition.days" :key="date">{{date}}</option>
+                <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </v-col>
           </v-row>
-           <v-row height="46px" no-gutters v-if="tabIndex==1">
+          <v-row height="46px" no-gutters v-if="tabIndex==1">
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -33,9 +33,7 @@
             >门票类型:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.ticketType">
-                <option>电子门票（350元）</option>
-                <option>实体门票（500元）</option>
-                <option>VIP同票（2000元）</option>
+                <option v-for="item in exhibition.tickets" :key="item.ticket_code" :value="item.ticket_code">{{item.out_ticket_name}}</option>
               </select>
             </v-col>
           </v-row>
@@ -45,7 +43,9 @@
               style="font-size: 16px;color: #666;text-indent: 20px;"
               cols="4"
               for="doc-ipt-3"
-            ><label v-html="'姓　　名:'"></label></v-col>
+            >
+              <label v-html="'姓　　名:'"></label>
+            </v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
                 class="mainForm"
@@ -92,7 +92,6 @@
               ></v-text-field>
             </v-col>
           </v-row>
-
           <v-row no-gutters>
             <v-col
               align-self="center"
@@ -169,9 +168,8 @@
   </div>
 </template>
 <script>
-import airshowCarousel from  "../components/Carousel";
+import airshowCarousel from "../components/Carousel";
 export default {
-  
   name: "TicketIndex",
   data() {
     return {
@@ -190,19 +188,21 @@ export default {
       ],
       YZMloading: false,
       CountDown: 60,
-      tabIndex:null,
-      exhibition:{
-
-        "exhibition_code":"","exhibition_name":"","tickets":[{"ticket_code":"ZH000320001","exhibition_code":"ZH00032","ticket_name":"A区门票","out_ticket_name":"A区门票","ticket_type":0,"row_num":"","column_num":"","ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320002","exhibition_code":"ZH00032","ticket_name":"B区门票","out_ticket_name":"B区门票","ticket_type":0,"row_num":"","column_num":"","ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320003","exhibition_code":"ZH00032","ticket_name":"东嘉宾区17日","out_ticket_name":"17日东嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:12:10"},{"ticket_code":"ZH000320004","exhibition_code":"ZH00032","ticket_name":"西嘉宾区17日","out_ticket_name":"17日西嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:13:02"},{"ticket_code":"ZH000320005","exhibition_code":"ZH00032","ticket_name":"东观礼台","out_ticket_name":"东观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:13:34"},{"ticket_code":"ZH000320006","exhibition_code":"ZH00032","ticket_name":"西观礼台","out_ticket_name":"西观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:13:48"},{"ticket_code":"ZH000320007","exhibition_code":"ZH00032","ticket_name":"东嘉宾区18-21","out_ticket_name":"18-21东嘉宾","ticket_type":1,"row_num":16,"column_num":125,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"U000001","modify_time":"2019-10-07 16:15:30"},{"ticket_code":"ZH000320008","exhibition_code":"ZH00032","ticket_name":"西嘉宾区18-21","out_ticket_name":"18-21西嘉宾","ticket_type":1,"row_num":16,"column_num":125,"ticket_cost":0.00,"remark":"赠票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320009","exhibition_code":"ZH00032","ticket_name":"东嘉宾区14日","out_ticket_name":"14日东嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"14日坐票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320010","exhibition_code":"ZH00032","ticket_name":"西嘉宾区14日","out_ticket_name":"14日西嘉宾","ticket_type":1,"row_num":10,"column_num":100,"ticket_cost":0.00,"remark":"14日坐票","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320011","exhibition_code":"ZH00032","ticket_name":"东观礼台14日","out_ticket_name":"14日东观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"","deleted":0,"modifier":"","modify_time":""},{"ticket_code":"ZH000320012","exhibition_code":"ZH00032","ticket_name":"西观礼台14日","out_ticket_name":"14日西观礼台","ticket_type":1,"row_num":9,"column_num":65,"ticket_cost":0.00,"remark":"","deleted":0,"modifier":"","modify_time":""}],"days":["2019-10-17","2019-10-18","2019-10-20","2019-10-21"]
+      tabIndex: null,
+      exhibition: {
+        exhibition_code: "",
+        exhibition_name: "",
+        tickets: [],
+        days: []
       },
-      lookUp:"0",
+      lookUp: "0",
       form: {
         fullname: "",
         cardtype: 0,
         cardnum: "",
-        applyDate: "2020-05-05",
+        applyDate: "",
         mobile: "",
-        ticketType: "电子门票（350元）",
+        ticketType: "",
         yanzhengma: ""
       }
     };
@@ -220,32 +220,49 @@ export default {
         }, 1000);
       }
     },
-    tabIndex(val){
-      if(val==0){
+    tabIndex(val) {
+      if (val == 0) {
         this.action = "赠票";
-      }else if(val==1){
+      } else if (val == 1) {
         this.action = "购票";
-      }else{
+      } else {
         this.action = "观展服务";
       }
     }
   },
-  mounted(){
-    var me =this;
+  mounted() {
+    var me = this;
     let exhibition_code = this.$route.query.exhibition_code;
-    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res=>{
-      if(res.status=="200"){
-        if(res.data.statusCode=="200"){
+    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
+      if (res.status == "200") {
+        if (res.data.statusCode == "200") {
           me.exhibition = res.data.data;
           me.form.applyDate = res.data.data.days[0];
+          me.form.ticketType = res.data.data.tickets[0].ticket_code;
         }
       }
-      console.log(res);
     });
+    me.GetServiceItems("package","FW1102");
   },
-  components:{
-      airshowCarousel
+  methods: {
+    GetServiceItems(type, code) {      
+      var me = this;
+      this.$api.orderapi.GetServiceItems(code).then(res => {
+        if (res.status == "200") {
+          if (res.data.statusCode == "200") {
+            if(type=="package"){
+              me.playPackages = res.data.data;
+            }else{
+              me.packageLevels = res.data.data;
+            }         
+          }
+        }
+      });
     }
+  },
+  components: {
+    airshowCarousel
+  }
 };
 </script>
 <style scoped>
@@ -260,7 +277,7 @@ export default {
   padding-bottom: 12px;
   width: 95%;
 }
-.listbox{
+.listbox {
   height: calc(100vh - 150px);
   overflow: auto;
 }

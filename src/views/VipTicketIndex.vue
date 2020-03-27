@@ -1,17 +1,16 @@
 <template>
-  <div >
+  <div>
     <airshowCarousel :imgs="imgs"></airshowCarousel>
-
-    <v-container  class="listbox">
+    <v-container class="listbox">
       <v-tabs grow v-model="tabIndex">
-        <v-tab :key="0" @click="tabIndex=0">申请赠票</v-tab>
-        <v-tab :key="1"  @click="tabIndex=1">购买门票</v-tab>
-        <v-tab :key="2"  @click="tabIndex=2">观展套餐</v-tab>
+        <v-tab :key="0" @click="tabIndex=0">购买门票</v-tab>
+        <v-tab :key="1" @click="tabIndex=1">观展套餐</v-tab>
+        <v-tab :key="2" @click="tabIndex=2">工作证预订</v-tab>
       </v-tabs>
-      <div  style="width:100%;border:1px #ccc solid;">
+      <div style="width:100%;border:1px #ccc solid;">
         <v-subheader isnet>{{action}}基本信息：</v-subheader>
         <v-form style="background-color:white">
-            <v-row no-gutters>
+          <v-row no-gutters>
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -22,7 +21,6 @@
               <v-text-field
                 v-model="form.cardnum"
                 class="mainForm"
-                label="证件号与姓名一致"
                 hide-details="auto"
                 height="30"
                 single-line
@@ -39,13 +37,61 @@
             >观展日期:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.applyDate">
-                <option>2020-05-05</option>
-                <option>2020-05-06</option>
-                <option>2020-05-07</option>
+                <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </v-col>
           </v-row>
-           <v-row height="46px" no-gutters v-if="tabIndex==1">
+          <v-row height="46px" no-gutters v-if="tabIndex==1">
+            <v-col
+              align-self="center"
+              style="font-size: 16px;color: #666;text-indent: 20px;"
+              cols="4"
+              for="doc-ipt-3"
+            >套餐类型:</v-col>
+            <v-col cols="8" class="am-u-sm-8 list-right">
+              <select style="width:95%;height:46px" v-model="form.playPackage">
+                <option
+                  v-for="item in playPackages"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name}}</option>
+              </select>
+            </v-col>
+          </v-row>
+          <v-row height="46px" no-gutters v-if="tabIndex==1">
+            <v-col
+              align-self="center"
+              style="font-size: 16px;color: #666;text-indent: 20px;"
+              cols="4"
+              for="doc-ipt-3"
+            >套餐档位:</v-col>
+            <v-col cols="8" class="am-u-sm-8 list-right">
+              <select style="width:95%;height:46px" v-model="form.packageLevel">
+                <option
+                  v-for="item in packageLevels"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name}}</option>
+              </select>
+            </v-col>
+          </v-row>
+          <v-row no-gutters v-if="tabIndex==1">
+            <v-col
+              align-self="center"
+              style="font-size: 16px;color: #666;text-indent: 20px;"
+              cols="4"
+              for="doc-ipt-3"
+            >单独包车:</v-col>
+            <v-col cols="8" class="am-u-sm-8 list-right">
+               <v-checkbox
+              v-model="needCar"
+              :label="carText"
+              type="checkbox"
+              required
+            ></v-checkbox>
+            </v-col>
+          </v-row>
+          <v-row height="46px" no-gutters v-if="tabIndex==0">
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -53,10 +99,21 @@
               for="doc-ipt-3"
             >门票类型:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.ticketType">
-                <option>电子门票（350元）</option>
-                <option>实体门票（500元）</option>
-                <option>VIP同票（2000元）</option>
+              <select style="width:95%;height:46px" v-model="form.TicketCode">
+                <option v-for="item in exhibition.tickets" :key="item.ticket_code" :value="item.ticket_code">{{item.out_ticket_name}}</option>
+              </select>
+            </v-col>
+          </v-row>
+          <v-row no-gutters v-if="tabIndex==2">
+            <v-col
+              align-self="center"
+              style="font-size: 16px;color: #666;text-indent: 20px;"
+              cols="4"
+              for="doc-ipt-3"
+            >证件类型:</v-col>
+            <v-col align-self="center" cols="8" class="am-u-sm-8 list-right">
+              <select style="width:95%;height:46px" v-model="form.workcard">
+                <option v-for="item in workcards" :key="item.pro_code" :value="item.pro_code">{{item.pro_name}}</option>
               </select>
             </v-col>
           </v-row>
@@ -66,7 +123,9 @@
               style="font-size: 16px;color: #666;text-indent: 20px;"
               cols="4"
               for="doc-ipt-3"
-            ><label v-html="'姓　　名:'"></label>:</v-col>
+            >
+              <label v-html="'姓　　名:'"></label>
+            </v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
                 class="mainForm"
@@ -144,7 +203,7 @@
               <v-text-field
                 v-model="form.cardnum"
                 class="mainForm"
-                label="证件号与姓名一致"
+                label="填写单位名称"
                 hide-details="auto"
                 height="30"
                 single-line
@@ -158,12 +217,14 @@
               style="font-size: 16px;color: #666;text-indent: 20px;"
               cols="4"
               for="doc-ipt-3"
-            ><label v-html="'职　　务:'"></label></v-col>
+            >
+              <label v-html="'职　　务:'"></label>
+            </v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
                 v-model="form.cardnum"
                 class="mainForm"
-                label="证件号与姓名一致"
+                label="填写职务"
                 hide-details="auto"
                 height="30"
                 single-line
@@ -228,9 +289,8 @@
   </div>
 </template>
 <script>
-import airshowCarousel from  "../components/Carousel";
+import airshowCarousel from "../components/Carousel";
 export default {
-  
   name: "TicketIndex",
   data() {
     return {
@@ -249,15 +309,30 @@ export default {
       ],
       YZMloading: false,
       CountDown: 60,
-      tabIndex:null,
-      lookUp:"0",
+      tabIndex: null,
+      exhibition: {
+        exhibition_code: "",
+        exhibition_name: "",
+        tickets: [],
+        days: []
+      },
+      lookUp: "0",
+      playPackages: [],
+      packageLevels: [],
+      carText: "",
+      workcards: [],
       form: {
         fullname: "",
         cardtype: 0,
         cardnum: "",
-        applyDate: "2020-05-05",
+        applyDate: "",
         mobile: "",
-        ticketType: "电子门票（350元）",
+        TicketCode: "",
+        playPackage: "",
+        packageLevel: "",
+        carcode: "",
+        needCar: "",
+        workcard: "",
         yanzhengma: ""
       }
     };
@@ -275,19 +350,65 @@ export default {
         }, 1000);
       }
     },
-    tabIndex(val){
-      if(val==0){
-        this.action = "赠票";
-      }else if(val==1){
+    tabIndex(val) {
+      if (val == 0) {
         this.action = "购票";
-      }else{
+      } else if (val == 1) {
         this.action = "观展服务";
+      } else {
+        this.action = "工作证";
       }
+    },
+    "form.playPackage":function(val){
+      this.GetServiceItems("level",val);
+    },
+    "form.packageLevel":function(val){
+      this.GetServiceItems("car",val);
     }
   },
-  components:{
-      airshowCarousel
+  methods: {
+    GetServiceItems(type, code) {
+      var me = this;
+      this.$api.orderapi.GetServiceItems(code).then(res => {
+        if (res.status == "200") {
+          if (res.data.statusCode == "200") {
+            if (type == "package") {
+              me.playPackages = res.data.data;
+              me.form.playPackage = res.data.data[0].pro_code;
+            } else if (type == "level") {
+              me.packageLevels = res.data.data;
+              me.form.packageLevel = res.data.data[0].pro_code;
+            } else if(type=="car"){
+              me.form.carcode = res.data.data[0].pro_code;
+              me.carText = res.data.data[0].pro_name;
+            }else {
+              me.workcards = res.data.data;
+              me.form.workcard = res.data.data[0].pro_code;
+            }
+          }
+        }
+      });
     }
+  },
+
+  components: {
+    airshowCarousel
+  },
+  mounted() {
+    var me = this;
+    let exhibition_code = this.$route.query.exhibition_code;
+    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
+      if (res.status == "200") {
+        if (res.data.statusCode == "200") {
+          me.exhibition = res.data.data;
+          me.form.applyDate = res.data.data.days[0];
+          me.form.TicketCode = res.data.data.tickets[0].ticket_code;
+        }
+      }
+    });
+    me.GetServiceItems("package", "FW1102");
+    me.GetServiceItems("workcard", "FW1101");
+  }
 };
 </script>
 <style scoped>
@@ -302,7 +423,7 @@ export default {
   padding-bottom: 12px;
   width: 95%;
 }
-.listbox{
+.listbox {
   height: calc(100vh - 150px);
   overflow: auto;
 }
