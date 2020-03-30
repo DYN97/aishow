@@ -23,7 +23,7 @@
       </v-row>
       <v-row justify="center">
         <v-col cols="8">
-          <v-btn block rounded color="primary" large dark @click="faildialog=true">确认提交</v-btn>
+          <v-btn block rounded color="primary" large dark @click="CheckInvitation">确认提交</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -35,7 +35,7 @@
           <span style="color:red;font-size:20px">{{restCount}}</span>次
         </v-card-text>
         <v-card-actions style="justify-content: center;">
-          <v-btn color="green darken-1" text @click="passdialog = false">确定</v-btn>
+          <v-btn color="green darken-1" text @click="ToTicketIndex">确定</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -43,7 +43,7 @@
       <v-card>
         <v-card-title class="headline" style="justify-content: center;">温馨提示</v-card-title>
 
-        <v-card-text style="font-size:16px;margin-top:20px">邀请码填写不正确，请重新输入！</v-card-text>
+        <v-card-text style="font-size:16px;margin-top:20px">{{errmessage}}</v-card-text>
         <v-card-actions style="justify-content: center;">
           <v-btn color="green darken-1" text @click="faildialog = false">确定</v-btn>
         </v-card-actions>
@@ -72,13 +72,41 @@ export default {
       ],
       cardnum: "",
       restCount: 10,
+      exhibitionCode:"",
+      errmessage:"",
       faildialog: false,
       passdialog: false
     };
   },
   watch: {},
-  mounted() {},
-  methods: {},
+  mounted() {
+   this.exhibitionCode= this.$route.params.exhibitionCode;
+  },
+  methods: {
+    CheckInvitation(){
+      var me = this;      
+      me.$api.exhibitionapi.CheckInvitation(me.exhibitionCode,me.cardnum).then(res=>{
+        if(res.data.statusCode=="200"){
+          me.restCount = res.data.data.usable_qty;
+          me.passdialog = true;
+        }else{
+          me.faildialog = true;
+          me.errmessage = res.data.message;
+        }
+      });
+
+    },
+    ToTicketIndex(){
+        this.$router.push({
+            name: "VipTicketIndex",
+            params: { exhibitionCode: this.exhibitionCode },
+            query:{invite_code:this.cardnum}
+          });
+
+    }
+
+
+  },
   components: {
     airshowCarousel
   }

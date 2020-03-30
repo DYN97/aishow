@@ -19,9 +19,10 @@
             >邀请码:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
-                v-model="form.cardnum"
+                v-model="form.invite_code"
                 class="mainForm"
                 hide-details="auto"
+                disabled
                 height="30"
                 single-line
                 regular
@@ -280,7 +281,7 @@
           </v-row>
           <v-row justify="center">
             <v-col cols="8">
-              <v-btn block rounded color="primary" large dark>确认提交</v-btn>
+              <v-btn block rounded color="primary" large dark @click="submit">确认提交</v-btn>
             </v-col>
           </v-row>
         </v-form>
@@ -317,6 +318,7 @@ export default {
         days: []
       },
       lookUp: "0",
+      ticketCost: 0,
       playPackages: [],
       packageLevels: [],
       carText: "",
@@ -324,6 +326,7 @@ export default {
       form: {
         fullname: "",
         cardtype: 0,
+        invite_code: "",
         cardnum: "",
         applyDate: "",
         mobile: "",
@@ -360,10 +363,15 @@ export default {
       }
     },
     "form.playPackage":function(val){
+      //
       this.GetServiceItems("level",val);
     },
     "form.packageLevel":function(val){
       this.GetServiceItems("car",val);
+    },
+    "form.TicketCode":function(val){
+      this.ticketCost = this.exhibition.tickets.find(t=>t.pro_code==val).ticket_cost;
+      //this.GetServiceItems("car",val);
     }
   },
   methods: {
@@ -388,6 +396,31 @@ export default {
           }
         }
       });
+    },submit(){    
+      
+      if(this.tabIndex==0){
+        let params = {
+          persons:[{
+            Name:this.form.fullname,
+            Idcard:this.form.cardnum,
+            CardType:this.form.cardtype,
+            InviteCode:this.form.invite_code,
+            Mobile:this.form.mobile,
+            TicketDate:this.form.applyDate,
+            Type:"1",
+            TicketCost:this.ticketCost
+          }],
+          type:1,
+          token:this.$store.state.token,
+          exhibition_id:this.exhibition.exhibition_code
+        };
+        this.$api.orderapi.CreateOrder(params).then(res=>{
+          console.log(res);
+        });
+
+      }
+
+
     }
   },
 
@@ -396,7 +429,8 @@ export default {
   },
   mounted() {
     var me = this;
-    let exhibition_code = this.$route.query.exhibition_code;
+    let exhibition_code = this.$route.params.exhibitionCode;
+    me.form.invite_code = this.$route.query.invite_code;
     this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {

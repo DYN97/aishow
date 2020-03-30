@@ -12,6 +12,9 @@ const exhibitionapi = {
     //设置菜单顺序
     GetExhibitionDetaile(id) {
         return axios.get(`/GetExhibitionDetaile.aspx?exhibition_id=` + id);
+    },
+    CheckInvitation(exhibition_code,invite_code){
+        return axios.get(`/CheckInvitation.aspx?exhibition_code=` + exhibition_code+"&invite_code="+invite_code);
     }
     // 其他接口…………
 }

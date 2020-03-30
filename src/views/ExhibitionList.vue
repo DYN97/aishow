@@ -60,7 +60,7 @@ export default {
   },
   mounted() {
     var me = this;
-    me.type = me.$route.params.type;
+    me.type = me.$route.query.type;
     this.$api.exhibitionapi.GetExhibitionList().then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {
@@ -77,11 +77,11 @@ export default {
         case 0:
           var path = "TicketIndex";
           if(this.type=="vip"){
-            path = "invitation"
+            path = "Invitation"
           }          
           this.$router.push({
-            path: "/"+path,
-            query: { exhibition_code: exhibition_code }
+            name: path,
+            params: { exhibitionCode: exhibition_code }
           });
           break;
         case 1:

@@ -10,11 +10,11 @@
   * 跳转登录页
   * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
   */
- const toLogin = () => {
+ const toOath = () => {
      router.replace({
-         path: '/login',
+         path: '/oath',
          query: {
-             redirect: router.currentRoute.fullPath
+             from: router.currentRoute.fullPath
          }
      });
  }
@@ -28,11 +28,12 @@
      switch (status) {
          // 401: 未登录状态，跳转登录页
          case 401:
-             toLogin();
+            toOath();
              break;
              // 403 token过期
              // 清除token并跳转登录页
          case 403:
+            toOath();
              break;
              // 404请求不存在
          case 404:
