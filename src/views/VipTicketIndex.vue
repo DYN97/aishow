@@ -84,12 +84,7 @@
               for="doc-ipt-3"
             >单独包车:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
-               <v-checkbox
-              v-model="needCar"
-              :label="carText"
-              type="checkbox"
-              required
-            ></v-checkbox>
+              <v-checkbox v-model="needCar" :label="carText" type="checkbox" required></v-checkbox>
             </v-col>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==0">
@@ -100,8 +95,12 @@
               for="doc-ipt-3"
             >门票类型:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.TicketCode">
-                <option v-for="item in exhibition.tickets" :key="item.ticket_code" :value="item.ticket_code">{{item.out_ticket_name}}</option>
+              <select style="width:95%;height:46px" v-model="form.TicketCode" @change="changeTicket">
+                <option
+                  v-for="item in exhibition.tickets"
+                  :key="item.ticket_code"
+                  :value="item.ticket_code"
+                >{{item.out_ticket_name}}</option>
               </select>
             </v-col>
           </v-row>
@@ -114,7 +113,11 @@
             >证件类型:</v-col>
             <v-col align-self="center" cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.workcard">
-                <option v-for="item in workcards" :key="item.pro_code" :value="item.pro_code">{{item.pro_name}}</option>
+                <option
+                  v-for="item in workcards"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name}}</option>
               </select>
             </v-col>
           </v-row>
@@ -287,10 +290,6 @@
         </v-form>
       </div>
     </v-container>
-
-
-
-
   </div>
 </template>
 <script>
@@ -369,19 +368,14 @@ export default {
         this.action = "工作证";
       }
     },
-    "form.playPackage":function(val){
+    "form.playPackage": function(val) {
       //
-      this.GetServiceItems("level",val);
+      this.GetServiceItems("level", val);
     },
-    "form.packageLevel":function(val){
-      this.GetServiceItems("car",val);
-    },
-    "form.TicketCode":function(val){
-      let choseTicket = this.exhibition.tickets.find(t=>t.pro_code==val);
-      this.ticketCost = choseTicket.ticket_cost;
-      this.form.TicketName = choseTicket.out_ticket_name;
-      //this.GetServiceItems("car",val);
+    "form.packageLevel": function(val) {
+      this.GetServiceItems("car", val);
     }
+    
   },
   methods: {
     GetServiceItems(type, code) {
@@ -395,45 +389,79 @@ export default {
             } else if (type == "level") {
               me.packageLevels = res.data.data;
               me.form.packageLevel = res.data.data[0].pro_code;
-            } else if(type=="car"){
+            } else if (type == "car") {
               me.form.carcode = res.data.data[0].pro_code;
               me.carText = res.data.data[0].pro_name;
-            }else {
+            } else {
               me.workcards = res.data.data;
               me.form.workcard = res.data.data[0].pro_code;
             }
           }
         }
       });
-    },submit(){    
+    },
+    changeTicket(){
       var me = this;
-      if(this.tabIndex==0){
+      this.ticketCost = this.exhibition.tickets.find(t=>t.ticket_code==me.form.TicketCode).ticket_cost;
+    },
+    submit() {
+      var me = this;
+      if (this.tabIndex == 0) {
         let params = {
-          persons:JSON.stringify([{
-            Name:this.form.fullname,
-            Idcard:this.form.cardnum,
-            CardType:this.form.cardtype,
-            InviteCode:this.form.invite_code,
-            Mobile:this.form.mobile,
-            TicketDate:this.form.applyDate,
-            Duty:this.form.duty,
-            CompanyName:this.form.company,
-            Type:"1",
-            TicketCost:this.ticketCost
-          }]),
-          type:1,
-          exhibition_id:this.exhibition.exhibition_code
+          persons: JSON.stringify([
+            {
+              Name: this.form.fullname,
+              Idcard: this.form.cardnum,
+              CardType: this.form.cardtype,
+              InviteCode: this.form.invite_code,
+              Mobile: this.form.mobile,
+              TicketDate: this.form.applyDate,
+              Duty: this.form.duty,
+              CompanyName: this.form.company,
+              Type: "1",
+              TicketCost: this.ticketCost
+            }
+          ]),
+          type: 1,
+          exhibition_id: this.exhibition.exhibition_code
         };
-        this.$api.orderapi.CreateOrder(params).then(res=>{
-          if(res.data.statusCode=="200"){
-            window.location.href = "/appwxpay.aspx?ordercode=" + res.data.data.ordercode + "&total_fee=0.01&exhibition_id=" + me.exhibition.exhibition_code;
-
+        this.$api.orderapi.CreateOrder(params).then(res => {
+          if (res.data.statusCode == "200") {
+            window.location.href =
+              "/appwxpay.aspx?token=" +
+              me.$store.state.token +
+              "&ordercode=" +
+              res.data.data.ordercode +
+              "&total_fee=0.01&exhibition_id=" +
+              me.exhibition.exhibition_code;
           }
         });
-
+      } else {
+        let params = {
+          invite_code: this.form.invite_code,
+          client_name: this.form.fullname,
+          client_idcard: this.form.cardnum,
+          cliend_cardtype: this.form.cardtype,
+          client_phone: this.form.mobile,
+          rec_company: this.form.company,
+          jobname: this.form.duty,
+          pro_code: this.tabIndex==2?this.form.workcard:this.form.packageLevel,
+          buy_num: 1
+        };
+        this.$api.orderapi.CreateProductOrder(params).then(res => {
+          if (res.data.statusCode == "200") {
+            window.location.href =
+              "/appwxpay.aspx?token=" +
+              me.$store.state.token +
+              "&ordercode=" +
+              res.data.data.ordercode +
+              "&type=" +
+              this.tabIndex+
+              "&total_fee="+res.data.data.money+"&exhibition_id=" +
+              me.exhibition.exhibition_code;
+          }
+        });
       }
-
-
     }
   },
 

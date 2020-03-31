@@ -15,6 +15,12 @@ const orderapi = {
     },
     GetServiceItems(productCode){
         return axios.get("/newOrders/GetServiceItems.aspx?productCode="+productCode);
+    },
+    GetOrderInfo(order_code){
+        return axios.get("/newOrders/GetOrderInfo.aspx?order_code="+order_code);
+    },
+    GetServerOrderInfo(order_code){
+        return axios.get("/newOrders/GetServerOrderInfo.aspx?order_code="+order_code);
     }
     // 其他接口…………
 }

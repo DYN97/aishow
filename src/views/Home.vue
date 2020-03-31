@@ -1,18 +1,29 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+     <v-row no-gutters>
+            <v-col
+              align-self="center"
+              style="font-size: 16px;color: #666;text-indent: 20px;"
+              cols="4"
+              for="doc-ipt-3"
+            > <router-link to="/exhibitionList">普通观众订票</router-link></v-col>
+          </v-row>
+   <v-row no-gutters>
+            <v-col
+              align-self="center"
+              style="font-size: 16px;color: #666;text-indent: 20px;"
+              cols="4"
+              for="doc-ipt-3"
+            > <router-link to="/exhibitionList?type=vip">VIP观众订票</router-link></v-col>
+          </v-row>
+    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
+  name: 'Home'
 }
 </script>

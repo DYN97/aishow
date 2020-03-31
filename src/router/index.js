@@ -36,7 +36,7 @@ const routes = [{
     name: "mainForm",
     component: MainFrom
 },{
-    path:"/Result",
+    path:"/Result/:result",
     name: "Result",
     component: Result
 },{

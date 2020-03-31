@@ -9,27 +9,27 @@
       </v-row>
       <v-row>
         <v-col cols="12" style="text-align:center" align-self="center">
-          <span style="font-size:20px;font-weight:bold">门票支付成功</span>
+          <span style="font-size:20px;font-weight:bold">{{actionName}}支付成功</span>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="10" align-self="center">
-          <span>观展日期：2020年11月10日</span>
+          <span>观展日期：{{ticketDate}}</span>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="10" align-self="center">
-          <span>门票类型：电子门票</span>
+          <span>门票类型：{{ticketType}}</span>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="10" align-self="center">
-          <span>申请人：张三</span>
+          <span>申请人：{{clientName}}</span>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="10" align-self="center">
-          <span>联系电话：13000000000</span>
+          <span>联系电话：{{clientMobile}}</span>
         </v-col>
       </v-row>
       <v-row justify="space-around">
@@ -76,6 +76,43 @@ export default {
   components: {
     airshowCarousel
   },
+  mounted() {
+    var me = this;
+    me.type = this.$route.params.result=="success"?1:0;
+    me.actionCode = this.$route.query.type;
+    me.ordercode = this.$route.query.order_code;
+    switch(me.actionCode){
+      case "0":me.actionName = "门票";
+              me.$api.orderapi.GetOrderInfo(me.ordercode).then(res=>{
+                if(res.data.statusCode=="200"){
+                  let detail = res.data.data.details[0];
+                  me.ticketDate = detail.ticket_date.substring(0,10);
+                  me.ticketType = "电子门票";
+                  me.clientName = detail.client_name;
+                  me.clientMobile = detail.client_phone;
+                }
+              });
+      
+      
+      break;
+      case "1":me.actionName = "服务包";
+              me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res=>{
+                if(res.data.statusCode=="200"){
+                  let detail = res.data.data.details[0];
+                  console.log(detail);
+                }
+              });
+      break;
+      case "2":me.actionName = "工作证";
+       me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res=>{
+                if(res.data.statusCode=="200"){
+                  let detail = res.data.data.details[0];
+                  console.log(detail);
+                }
+              });break;  
+    }
+
+  },
   data() {
     return {
       imgs: [
@@ -90,7 +127,14 @@ export default {
           isguanggao: false
         }
       ],
-      type: 0
+      type: 0,
+      actionCode:"",
+      ordercode:"",
+      actionName:"",
+      ticketDate:"",
+      ticketType:"",
+      clientName:"",
+      clientMobile:""
     };
   }
 };
