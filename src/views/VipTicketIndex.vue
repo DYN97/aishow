@@ -202,7 +202,7 @@
             >单位名称:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
-                v-model="form.cardnum"
+                v-model="form.company"
                 class="mainForm"
                 label="填写单位名称"
                 hide-details="auto"
@@ -223,7 +223,7 @@
             </v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
-                v-model="form.cardnum"
+                v-model="form.duty"
                 class="mainForm"
                 label="填写职务"
                 hide-details="auto"
@@ -330,6 +330,8 @@ export default {
         cardnum: "",
         applyDate: "",
         mobile: "",
+        company: "",
+        duty: "",
         TicketCode: "",
         playPackage: "",
         packageLevel: "",
@@ -400,18 +402,19 @@ export default {
       
       if(this.tabIndex==0){
         let params = {
-          persons:[{
+          persons:JSON.stringify([{
             Name:this.form.fullname,
             Idcard:this.form.cardnum,
             CardType:this.form.cardtype,
             InviteCode:this.form.invite_code,
             Mobile:this.form.mobile,
             TicketDate:this.form.applyDate,
+            Duty:this.form.duty,
+            CompanyName:this.form.company,
             Type:"1",
             TicketCost:this.ticketCost
-          }],
+          }]),
           type:1,
-          token:this.$store.state.token,
           exhibition_id:this.exhibition.exhibition_code
         };
         this.$api.orderapi.CreateOrder(params).then(res=>{

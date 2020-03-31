@@ -9,6 +9,7 @@ import MainFrom from '../components/MainForm.vue';
 import Result from '../views/Result.vue';
 import VipTicketIndex from '../views/VipTicketIndex.vue';
 import Invitation from '../views/Invitation.vue';
+import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,11 @@ const routes = [{
     path: '/ExhibitionList',
     name: 'ExhibitionList',
     component: ExhibitionList
+},
+{
+    path: '/',
+    name: 'home',
+    component: Home
 },
 {
     path: '/TicketIndex/:exhibitionCode',
@@ -47,11 +53,12 @@ const routes = [{
 
 const router = new VueRouter({
     routes,
+    base:"/mobile/newapp",
     mode: "history"
 });
 router.beforeEach((to, from, next) => {
     //console.log(to, from)
-    if (to.name != "oath") {
+    if (to.name != "oath"&&to.name!="home") {
         let loginState = sessionStorage.getItem("islogin");
 
         if (loginState == "true") {
