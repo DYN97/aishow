@@ -287,6 +287,10 @@
         </v-form>
       </div>
     </v-container>
+
+
+
+
   </div>
 </template>
 <script>
@@ -333,6 +337,7 @@ export default {
         company: "",
         duty: "",
         TicketCode: "",
+        TicketName: "",
         playPackage: "",
         packageLevel: "",
         carcode: "",
@@ -372,7 +377,9 @@ export default {
       this.GetServiceItems("car",val);
     },
     "form.TicketCode":function(val){
-      this.ticketCost = this.exhibition.tickets.find(t=>t.pro_code==val).ticket_cost;
+      let choseTicket = this.exhibition.tickets.find(t=>t.pro_code==val);
+      this.ticketCost = choseTicket.ticket_cost;
+      this.form.TicketName = choseTicket.out_ticket_name;
       //this.GetServiceItems("car",val);
     }
   },
@@ -399,7 +406,7 @@ export default {
         }
       });
     },submit(){    
-      
+      var me = this;
       if(this.tabIndex==0){
         let params = {
           persons:JSON.stringify([{
@@ -418,7 +425,10 @@ export default {
           exhibition_id:this.exhibition.exhibition_code
         };
         this.$api.orderapi.CreateOrder(params).then(res=>{
-          console.log(res);
+          if(res.data.statusCode=="200"){
+            window.location.href = "/appwxpay.aspx?ordercode=" + res.data.data.ordercode + "&total_fee=0.01&exhibition_id=" + me.exhibition.exhibition_code;
+
+          }
         });
 
       }

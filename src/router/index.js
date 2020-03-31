@@ -65,7 +65,7 @@ router.beforeEach((to, from, next) => {
             store.commit("setToken",sessionStorage.getItem("token"));
             next();
         } else {
-            next("/oath?from=" + to.name);
+            next("/oath?from=" + to.fullPath);
         }
     } else {
         next();
