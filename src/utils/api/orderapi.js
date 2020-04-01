@@ -21,6 +21,9 @@ const orderapi = {
     },
     GetServerOrderInfo(order_code){
         return axios.get("/newOrders/GetServerOrderInfo.aspx?order_code="+order_code);
+    },
+    GetOrderDetail(detail_id){
+        return axios.get("/newOrders/GetOrderDetaile.aspx?detail_id="+detail_id);
     }
     // 其他接口…………
 }

@@ -1,7 +1,7 @@
  /* jshint esversion: 6 */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '../store/index';
+//import store from '../store/index';
 import ExhibitionList from '../views/ExhibitionList.vue';
 import TicketIndex from '../views/TicketIndex.vue';
 import Oath from '../views/oath.vue';
@@ -10,6 +10,11 @@ import Result from '../views/Result.vue';
 import VipTicketIndex from '../views/VipTicketIndex.vue';
 import Invitation from '../views/Invitation.vue';
 import Home from '../views/Home.vue';
+import OrderList from '../views/OrderList.vue';
+import OrderDetail from '../views/OrderDetail.vue';
+import MailDetail from '../views/MailDetail.vue';
+import MailList from '../views/MailList.vue';
+import ConsigneeText from '../views/consigneeText.vue';
 
 Vue.use(VueRouter);
 
@@ -47,6 +52,26 @@ const routes = [{
     path:"/VipTicketIndex/:exhibitionCode",
     name: "VipTicketIndex",
     component: VipTicketIndex
+},{
+    path:"/OrderList",
+    name: "OrderList",
+    component: OrderList
+},{
+    path:"/MailList",
+    name: "MailList",
+    component: MailList
+},{
+    path:"/ConsigneeText",
+    name: "ConsigneeText",
+    component: ConsigneeText
+},{
+    path:"/OrderDetail/:id",
+    name: "OrderDetail",
+    component: OrderDetail
+},{
+    path:"/MailDetail/:id",
+    name: "MailDetail",
+    component: MailDetail
 }
 
 ];
@@ -56,20 +81,22 @@ const router = new VueRouter({
     base:"/mobile/newapp",
     mode: "history"
 });
-router.beforeEach((to, from, next) => {
-    //console.log(to, from)
-    if (to.name != "oath"&&to.name!="home") {
-        let loginState = sessionStorage.getItem("islogin");
+// router.beforeEach((to, from, next) => {
+//     //console.log(to, from)
+//     if (to.name != "oath"&&to.name!="home") {
+//         let loginState = sessionStorage.getItem("islogin");
 
-        if (loginState == "true") {
-            store.commit("setToken",sessionStorage.getItem("token"));
-            next();
-        } else {
-            next("/oath?from=" + to.fullPath);
-        }
-    } else {
-        next();
-    }
+//         if (loginState == "true") {
+//             store.commit("setToken",sessionStorage.getItem("token"));
+//             next();
+//         } else {
+//             next("/oath?from=" + to.fullPath);
+//         }
+//     } else {
+//         next();
+//     }
 
-});
+// });
+
+
 export default router;

@@ -12,6 +12,7 @@
           <span style="font-size:20px;font-weight:bold">{{actionName}}支付成功</span>
         </v-col>
       </v-row>
+      <div v-if="actionCode==0">
       <v-row justify="center">
         <v-col cols="10" align-self="center">
           <span>观展日期：{{ticketDate}}</span>
@@ -24,7 +25,7 @@
       </v-row>
       <v-row justify="center">
         <v-col cols="10" align-self="center">
-          <span>申请人：{{clientName}}</span>
+          <span v-html="'申请人　：'+clientName"></span>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -32,6 +33,51 @@
           <span>联系电话：{{clientMobile}}</span>
         </v-col>
       </v-row>
+      </div>
+      <div v-if="actionCode==1">
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+          <span>套餐类型：{{packageType}}</span>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+          <span>套餐档位：{{packageLevel}}</span>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+           <span v-html="'申请人　：'+clientName"></span>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+          <span>联系电话：{{clientMobile}}</span>
+        </v-col>
+      </v-row>
+      </div>
+      <div v-if="actionCode==2">
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+          <span>观展日期：{{ticketDate}}</span>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+          <span>工作证类型：{{workcardType}}</span>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+           <span v-html="'申请人　：'+clientName"></span>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="10" align-self="center">
+          <span>联系电话：{{clientMobile}}</span>
+        </v-col>
+      </v-row>
+      </div>
       <v-row justify="space-around">
         <v-col cols="5" style="text-align:center" align-self="center">
           <v-btn>继续购买</v-btn>
@@ -60,7 +106,7 @@
       
       <v-row justify="space-around">
         <v-col cols="5" style="text-align:center" align-self="center">
-          <v-btn><label v-html="'返　　回'"></label></v-btn>
+          <v-btn>继续支付</v-btn>
         </v-col>
         <v-col cols="5" style="text-align:center" align-self="center">
           <v-btn>我的订单</v-btn>
@@ -99,15 +145,24 @@ export default {
               me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res=>{
                 if(res.data.statusCode=="200"){
                   let detail = res.data.data.details[0];
-                  console.log(detail);
+                 // me.ticketDate = detail.ticket_date.substring(0,10);
+                  
+                  me.packageType = detail.parentname;
+                  me.packageLevel = detail.pro_name;
+                  me.clientName = detail.client_name;
+                  me.clientMobile = detail.client_phone;
                 }
               });
+
       break;
       case "2":me.actionName = "工作证";
        me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res=>{
                 if(res.data.statusCode=="200"){
                   let detail = res.data.data.details[0];
-                  console.log(detail);
+                 // me.ticketDate = detail.ticket_date.substring(0,10);
+                  me.workcardType = detail.pro_name;
+                  me.clientName = detail.client_name;
+                  me.clientMobile = detail.client_phone;
                 }
               });break;  
     }
@@ -127,14 +182,17 @@ export default {
           isguanggao: false
         }
       ],
-      type: 0,
+      type: 1,
       actionCode:"",
       ordercode:"",
       actionName:"",
       ticketDate:"",
       ticketType:"",
       clientName:"",
-      clientMobile:""
+      clientMobile:"",
+      packageType:"",
+      packageLevel:"",
+      workcardType:""
     };
   }
 };

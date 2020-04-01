@@ -59,7 +59,6 @@
          // 而后我们可以在响应拦截器中，根据状态码进行一些统一的操作。        
          const token = store.state.token;
          token && (config.headers.Authorization = token);
-         console.log(config);
          return config;
      },
      error => Promise.error(error))
