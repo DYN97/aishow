@@ -1,6 +1,6 @@
 <template>
   <div class="detailBox">
-    <airshowCarousel :imgs="imgs"></airshowCarousel>
+    <airshowCarousel :type="15"></airshowCarousel>
     <ul class="detailList listbox">
       <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
       <li class="clearfix">

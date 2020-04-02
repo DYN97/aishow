@@ -1,7 +1,7 @@
 <template>
   <div class="mailListBox">
-    <airshowCarousel :imgs="imgs"></airshowCarousel>
-    <ul class="result-list listbox"  id="list" style="padding:0">
+    <airshowCarousel :type="110"></airshowCarousel>
+    <ul class="result-list listbox" id="list" style="padding:0">
       <li v-for="item in maildata" :key="item">
         <div class="col1">
           <dl>
@@ -23,33 +23,7 @@ export default {
   name: "MailDetail",
   data() {
     return {
-      maildata: [
-        {
-          date: "2020-04-01",
-          time: "10:20:20",
-          remark: "测试测试测试测试测试测试"
-        },
-        {
-          date: "2020-04-01",
-          time: "10:20:20",
-          remark: "测试测试测试测试测试测试"
-        },
-        {
-          date: "2020-04-01",
-          time: "10:20:20",
-          remark: "测试测试测试测试测试测试"
-        },
-        {
-          date: "2020-04-01",
-          time: "10:20:20",
-          remark: "测试测试测试测试测试测试"
-        },
-        {
-          date: "2020-04-01",
-          time: "10:20:20",
-          remark: "测试测试测试测试测试测试"
-        }
-      ],
+      maildata: [],
       imgs: [
         {
           src:
@@ -63,8 +37,24 @@ export default {
         }
       ]
     };
-  },components: {
+  },
+  components: {
     airshowCarousel
+  },
+  mounted() {
+    var mail_no = this.$route.params.id;
+    this.$api.commonapi.GetYunDaExpressInfo(mail_no).then(res => {
+      if (res.data.statusCode == "200") {
+        if (res.data.data.steps) {
+          for (var i = 0; i <  res.data.data.steps.length; i++) {
+            var thistime = res.data.data.steps[i].time;
+            res.data.data.steps[i].date = thistime.substr(0, 10);
+            res.data.data.steps[i].time = thistime.substr(11, 5);
+          }
+          this.maildata = res.data.data.steps;
+        }
+      }
+    });
   }
 };
 </script>

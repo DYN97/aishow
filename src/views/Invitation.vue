@@ -1,6 +1,6 @@
 <template>
   <div>
-    <airshowCarousel :imgs="imgs"></airshowCarousel>
+    <airshowCarousel :type="17"></airshowCarousel>
 
     <v-container class="listbox">
       <v-row no-gutters>

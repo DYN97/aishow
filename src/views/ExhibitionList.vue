@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-carousel cycle :interval="2000" height="150" hide-delimiter-background :show-arrows="false">
-      <v-carousel-item v-for="(img, i) in imgs" :key="i" :src="img.src">
-        <span class="ad" v-if="img.isguanggao">广告</span>
-      </v-carousel-item>
-    </v-carousel>
+    <airshowCarousel :type="12"></airshowCarousel>
     <v-list three-line class="listbox">
       <template v-for="(item, index) in items">
         <v-divider v-if="index>0" :key="index" :inset="item.inset"></v-divider>
@@ -37,6 +33,7 @@
   </div>
 </template>
 <script>
+import airshowCarousel from "../components/Carousel";
 export default {
   name: "ExhibitionList",
   data() {
@@ -58,9 +55,12 @@ export default {
       type:"normal"
     };
   },
+  components:{
+    airshowCarousel
+  },
   mounted() {
     var me = this;
-    me.type = me.$route.query.type;
+    me.type = me.$route.query.type;   
     this.$api.exhibitionapi.GetExhibitionList().then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {

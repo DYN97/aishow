@@ -1,14 +1,25 @@
 <template>
   <div>
-    <airshowCarousel :imgs="imgs"></airshowCarousel>
+    <airshowCarousel :type="11"></airshowCarousel>
     <v-container class="listbox">
-      <v-tabs grow v-model="tabIndex">
-        <v-tab :key="0" @click="tabIndex=0">购买门票</v-tab>
-        <v-tab :key="1" @click="tabIndex=1">观展套餐</v-tab>
-        <v-tab :key="2" @click="tabIndex=2">工作证预订</v-tab>
+      <v-tabs grow>
+        <v-tab :key="1" @click="tabIndex=1">购买门票</v-tab>
+        <v-tab :key="2" @click="tabIndex=2">观展套餐</v-tab>
+        <v-tab :key="3" @click="tabIndex=3">工作证预订</v-tab>
       </v-tabs>
       <div style="width:100%;border:1px #ccc solid;">
         <v-subheader isnet>{{action}}基本信息：</v-subheader>
+        <div v-if="tabIndex==2" style="margin-bottom:20px">
+          <van-card
+            v-for="item in playPackages"
+            :key="item.pro_code"
+            :price="item.selling_price"
+            :desc="item.pro_desc"
+            :title="item.pro_name"
+            thumb="http://59.110.175.131:1111/upfiles/2019-04-08/微信图片_20190331135313_20190408220305477.jpg"
+          />
+        </div>
+
         <v-form style="background-color:white">
           <v-row no-gutters>
             <v-col
@@ -42,7 +53,7 @@
               </select>
             </v-col>
           </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==1">
+          <v-row height="46px" no-gutters v-if="tabIndex==2">
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -59,7 +70,7 @@
               </select>
             </v-col>
           </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==1">
+          <v-row height="46px" no-gutters v-if="tabIndex==2">
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -76,7 +87,7 @@
               </select>
             </v-col>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==1">
+          <v-row no-gutters v-if="tabIndex==2">
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -84,10 +95,10 @@
               for="doc-ipt-3"
             >单独包车:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
-              <v-checkbox v-model="needCar" :label="carText" type="checkbox" required></v-checkbox>
+              <v-checkbox v-model="form.needCar" :label="carText" type="checkbox" required></v-checkbox>
             </v-col>
           </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==0">
+          <v-row height="46px" no-gutters v-if="tabIndex==1">
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -95,7 +106,11 @@
               for="doc-ipt-3"
             >门票类型:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.TicketCode" @change="changeTicket">
+              <select
+                style="width:95%;height:46px"
+                v-model="form.TicketCode"
+                @change="changeTicket"
+              >
                 <option
                   v-for="item in exhibition.tickets"
                   :key="item.ticket_code"
@@ -104,7 +119,7 @@
               </select>
             </v-col>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2">
+          <v-row no-gutters v-if="tabIndex==3">
             <v-col
               align-self="center"
               style="font-size: 16px;color: #666;text-indent: 20px;"
@@ -293,6 +308,7 @@
   </div>
 </template>
 <script>
+import { Card,Toast } from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
   name: "TicketIndex",
@@ -313,7 +329,7 @@ export default {
       ],
       YZMloading: false,
       CountDown: 60,
-      tabIndex: null,
+      tabIndex: 1,
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
@@ -350,7 +366,7 @@ export default {
     YZMloading(val) {
       if (val) {
         let cd = setInterval(() => {
-          this.CountDown -= 10;
+          this.CountDown -= 1;
           if (this.CountDown == 0) {
             clearInterval(cd);
             this.YZMloading = false;
@@ -360,9 +376,9 @@ export default {
       }
     },
     tabIndex(val) {
-      if (val == 0) {
+      if (val == 1) {
         this.action = "购票";
-      } else if (val == 1) {
+      } else if (val == 2) {
         this.action = "观展服务";
       } else {
         this.action = "工作证";
@@ -375,7 +391,6 @@ export default {
     "form.packageLevel": function(val) {
       this.GetServiceItems("car", val);
     }
-    
   },
   methods: {
     GetServiceItems(type, code) {
@@ -400,13 +415,80 @@ export default {
         }
       });
     },
-    changeTicket(){
+    isPhone: function(phone) {
+      if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone)) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    isIDCard: function(idnumber) {
+      if (!idnumber || idnumber.length < 0) return false;
+      if (idnumber.length == 15) return false;
+      if (idnumber.length != 18) return false;
+      idnumber = idnumber.toUpperCase();
+      if (!/^\d{17}([\dx])$/i.test(idnumber)) return false;
+      var address =
+        "11x22x35x44x53x12x23x36x45x54x13x31x37x46x61x14x32x41x50x62x15x33x42x51x63x21x34x43x52x64x65x71x81x82x91";
+      var twostr = idnumber.substr(0, 2);
+      if (address.indexOf(twostr) < 0) return false;
+      var year = idnumber.substr(6, 4);
+      if (year <= 1900 || year >= new Date().getFullYear()) return false;
+      var m = idnumber.substr(10, 2) * 1;
+      if (m < 1 || m > 12) return false;
+      var d = idnumber.substr(12, 2) * 1;
+      if (d < 1 || d > 31) return false;
+      var arrVarifyCode = "1,0,X,9,8,7,6,5,4,3,2".split(",");
+      var Wi = "7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2".split(",");
+      var sum = 0;
+      for (var i = 0; i < 17; i++) {
+        var num = idnumber.substr(i, 1) * 1;
+        sum += Wi[i] * 1 * num;
+      }
+      var n = sum % 11;
+      if (arrVarifyCode[n] != idnumber.substr(17, 1)) return false;
+      return true;
+    },
+    changeTicket() {
       var me = this;
-      this.ticketCost = this.exhibition.tickets.find(t=>t.ticket_code==me.form.TicketCode).ticket_cost;
+      this.ticketCost = this.exhibition.tickets.find(
+        t => t.ticket_code == me.form.TicketCode
+      ).ticket_cost;
     },
     submit() {
       var me = this;
-      if (this.tabIndex == 0) {
+      let _name = this.form.fullname,
+        _tel = this.form.mobile,
+        _idcard = this.form.Idcard,
+        cardtype = this.form.cardtype,
+        yanzhengma = this.form.yanzhengma;
+
+      if (_name.length < 2) {
+        Toast("请填写姓名！");
+        this.once = true;
+        return;
+      }
+      if (_idcard.length == 0) {
+        Toast("请填写证件号码！");
+        this.once = true;
+        return;
+      }
+      if (cardtype == 0 && (_idcard.length != 18 || !this.isIDCard(_idcard))) {
+        Toast("请填写正确的身份证号！");
+        this.once = true;
+        return;
+      }
+      if (_tel.length < 11 || !this.isPhone(_tel)) {
+        Toast("请填写有效的联系电话！");
+        this.once = true;
+        return;
+      }
+      if (!yanzhengma || yanzhengma.length < 4) {
+        Toast("请输入正确的验证码");
+        this.once = true;
+        return;
+      }
+      if (this.tabIndex == 1) {
         let params = {
           persons: JSON.stringify([
             {
@@ -432,8 +514,20 @@ export default {
               me.$store.state.token +
               "&ordercode=" +
               res.data.data.ordercode +
-              "&total_fee=0.01&exhibition_id=" +
-              me.exhibition.exhibition_code;
+              "&type=1&total_fee=0.01&exhibition_id=" +
+              me.exhibition.exhibition_code +
+              "&way=vip";
+          } else {
+            this.$router.push({
+              name: "Result",
+              params: {
+                result: "fail"
+              },
+              query: {
+                type: this.tabIndex,
+                message: res.data.message
+              }
+            });
           }
         });
       } else {
@@ -445,7 +539,8 @@ export default {
           client_phone: this.form.mobile,
           rec_company: this.form.company,
           jobname: this.form.duty,
-          pro_code: this.tabIndex==2?this.form.workcard:this.form.packageLevel,
+          pro_code:
+            this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
           buy_num: 1
         };
         this.$api.orderapi.CreateProductOrder(params).then(res => {
@@ -456,9 +551,23 @@ export default {
               "&ordercode=" +
               res.data.data.ordercode +
               "&type=" +
-              this.tabIndex+
-              "&total_fee="+res.data.data.money+"&exhibition_id=" +
-              me.exhibition.exhibition_code;
+              this.tabIndex +
+              "&total_fee=" +
+              res.data.data.money +
+              "&exhibition_id=" +
+              me.exhibition.exhibition_code +
+              "&way=vip";
+          } else {
+            this.$router.push({
+              name: "Result",
+              params: {
+                result: "fail"
+              },
+              query: {
+                type: this.tabIndex,
+                message: res.data.message
+              }
+            });
           }
         });
       }
@@ -466,7 +575,8 @@ export default {
   },
 
   components: {
-    airshowCarousel
+    airshowCarousel,
+    [Card.name]: Card
   },
   mounted() {
     var me = this;
@@ -482,7 +592,6 @@ export default {
       }
     });
     me.GetServiceItems("package", "FW1102");
-    me.GetServiceItems("workcard", "FW1101");
   }
 };
 </script>
