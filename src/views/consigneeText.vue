@@ -77,6 +77,11 @@
         <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
         <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意邮寄协议</a>
       </p>
+      
+
+      <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
+        <agreementPage :type="'mail'" @closeChoseBox="showAgreement=false" @confirm="agree" />
+      </van-popup>
       <van-popup v-model="showPicker" position="bottom">
         <van-area
           :area-list="areaList"
@@ -85,10 +90,6 @@
           @cancel="showPicker = false"
           @confirm="onConfirm"
         />
-      </van-popup>
-
-      <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
-        <agreementPage :type="'mail'" @closeChoseBox="showAgreement=false" @confirm="agree" />
       </van-popup>
     </div>
     <button type="button" id="submitBtn" @click="submit">确 认 邮 寄</button>

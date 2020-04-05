@@ -11,8 +11,8 @@ export default {
   },
   beforeRouteEnter: (to, from, next) => {
     if (to.query.token) {
-      sessionStorage.setItem("islogin", true);
-      sessionStorage.setItem("token", to.query.token); 
+      localStorage.setItem("islogin", true);
+      localStorage.setItem("token", to.query.token); 
       next(to.query.to);     
     } else {
       next(vm => {

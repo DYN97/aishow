@@ -275,6 +275,7 @@
                 text
                 style="width:80%"
                 bottom
+                v-model="form.yanzhengma"
                 small
                 :loading="YZMloading"
                 :disabled="YZMloading"
@@ -286,16 +287,14 @@
                 </template>
               </v-btn>
             </v-col>
-          </v-row>
-          <v-row height="46px" no-gutters>
-            <v-checkbox
-              v-model="lookUp"
-              value="1"
-              label="订票须知及免责协议"
-              type="checkbox"
-              required
-              style="margin-left:20px"
-            ></v-checkbox>
+          </v-row><v-row height="46px" no-gutters>
+            <p class="cCommonAgreeBox" sta="0">
+        <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
+        <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意邮寄协议</a>
+      </p>
+      
+
+      
           </v-row>
           <v-row justify="center">
             <v-col cols="8">
@@ -305,10 +304,14 @@
         </v-form>
       </div>
     </v-container>
+    <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
+        <agreementPage :type="'mianze'" @closeChoseBox="showAgreement=false" @confirm="agree" />
+      </van-popup>
   </div>
 </template>
 <script>
-import { Card,Toast } from "vant";
+import agreementPage from "../components/agreementPage";
+import { Card, Toast,Popup } from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
   name: "TicketIndex",
@@ -340,6 +343,8 @@ export default {
       ticketCost: 0,
       playPackages: [],
       packageLevels: [],
+         showAgreement:false,
+        agreementPass:false,
       carText: "",
       workcards: [],
       form: {
@@ -415,6 +420,10 @@ export default {
         }
       });
     },
+    agree() {
+      this.showAgreement = false;
+      this.agreementPass = true;
+    },
     isPhone: function(phone) {
       if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone)) {
         return false;
@@ -465,6 +474,11 @@ export default {
 
       if (_name.length < 2) {
         Toast("请填写姓名！");
+        this.once = true;
+        return;
+      }
+      if (!this.agreementPass) {
+        Toast("请阅读免责声明！");
         this.once = true;
         return;
       }
@@ -576,7 +590,9 @@ export default {
 
   components: {
     airshowCarousel,
-    [Card.name]: Card
+    agreementPage,
+    [Card.name]: Card,
+    [Popup.name]: Popup
   },
   mounted() {
     var me = this;
@@ -610,5 +626,21 @@ export default {
 .listbox {
   height: calc(100vh - 150px);
   overflow: auto;
+}
+.cCommonAgreeBox .agree-icon {
+  font-size: 18px;
+  padding: 0 8px 0 20px;
+  line-height: 20px;
+  vertical-align: text-bottom;
+  color: #999;
+}
+
+.iCblue {
+  color: #5eafee !important;
+}
+.cCommonAgreeBox a {
+  color: #888;
+  text-decoration: underline;
+  font-size: 14px;
 }
 </style>

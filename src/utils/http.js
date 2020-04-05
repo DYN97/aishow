@@ -11,6 +11,7 @@
   * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
   */
  const toOath = () => {
+     localStorage.setItem("islogin", false);
      router.replace({
          path: '/oath',
          query: {
@@ -28,12 +29,12 @@
      switch (status) {
          // 401: 未登录状态，跳转登录页
          case 401:
-            toOath();
+             toOath();
              break;
              // 403 token过期
              // 清除token并跳转登录页
          case 403:
-            toOath();
+             toOath();
              break;
              // 404请求不存在
          case 404:
