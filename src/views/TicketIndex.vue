@@ -47,7 +47,7 @@
                   v-for="item in playPackages"
                   :key="item.pro_code"
                   :value="item.pro_code"
-                >{{item.pro_name}}</option>
+                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
               </select>
             </v-col>
           </v-row>
@@ -92,7 +92,7 @@
                   v-for="item in exhibition.tickets"
                   :key="item.ticket_code"
                   :value="item.ticket_code"
-                >{{item.out_ticket_name}}</option>
+                >{{item.out_ticket_name+'(￥'+item.ticket_cost+')'}}</option>
               </select>
             </v-col>
           </v-row>
@@ -210,9 +210,9 @@
             </v-col>
           </v-row>
           <v-row height="46px" no-gutters>
-            <p class="cCommonAgreeBox" sta="0">
+            <p class="cCommonAgreeBox" sta="0" @click="agreementPass=!agreementPass">
         <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
-        <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意邮寄协议</a>
+        <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意{{xieyi}}协议</a>
       </p>
           </v-row>
           <v-row justify="center">
@@ -223,7 +223,7 @@
         </v-form>
       </div>
       <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
-        <agreementPage :type="'mianze'" @closeChoseBox="showAgreement=false" @confirm="agree" />
+        <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
       </van-popup>
     </v-container>
   </div>
@@ -236,7 +236,8 @@ export default {
   name: "TicketIndex",
   data() {
     return {
-      action: "订票",
+      action: "赠票",
+      xieyi:"赠票",
       imgs: [
         {
           src:
@@ -302,10 +303,13 @@ export default {
     tabIndex(val) {
       if (val == 0) {
         this.action = "赠票";
+        this.xieyi = "赠票";
       } else if (val == 1) {
         this.action = "购票";
+        this.xieyi = "购票";
       } else {
         this.action = "观展服务";
+        this.xieyi = "购买";
       }
     },
     "form.playPackage": function(val) {

@@ -20,7 +20,7 @@
     <div class="bottomTip">
       <p v-for="(p,index) in tip" :key="index">{{p}}</p>
     </div>
-    <button id='agreePage-agreeBtn' @click="onPass">同 意 协 议</button>
+    <button id="agreePage-agreeBtn" @click="onPass">同 意 协 议</button>
   </div>
 </template>
 <script>
@@ -37,11 +37,7 @@ export default {
     };
   },
   mounted() {
-    let agree = agreement[this.type];
-    this.title = agree.title;
-    this.h1 = agree.h1;
-    this.tip = agree.tip;
-    this.inner = agree.inner;
+    this.reloadPage();
   },
   methods: {
     onPass() {
@@ -49,6 +45,25 @@ export default {
     },
     onClose() {
       this.$emit("closeChoseBox");
+    },
+    reloadPage() {
+      let typecode= "";
+      switch(this.type){
+        case "赠票":typecode= "zengpiao";break;
+        case "订票":typecode= "goupiao";break;
+        case "购票":typecode= "goupiao";break;
+        case "购买":typecode= "goumai";break;
+      }
+      let agree = agreement[typecode];
+      this.title = agree.title;
+      this.h1 = agree.h1;
+      this.tip = agree.tip;
+      this.inner = agree.inner;
+    }
+  },
+  watch: {
+    type() {
+      this.reloadPage();
     }
   }
 };

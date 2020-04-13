@@ -115,7 +115,7 @@
                   v-for="item in exhibition.tickets"
                   :key="item.ticket_code"
                   :value="item.ticket_code"
-                >{{item.out_ticket_name}}</option>
+                >{{item.out_ticket_name+'(￥'+item.ticket_cost+')'}}</option>
               </select>
             </v-col>
           </v-row>
@@ -125,7 +125,7 @@
               style="font-size: 16px;color: #666;text-indent: 20px;"
               cols="4"
               for="doc-ipt-3"
-            >证件类型:</v-col>
+            >工作证:</v-col>
             <v-col align-self="center" cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.workcard">
                 <option
@@ -287,14 +287,12 @@
                 </template>
               </v-btn>
             </v-col>
-          </v-row><v-row height="46px" no-gutters>
-            <p class="cCommonAgreeBox" sta="0">
-        <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
-        <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意邮寄协议</a>
-      </p>
-      
-
-      
+          </v-row>
+          <v-row height="46px" no-gutters>
+            <p class="cCommonAgreeBox" sta="0" @click="agreementPass = !agreementPass">
+              <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
+              <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意{{xieyi}}协议</a>
+            </p>
           </v-row>
           <v-row justify="center">
             <v-col cols="8">
@@ -305,19 +303,20 @@
       </div>
     </v-container>
     <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
-        <agreementPage :type="'mianze'" @closeChoseBox="showAgreement=false" @confirm="agree" />
-      </van-popup>
+      <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
+    </van-popup>
   </div>
 </template>
 <script>
 import agreementPage from "../components/agreementPage";
-import { Card, Toast,Popup } from "vant";
+import { Card, Toast, Popup } from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
   name: "TicketIndex",
   data() {
     return {
-      action: "订票",
+      action: "购票",
+      xieyi:"购票",
       imgs: [
         {
           src:
@@ -343,8 +342,8 @@ export default {
       ticketCost: 0,
       playPackages: [],
       packageLevels: [],
-         showAgreement:false,
-        agreementPass:false,
+      showAgreement: false,
+      agreementPass: false,
       carText: "",
       workcards: [],
       form: {
@@ -381,12 +380,16 @@ export default {
       }
     },
     tabIndex(val) {
+      this.agreementPass =false;
       if (val == 1) {
         this.action = "购票";
+        this.xieyi = "购票";
       } else if (val == 2) {
         this.action = "观展服务";
+        this.xieyi = "购买";
       } else {
         this.action = "工作证";
+        this.xieyi = "购买";
       }
     },
     "form.playPackage": function(val) {
@@ -608,6 +611,7 @@ export default {
       }
     });
     me.GetServiceItems("package", "FW1102");
+    me.GetServiceItems("workcard", "FW1101");
   }
 };
 </script>
