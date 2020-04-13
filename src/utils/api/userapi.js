@@ -3,11 +3,11 @@
  //  import qs from 'qs'; // 根据需求是否导入qs模块
 
  axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '/service/' : '/api';
-
+ const mode =  process.env.NODE_ENV === 'production' ? 'wx' : 'test';
  const userapi = {
      // 登陆    
      oath(curl) {
-         return axios.get(`upms/oath.aspx?curl=` + curl);
+         return axios.get(`upms/oath.aspx?curl=` + curl+"&mode="+mode);
      },
      // 获取权限  
 

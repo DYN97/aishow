@@ -30,7 +30,7 @@
               style="font-size: 16px;color: #666;text-indent: 20px;"
               cols="4"
               for="doc-ipt-3"
-            > <router-link to="/OrderDetail">订单详情</router-link></v-col>
+            > <router-link to="/MailList">邮寄列表</router-link></v-col>
           </v-row>
     
   </div>
