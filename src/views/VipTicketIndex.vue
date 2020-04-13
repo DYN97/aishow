@@ -275,6 +275,7 @@
                 text
                 style="width:80%"
                 bottom
+                v-model="form.yanzhengma"
                 small
                 :loading="YZMloading"
                 :disabled="YZMloading"

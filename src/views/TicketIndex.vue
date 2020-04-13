@@ -197,6 +197,7 @@
                 style="width:80%"
                 bottom
                 small
+                v-model="form.yanzhengma"
                 :loading="YZMloading"
                 :disabled="YZMloading"
                 @click="YZMloading = true"
