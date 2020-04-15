@@ -24,10 +24,10 @@
           <v-row height="46px" no-gutters>
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
-            >观展日期:</v-col>
+            ><i class="iconfont">&#xe650;</i>观展日期:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.applyDate">
                 <option v-for="date in exhibition.days" :key="date">{{date}}</option>
@@ -37,7 +37,7 @@
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
             >套餐类型:</v-col>
@@ -54,7 +54,7 @@
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
             >套餐档位:</v-col>
@@ -71,7 +71,7 @@
           <v-row no-gutters v-if="tabIndex==2">
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
             >单独包车:</v-col>
@@ -82,7 +82,7 @@
           <v-row height="46px" no-gutters v-if="tabIndex==1">
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
             >门票类型:</v-col>
@@ -99,11 +99,11 @@
           <v-row height="46px" no-gutters>
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
             >
-              <label v-html="'姓　　名:'"></label>
+              <i class="iconfont">&#xe63f;</i><label v-html="'姓　　名:'"></label>
             </v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
@@ -120,10 +120,10 @@
           <v-row no-gutters>
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
-            >证件类型:</v-col>
+            ><i class="iconfont">&#xe690;</i>证件类型:</v-col>
             <v-col align-self="center" cols="8" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.cardtype">
                 <option value="0">身份证</option>
@@ -135,10 +135,10 @@
           <v-row no-gutters>
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
-            >证件号码:</v-col>
+            ><i class="iconfont">&#xe614;</i>证件号码:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
                 v-model="form.cardnum"
@@ -154,10 +154,10 @@
           <v-row no-gutters>
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
-            >联系电话:</v-col>
+            ><i class="iconfont">&#xe659;</i>联系电话:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
               <v-text-field
                 maxlength="11"
@@ -175,10 +175,10 @@
           <v-row height="46px" no-gutters>
             <v-col
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 20px;"
+              style="font-size: 16px;color: #666;text-indent: 10px;"
               cols="4"
               for="doc-ipt-3"
-            >验证码:</v-col>
+            ><i class="iconfont">&#xe605;</i>验证码:</v-col>
             <v-col cols="4" class="am-u-sm-8 list-right">
               <v-text-field
                 style="padding-bottom:12px"
@@ -571,4 +571,14 @@ export default {
   height: calc(100vh - 150px);
   overflow: auto;
 }
+  .v-subheader{
+    background: #eef7ff;
+    color: #333;
+  }
+  .listbox .iconfont{
+    color: #0f9ae0;
+    font-size: 16px;
+    margin-right: 4px;
+    font-weight: bold;
+  }
 </style>
