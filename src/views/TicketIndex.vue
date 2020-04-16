@@ -8,9 +8,9 @@
         <v-tab :key="1" @click="tabIndex=1">购买门票</v-tab>
         <v-tab :key="2" @click="tabIndex=2">观展套餐</v-tab>
       </v-tabs>
-      <div style="width:100%;border:1px #ccc solid;">
+      <div style="width:100%">
         <v-subheader isnet>{{action}}基本信息：</v-subheader>
-        <div v-if="tabIndex==2" style="margin-bottom:20px">
+        <div v-if="tabIndex==2" style="margin-bottom:10px">
           <van-card
             v-for="item in playPackages"
             :key="item.pro_code"
@@ -22,26 +22,24 @@
         </div>
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            ><i class="iconfont">&#xe650;</i>观展日期:</v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont">&#xe650;</i>观展日期:</div>
+            <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.applyDate">
                 <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
-            </v-col>
+            </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            >套餐类型:</v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型:</div>
+            <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.playPackage">
                 <option
                   v-for="item in playPackages"
@@ -49,16 +47,15 @@
                   :value="item.pro_code"
                 >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
               </select>
-            </v-col>
+            </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            >套餐档位:</v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位:</div>
+            <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.packageLevel">
                 <option
                   v-for="item in packageLevels"
@@ -66,27 +63,25 @@
                   :value="item.pro_code"
                 >{{item.pro_name}}</option>
               </select>
-            </v-col>
+            </div>
           </v-row>
           <v-row no-gutters v-if="tabIndex==2">
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            >单独包车:</v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车:</div>
+            <div class="am-u-sm-8 list-right" style="margin-top: 8px">
               <v-checkbox v-model="form.needCar" :label="carText" type="checkbox" required></v-checkbox>
-            </v-col>
+            </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            >门票类型:</v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont" style="font-size: 18px;">&#xe61c;</i>门票类型:</div>
+            <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.TicketCode">
                 <option
                   v-for="item in exhibition.tickets"
@@ -94,18 +89,17 @@
                   :value="item.ticket_code"
                 >{{item.out_ticket_name+'(￥'+item.ticket_cost+')'}}</option>
               </select>
-            </v-col>
+            </div>
           </v-row>
           <v-row height="46px" no-gutters>
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
             >
               <i class="iconfont">&#xe63f;</i><label v-html="'姓　　名:'"></label>
-            </v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            </div>
+            <div class="am-u-sm-8 list-right">
               <v-text-field
                 class="mainForm"
                 v-model="form.fullname"
@@ -115,31 +109,29 @@
                 single-line
                 regular
               ></v-text-field>
-            </v-col>
+            </div>
           </v-row>
           <v-row no-gutters>
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            ><i class="iconfont">&#xe690;</i>证件类型:</v-col>
-            <v-col align-self="center" cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont">&#xe690;</i>证件类型:</div>
+            <div align-self="center" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.cardtype">
                 <option value="0">身份证</option>
                 <option value="1">护照</option>
                 <option value="2">港澳通行证</option>
               </select>
-            </v-col>
+            </div>
           </v-row>
           <v-row no-gutters>
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            ><i class="iconfont">&#xe614;</i>证件号码:</v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont">&#xe614;</i>证件号码:</div>
+            <div class="am-u-sm-8 list-right">
               <v-text-field
                 v-model="form.cardnum"
                 class="mainForm"
@@ -149,16 +141,15 @@
                 single-line
                 regular
               ></v-text-field>
-            </v-col>
+            </div>
           </v-row>
           <v-row no-gutters>
-            <v-col
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            ><i class="iconfont">&#xe659;</i>联系电话:</v-col>
-            <v-col cols="8" class="am-u-sm-8 list-right">
+            ><i class="iconfont">&#xe659;</i>联系电话:</div>
+            <div class="am-u-sm-8 list-right">
               <v-text-field
                 maxlength="11"
                 onkeyup="this.value=this.value.replace(/\D/g,'')"
@@ -170,16 +161,15 @@
                 single-line
                 regular
               ></v-text-field>
-            </v-col>
+            </div>
           </v-row>
-          <v-row height="46px" no-gutters>
-            <v-col
+          <v-row height="46px" no-gutters style="position: relative">
+            <div
               align-self="center"
-              style="font-size: 16px;color: #666;text-indent: 10px;"
-              cols="4"
+              class="tag-name"
               for="doc-ipt-3"
-            ><i class="iconfont">&#xe605;</i>验证码:</v-col>
-            <v-col cols="4" class="am-u-sm-8 list-right">
+            ><i class="iconfont">&#xe605;</i>验证码:</div>
+            <div class="am-u-sm-8 list-right">
               <v-text-field
                 style="padding-bottom:12px"
                 v-model="form.yanzhengma"
@@ -190,33 +180,33 @@
                 single-line
                 regular
               ></v-text-field>
-            </v-col>
-            <v-col cols="4" class="am-u-sm-8 list-right" align-self="center">
+            </div>
+            <div class="am-u-sm-8" align-self="center" style="position: absolute;right: 20px;bottom: 18px;">
               <v-btn
                 text
-                style="width:80%"
                 bottom
                 small
                 v-model="form.yanzhengma"
                 :loading="YZMloading"
                 :disabled="YZMloading"
                 @click="YZMloading = true"
+                class="get-code"
               >
-                获取手机验证码
+                获取验证码
                 <template v-slot:loader>
-                  <span>重新发送({{CountDown}})</span>
+                  <span style="color: rgba(255,255,255,0.5) !important;">重新发送({{CountDown}})</span>
                 </template>
               </v-btn>
-            </v-col>
+            </div>
           </v-row>
-          <v-row height="46px" no-gutters>
+          <v-row height="46px" no-gutters class="agree-box">
             <p class="cCommonAgreeBox" sta="0" @click="agreementPass=!agreementPass">
         <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
         <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意{{xieyi}}协议</a>
       </p>
           </v-row>
           <v-row justify="center">
-            <v-col cols="8">
+            <v-col cols="8" style="padding: 0 0 20px 0;">
               <v-btn block rounded color="primary" @click="submit" large dark>确认提交</v-btn>
             </v-col>
           </v-row>
@@ -540,9 +530,17 @@ export default {
 };
 </script>
 <style scoped>
+  .van-card__title{
+    color: #0f9ae0;
+    font-size: 14px;
+  }
+  .van-card__content{
+    padding: 10px 0 5px;
+  }
 .cCommonAgreeBox .agree-icon {
+  position: unset;
   font-size: 18px;
-  padding: 0 8px 0 20px;
+  padding: 0 8px 0 10px;
   line-height: 20px;
   vertical-align: text-bottom;
   color: #999;
@@ -566,19 +564,63 @@ export default {
 .mainForm {
   padding-bottom: 12px;
   width: 95%;
+  margin: 0;
+  padding-top: 8px;
 }
 .listbox {
   height: calc(100vh - 150px);
   overflow: auto;
 }
+.v-input{
+  margin: 0 !important;
+}
   .v-subheader{
     background: #eef7ff;
     color: #333;
   }
-  .listbox .iconfont{
+  .listbox .tag-name .iconfont{
+    /*position: absolute;*/
+    /*left: 5px;*/
+    /*top: 14px;*/
+    line-height: 16px;
     color: #0f9ae0;
     font-size: 16px;
-    margin-right: 4px;
     font-weight: bold;
+    margin-right: 5px;
+  }
+  .container{
+    width: calc(100% - 24px);
+    /* padding: 12px; */
+    box-shadow: 1px 1px 5px #ddd;
+    margin: 12px auto;
+    padding: 0;
+  }
+.agree-box{
+  border-top: #ddd solid 1px;
+  padding-top: 15px;
+}
+.tag-name{
+  position: relative;
+  font-size: 16px;
+  color: #666;
+  width: 120px;
+  height: 46px;
+  line-height: 46px;
+  overflow: hidden;
+  text-indent: 12px;
+}
+  .get-code{
+    background: #ff9000;
+    color: #FFF !important;
+    display: block;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 4px;
+    padding: 0 5px !important;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  .list-right{
+    width: calc(100% - 130px);
   }
 </style>
