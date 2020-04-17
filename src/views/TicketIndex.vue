@@ -205,7 +205,7 @@
         <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意{{xieyi}}协议</a>
       </p>
           </v-row>
-          <v-row justify="center">
+          <v-row justify="center" style="margin: 0">
             <v-col cols="8" style="padding: 0 0 20px 0;">
               <v-btn block rounded color="primary" @click="submit" large dark>确认提交</v-btn>
             </v-col>
@@ -594,6 +594,8 @@ export default {
     box-shadow: 1px 1px 5px #ddd;
     margin: 12px auto;
     padding: 0;
+    height: calc(100vh - 180px);
+    background: #fff;
   }
 .agree-box{
   border-top: #ddd solid 1px;
