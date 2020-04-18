@@ -82,7 +82,7 @@
               for="doc-ipt-3"
             ><i class="iconfont" style="font-size: 18px;">&#xe61c;</i>门票类型:</div>
             <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.TicketCode">
+              <select style="width:95%;height:46px" v-model="form.TicketCode" @change="changeTicket">
                 <option
                   v-for="item in exhibition.tickets"
                   :key="item.ticket_code"

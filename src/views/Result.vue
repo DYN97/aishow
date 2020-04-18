@@ -215,10 +215,10 @@ export default {
         me.$api.orderapi.GetOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
-            me.ticketDate = detail.ticket_date.substring(0, 10);
-            me.ticketType = "电子门票";
-            me.clientName = detail.client_name;
-            me.clientMobile = detail.client_phone;
+            me.ticketDate = detail.aticket_date.substring(0, 10);
+            me.ticketType = "赠票";
+            me.clientName = detail.aclient_name;
+            me.clientMobile = detail.aclient_phone;
           }
         });
 
@@ -229,7 +229,7 @@ export default {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.ticket_date.substring(0, 10);
-            me.ticketType = "电子门票";
+            me.ticketType = detail.bticket_name;
             me.clientName = detail.client_name;
             me.clientMobile = detail.client_phone;
           }

@@ -30,6 +30,9 @@ const orderapi = {
     },
     CreateMailOrder(params){
         return axios.post(`/newOrders/CreateMailOrder.aspx`,qs.stringify(params));
+    },
+    RefundMoney(detail_id){
+        return axios.get("/newOrders/RefundMoney.aspx?order_detail_id="+detail_id);
     }
     // 其他接口…………
 }

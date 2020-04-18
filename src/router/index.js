@@ -21,7 +21,7 @@
  const routes = [{
          path: '/ExhibitionList',
          name: 'ExhibitionList',
-         title:"展会列表",
+         title: "展会列表",
          component: ExhibitionList
      },
      {
@@ -32,7 +32,7 @@
      {
          path: '/TicketIndex/:exhibitionCode',
          name: 'TicketIndex',
-         title:"普通观众订票",
+         title: "普通观众订票",
          component: TicketIndex
      }, {
          path: "/oath",
@@ -45,42 +45,42 @@
      }, {
          path: "/Result/:result",
          name: "Result",
-         title:"操作结果",
+         title: "操作结果",
          component: Result
      }, {
          path: "/Invitation/:exhibitionCode",
          name: "Invitation",
-         title:"邀请码",
+         title: "邀请码",
          component: Invitation
      }, {
          path: "/VipTicketIndex/:exhibitionCode",
          name: "VipTicketIndex",
-         title:"Vip观众订票",
+         title: "Vip观众订票",
          component: VipTicketIndex
      }, {
          path: "/OrderList",
          name: "OrderList",
-         title:"订单列表",
+         title: "订单列表",
          component: OrderList
      }, {
          path: "/MailList",
          name: "MailList",
-         title:"邮寄列表",
+         title: "邮寄列表",
          component: MailList
      }, {
          path: "/ConsigneeText",
          name: "ConsigneeText",
-         title:"申请邮寄",
+         title: "申请邮寄",
          component: ConsigneeText
      }, {
          path: "/OrderDetail/:id",
          name: "OrderDetail",
-         title:"订单详情",
+         title: "订单详情",
          component: OrderDetail
      }, {
          path: "/MailDetail/:id",
          name: "MailDetail",
-         title:"快递详情",
+         title: "快递详情",
          component: MailDetail
      }
 
@@ -107,27 +107,67 @@
      }
 
  });
- router.afterEach((transition)=>{
-    console.log(transition);
-    setTitle("sjisajdo");
+ router.afterEach((transition) => {
+     let title = "聚航 Airshow"
+     let type = transition.query.type ? transition.query.type : "普通";
+     let result = transition.params? transition.params.result:"";
+     switch (transition.name) {
+         case "ExhibitionList":
+             
+             title = type + "展会列表";
+             break;
+         case "TicketIndex":
+             title = "普通观众订票";
+             break;
+         case "VipTicketIndex":
+             title = "Vip观众订票";
+             break;
+         case "Invitation":
+             title = "邀请码";
+             break;
+         case "Result":
+             
+             if (result == "success") {
+                 title = "操作成功";
+             } else {
+                 title = "操作失败";
+             }
+             break;
+         case "OrderList":
+             title = "订单列表";
+             break;
+         case "MailList":
+             title = "邮寄列表";
+             break;
+         case "ConsigneeText":
+             title = "申请邮寄";
+             break;
+         case "OrderDetail":
+             title = "订单详情";
+             break;
+         case "MailDetail":
+             title = "快递详情";
+             break;
+     }
+     setTitle(title);
  });
 
  export default router;
 
 
  function setTitle(title) {
-    document.title = title
-    var mobile = navigator.userAgent.toLowerCase();
-    if (/iphone|ipad|ipod/.test(mobile)) {
-      var iframe = document.createElement('iframe');
-      iframe.style.display = 'none'
-      var iframeCallback = function () {
-        setTimeout(function () {
-          iframe.removeEventListener('load', iframeCallback);
-          document.body.removeChild(iframe);
-        }, 0);
-      }
-      iframe.addEventListener('load', iframeCallback);
-      document.body.appendChild(iframe);
-    }
-  }
+     document.title = title
+     var mobile = navigator.userAgent.toLowerCase();
+     if (/iphone|ipad|ipod/.test(mobile)) {
+         var iframe = document.createElement('iframe');
+         iframe.style.display = 'none'
+         var iframeCallback = function () {
+             setTimeout(function () {
+                 iframe.removeEventListener('load', iframeCallback);
+                 document.body.removeChild(iframe);
+             }, 0);
+         }
+         iframe.addEventListener('load', iframeCallback);
+         document.body.appendChild(iframe);
+     }
+ }
