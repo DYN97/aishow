@@ -550,6 +550,7 @@ export default {
       } else {
         let params = {
           invite_code: this.form.invite_code,
+          exhibition_date: this.form.applyDate,
           client_name: this.form.fullname,
           client_idcard: this.form.cardnum,
           cliend_cardtype: this.form.cardtype,

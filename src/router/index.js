@@ -110,10 +110,10 @@
  router.afterEach((transition) => {
      let title = "聚航 Airshow"
      let type = transition.query.type ? transition.query.type : "普通";
-     let result = transition.params? transition.params.result:"";
+     let result = transition.params ? transition.params.result : "";
      switch (transition.name) {
          case "ExhibitionList":
-             
+
              title = type + "展会列表";
              break;
          case "TicketIndex":
@@ -126,7 +126,6 @@
              title = "邀请码";
              break;
          case "Result":
-             
              if (result == "success") {
                  title = "操作成功";
              } else {
@@ -161,8 +160,8 @@
      if (/iphone|ipad|ipod/.test(mobile)) {
          var iframe = document.createElement('iframe');
          iframe.style.display = 'none'
-         var iframeCallback = function () {
-             setTimeout(function () {
+         var iframeCallback = function() {
+             setTimeout(function() {
                  iframe.removeEventListener('load', iframeCallback);
                  document.body.removeChild(iframe);
              }, 0);

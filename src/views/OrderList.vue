@@ -19,7 +19,7 @@
                   <v-list-item-title style="white-space:unset;font-size:16px">
                     <v-row no-gutters justify="space-between">
                       <v-col cols="3" style="color: #0f9ae0">{{childItem.order_type_name}}</v-col>
-                      <v-col style="text-align:center" cols="7">{{childItem.ticket_date}}</v-col>
+                      <v-col style="text-align:center" cols="7">{{childItem.ticket_date.subtring(0,10)}}</v-col>
                       <v-col cols="2" class="list-sta">{{childItem.status_name}}</v-col>
                     </v-row>
                   </v-list-item-title>

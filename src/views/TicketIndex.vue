@@ -450,7 +450,8 @@ export default {
                   result: "success"
                 },
                 query: {
-                  type: 0
+                  type: 0,
+                  order_code:res.data.data.ordercode
                 }
               });
             } else {
@@ -488,6 +489,7 @@ export default {
           cliend_cardtype: this.form.cardtype,
           client_phone: this.form.mobile,
           pro_code: this.form.packageLevel,
+          exhibition_date: this.form.applyDate,
           buy_num: 1
         };
 
