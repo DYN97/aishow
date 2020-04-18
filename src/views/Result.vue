@@ -228,10 +228,10 @@ export default {
         me.$api.orderapi.GetOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
-            me.ticketDate = detail.ticket_date.substring(0, 10);
+            me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = detail.bticket_name;
-            me.clientName = detail.client_name;
-            me.clientMobile = detail.client_phone;
+            me.clientName = detail.aclient_name;
+            me.clientMobile = detail.aclient_phone;
           }
         });
 
@@ -241,7 +241,7 @@ export default {
         me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
-            // me.ticketDate = detail.ticket_date.substring(0,10);
+             me.ticketDate = detail.exhibition_date.substring(0,10);
 
             me.packageType = detail.parentname;
             me.packageLevel = detail.pro_name;
