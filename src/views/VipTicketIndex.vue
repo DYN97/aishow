@@ -275,7 +275,7 @@
                 text
                 style="width:80%"
                 bottom
-                v-model="form.yanzhengma"
+                
                 small
                 :loading="YZMloading"
                 :disabled="YZMloading"
@@ -468,7 +468,7 @@ export default {
       var me = this;
       let _name = this.form.fullname,
         _tel = this.form.mobile,
-        _idcard = this.form.Idcard,
+        _idcard = this.form.cardnum,
         cardtype = this.form.cardtype,
         yanzhengma = this.form.yanzhengma;
 

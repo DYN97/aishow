@@ -87,7 +87,7 @@
               for="doc-ipt-3"
             >门票类型:</v-col>
             <v-col cols="8" class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.TicketCode">
+              <select style="width:95%;height:46px" v-model="form.TicketCode" @change="changeTicket">
                 <option
                   v-for="item in exhibition.tickets"
                   :key="item.ticket_code"
@@ -197,7 +197,6 @@
                 style="width:80%"
                 bottom
                 small
-                v-model="form.yanzhengma"
                 :loading="YZMloading"
                 :disabled="YZMloading"
                 @click="YZMloading = true"
@@ -388,11 +387,17 @@ export default {
       if (arrVarifyCode[n] != idnumber.substr(17, 1)) return false;
       return true;
     },
+    changeTicket() {
+      var me = this;
+      this.ticketCost = this.exhibition.tickets.find(
+        t => t.ticket_code == me.form.TicketCode
+      ).ticket_cost;
+    },
     submit() {
       var me = this;
       let _name = this.form.fullname,
         _tel = this.form.mobile,
-        _idcard = this.form.Idcard,
+        _idcard = this.form.cardnum,
         cardtype = this.form.cardtype,
         yanzhengma = this.form.yanzhengma;
 
