@@ -3,19 +3,19 @@ const path = require("path");
 function resolve(dir) {
   return path.join(__dirname, "./", dir);
 }
-let projectName = "pages";
+
 // cdn预加载使用
 
 // 是否使用gzip
-const productionGzip = true;
+
 // 需要gzip压缩的文件后缀
-const productionGzipExtensions = ["js", "css"];
+
 let prod =
   process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test";
 module.exports = {
-  outputDir:'../../',
-  publicPath:"/mobile/newapp/",
-  assetsDir: prod?"static":"static",
+  outputDir: '../../',
+  publicPath: "/mobile/newapp/",
+  assetsDir: prod ? "static" : "static",
   productionSourceMap: false,
   chainWebpack: config => {
     config.resolve.alias
@@ -28,31 +28,31 @@ module.exports = {
     // .set("@api", resolve("src/api"))
     // .set("@utils", resolve("src/utils"));
   },
-    "transpileDependencies": [
-        "vuetify"
-    ],
-    configureWebpack: config => {
-        var myConfig = {};
-        if (process.env.NODE_ENV == "development") {
-            myConfig.devServer = {
-                port: 8902,
-                proxy: {
-                    '/api': {
-                        target: 'http://59.110.175.131:1111/service',
-                        changeOrigin: true,
-                        pathRewrite: {
-                            '^/api': '/'
-                        }
-                    }
-                }
+  "transpileDependencies": [
+    "vuetify"
+  ],
+  configureWebpack: () => {
+    var myConfig = {};
+    if (process.env.NODE_ENV == "development") {
+      myConfig.devServer = {
+        port: 8902,
+        proxy: {
+          '/api': {
+            target: 'http://59.110.175.131:1111/service',
+            changeOrigin: true,
+            pathRewrite: {
+              '^/api': '/'
             }
-
-
+          }
         }
-        return myConfig;
-
-
+      }
 
 
     }
+    return myConfig;
+
+
+
+
+  }
 }

@@ -224,7 +224,7 @@ export default {
 
         break;
       case "1":
-        me.actionName = "门票购买";
+        me.actionName = "门票付款";
         me.$api.orderapi.GetOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];

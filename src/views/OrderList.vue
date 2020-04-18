@@ -1,7 +1,6 @@
 <template>
   <div>
     <airshowCarousel :type="14"></airshowCarousel>
-
     <!-- <v-tabs grow v-model="tabIndex">
         <v-tab :key="0" @click="tabIndex=0">门票</v-tab>
         <v-tab :key="1" @click="tabIndex=1">观展套餐</v-tab>
@@ -19,9 +18,9 @@
                 <v-list-item-content style>
                   <v-list-item-title style="white-space:unset;font-size:16px">
                     <v-row no-gutters justify="space-between">
-                      <v-col cols="3">{{childItem.order_type_name}}</v-col>
+                      <v-col cols="3" style="color: #0f9ae0">{{childItem.order_type_name}}</v-col>
                       <v-col style="text-align:center" cols="7">{{childItem.ticket_date}}</v-col>
-                      <v-col cols="2">{{childItem.status_name}}</v-col>
+                      <v-col cols="2" class="list-sta">{{childItem.status_name}}</v-col>
                     </v-row>
                   </v-list-item-title>
                   <v-list-item-subtitle>
@@ -105,4 +104,23 @@ export default {
   height: calc(100vh - 150px);
   overflow: auto;
 }
+.container{
+  background: #fff;
+}
+fieldset{
+  background: #fff;
+  margin-bottom: 20px;
+}
+legend{
+  color: #ff9000;
+  padding: 0 10px;
+}
+  .list-sta{
+    background: rgb(15, 154, 224);
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 2px;
+    color: #fff;
+  }
 </style>

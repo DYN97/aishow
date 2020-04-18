@@ -9,7 +9,7 @@
             <a v-if="childItem.complate" @click="toMailDetail(childItem.mail_serial_num)">
               <div class="listRight">
                 <div class="text-row">
-                  <div :class="'sta cFRight '+childItem.class">{{childItem.status_name}}</div>
+                  <div :class="'sta cFRight '+childItem.class" class="list-sta">{{childItem.status_name}}</div>
                   <span class="name">{{childItem.client_name}}</span>
                 </div>
                 <div class="text-row">
@@ -28,7 +28,7 @@
             >
               <i class="iconfont left-icon">{{childItem.checked?'&#xe60a;':'&#xe6d0;'}}</i>
               <div class="text-row">
-                <div :class="'sta cFRight '+childItem.class">{{childItem.status_name}}</div>
+                <div :class="'sta cFRight '+childItem.class" class="list-sta">{{childItem.status_name}}</div>
                 <span class="name">{{childItem.client_name}}</span>
               </div>
               <div class="text-row">
@@ -114,10 +114,20 @@ export default {
 };
 </script>
 <style scoped>
+  fieldset{
+    background: #fff;
+    margin: 10px 10px 30px;
+  }
+
+  legend{
+    color: #ff9000;
+    padding: 0 10px;
+  }
 .listBox {
   height: calc(100vh - 150px);
   overflow: auto;
   padding-bottom: 50px;
+  background: #fff;
 }
 .cFRight {
   float: right;
@@ -143,7 +153,7 @@ export default {
   font-size: 1.1rem;
   padding-right: 4%;
   line-height: 40px;
-  color: #b9b9b9;
+  color: #0f9ae0;
 }
 .mailList li.on .left-icon {
   color: #5eafee;
@@ -187,4 +197,14 @@ export default {
   font-size: 18px;
   text-align: center;
 }
+
+  .list-sta{
+    background: rgb(15, 154, 224);
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 2px;
+    color: #fff;
+    padding: 0 10px;
+  }
 </style>
