@@ -7,8 +7,8 @@
         <v-tab :key="2" @click="tabIndex=2">服务产品</v-tab>
     </v-tabs>
     <div style="width:100%;border:1px #ccc solid;" class="listbox">
-      <v-container>
-        <fieldset v-for="item in items" :key="item.exhibition_name">
+      <v-container v-if="tabIndex==0">
+        <fieldset v-for="item in ticketitems" :key="item.exhibition_name" >
           <legend style="margin-left:20px">{{item.exhibition_name}}</legend>
 
           <v-list three-line>
@@ -19,7 +19,65 @@
                   <v-list-item-title style="white-space:unset;font-size:16px">
                     <v-row no-gutters justify="space-between">
                       <v-col cols="3" style="color: #0f9ae0">{{childItem.order_type_name}}</v-col>
-                      <v-col style="text-align:center" cols="7">{{childItem.ticket_date.subtring(0,10)}}</v-col>
+                      <v-col style="text-align:center" cols="7">{{childItem.ticket_date}}</v-col>
+                      <v-col cols="2" class="list-sta">{{childItem.status_name}}</v-col>
+                    </v-row>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <v-row no-gutters justify="space-between">
+                      <v-col cols="2">{{childItem.client_name}}</v-col>
+                      <v-col style="text-align:center" cols="7">{{childItem.client_idcard}}</v-col>
+                      <v-col cols="2">￥{{childItem.ticket_cost}}</v-col>
+                    </v-row>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </fieldset>
+      </v-container>
+       <v-container v-else-if="tabIndex==1">
+        <fieldset v-for="item in carditems" :key="item.exhibition_name" >
+          <legend style="margin-left:20px">{{item.exhibition_name}}</legend>
+
+          <v-list three-line>
+            <template v-for="(childItem, index) in item.list">
+              <v-divider v-if="index>0" :key="index"></v-divider>
+              <v-list-item :key="childItem.order_detail_id" @click="toOrderDetail(childItem.order_detail_id)">
+                <v-list-item-content style>
+                  <v-list-item-title style="white-space:unset;font-size:16px">
+                    <v-row no-gutters justify="space-between">
+                      <v-col cols="3" style="color: #0f9ae0">{{childItem.order_type_name}}</v-col>
+                      <v-col style="text-align:center" cols="7">{{childItem.ticket_date}}</v-col>
+                      <v-col cols="2" class="list-sta">{{childItem.status_name}}</v-col>
+                    </v-row>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <v-row no-gutters justify="space-between">
+                      <v-col cols="2">{{childItem.client_name}}</v-col>
+                      <v-col style="text-align:center" cols="7">{{childItem.client_idcard}}</v-col>
+                      <v-col cols="2">￥{{childItem.ticket_cost}}</v-col>
+                    </v-row>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </fieldset>
+      </v-container>
+      <v-container v-else>
+        <fieldset v-for="item in sqitems" :key="item.exhibition_name" >
+          <legend style="margin-left:20px">{{item.exhibition_name}}</legend>
+
+          <v-list three-line>
+            <template v-for="(childItem, index) in item.list">
+              <v-divider v-if="index>0" :key="index"></v-divider>
+              <v-list-item :key="childItem.order_detail_id" @click="toOrderDetail(childItem.order_detail_id)">
+                <v-list-item-content style>
+                  <v-list-item-title style="white-space:unset;font-size:16px">
+                    <v-row no-gutters justify="space-between">
+                      <v-col cols="3" style="color: #0f9ae0">{{childItem.order_type_name}}</v-col>
+                      <v-col style="text-align:center" cols="7">{{childItem.ticket_date}}</v-col>
                       <v-col cols="2" class="list-sta">{{childItem.status_name}}</v-col>
                     </v-row>
                   </v-list-item-title>
@@ -58,7 +116,10 @@ export default {
           isguanggao: false
         }
       ],
-      items:[]
+      ticketitems:[],
+      sqitems:[],
+      carditems:[],
+      tabIndex:0
     };
   },
   watch: {
@@ -66,9 +127,11 @@ export default {
   },
   mounted() {
     var me = this ;
-    me.$api.orderapi.GetOrderList("").then(res=>{
+    me.$api.orderapi.GetOrderList0424("").then(res=>{
       if(res.data.statusCode=="200"){
-        me.items = res.data.data.list;
+        me.ticketitems = res.data.data.ticketlist;
+        me.sqitems = res.data.data.sqlist;
+        me.carditems = res.data.data.cardlist;
       }
     });
   },
@@ -80,6 +143,14 @@ export default {
           id:detail_id
         }
       });
+    },
+    GetStatusName(type,status){
+      switch(status){
+        case "0":return "待审核";
+        case "1":return type=="ticket"?"申请失败": "待审核";
+        case "2":return "待领取";
+        case "3":return "已领取";
+      }
     }
     
   },

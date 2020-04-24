@@ -25,6 +25,9 @@ const orderapi = {
     GetOrderList(status){
         return axios.get("/newOrders/GetOrderList.aspx?status="+status);
     },
+    GetOrderList0424(status){
+        return axios.get("/newOrders/GetOrderList0424.aspx?status="+status);
+    },
     GetOrderDetail(detail_id){
         return axios.get("/newOrders/GetOrderDetaile.aspx?detail_id="+detail_id);
     },

@@ -4,57 +4,48 @@
     <ul class="detailList listbox">
       <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
       <li class="clearfix">
-        <b class="name" v-html="'状　　态:'"></b>
-        <div class="text sta-content" v-html="statusText"></div>
+        <b class="name">门票类型</b>
+        <span class="text">电子门票</span>
+      </li>
+      <li class="clearfix" >
+        <vue-qr :text="qrurl" :margin="0" colorDark="#000000" colorLight="#fff"  :logoScale="0.3" :size="180" style="margin-left:50px"></vue-qr>
       </li>
       <li class="clearfix">
-        <b class="name">展会名称:</b>
-        <span class="text">{{exhibition_name}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name" v-html="'申请人　:'"></b>
-        <span class="text">{{client_name}}</span>
-      </li>
-       <li class="clearfix">
-        <b class="name">证件类型:</b>
-        <span class="text">{{client_cardtype}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">证件号码:</b>
-        <span class="text">{{client_idcard}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">联系电话:</b>
-        <span class="text">{{client_phone}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">门票日期:</b>
+        <b class="name">门票日期</b>
         <span class="text">{{ticket_date}}</span>
       </li>
       <li class="clearfix">
-        <b class="name">门票类型:</b>
-        <span class="text">{{order_type_name}}</span>
+        <b class="name" v-html="'申请人　'"></b>
+        <span class="text">{{client_name}}</span>
       </li>
       <li class="clearfix">
-        <b class="name">支付金额:</b>
+        <b class="name">{{client_cardtype}}</b>
+        <span class="text">{{client_idcard}}</span>
+      </li>
+      <li class="clearfix">
+        <b class="name">联系电话</b>
+        <span class="text">{{client_phone}}</span>
+      </li>
+      <li class="clearfix">
+        <b class="name">支付金额</b>
         <span class="text">{{ticket_cost}}元</span>
       </li>
       <li class="clearfix">
-        <b class="name">申请时间:</b>
-        <span class="text">{{apply_time}}</span>
+        <b class="name">订单状态</b>
+        <span class="text">{{statusText}}</span>
       </li>
     </ul>
     <ul class="detailPersonList" v-if="ismail&&apply_status==3">
       <li class="clearfix">
-        <b class="name">领取方式:</b>
+        <b class="name">领取方式</b>
         <span class="text">{{receive_type_name}}</span>
       </li>
       <li class="clearfix">
-        <b class="name">领取时间:</b>
+        <b class="name">领取时间</b>
         <span class="text">{{receive_time}}</span>
       </li>
       <li class="clearfix">
-        <b class="name">快递单号:</b>
+        <b class="name">快递单号</b>
         <span
           class="text"
           style="color:cornflowerblue;text-decoration:underline"
@@ -62,7 +53,7 @@
         >{{mail_serial_num}}</span>
       </li>
       <li class="clearfix">
-        <b class="name">收件信息:</b>
+        <b class="name">收件信息</b>
         <div class="text">
           <p>{{addressee}} {{addressee_phone}}</p>
           <p style="padding-top: 10px;font-size: 14px;color: #999">{{addre}}</p>
@@ -70,15 +61,9 @@
       </li>
     </ul>
     <div class="paybtnBox clearfix" style="margin-bottom: 20px;text-align:center">
+      <a @click="mailList" type="button" class="blueBtn button" v-if="apply_status==2">门票邮寄</a>
       <a
-       
-        @click="mailList"
-        type="button"
-        class="blueBtn button"
-        v-if="apply_status==2"
-      >门票邮寄</a>
-      <a
-        id="refund"     
+        id="refund"
         type="button"
         @click="dialog = true"
         class="blueBtn button"
@@ -103,6 +88,7 @@
   </div>
 </template>
 <script>
+import vueQr from 'vue-qr'
 import airshowCarousel from "../components/Carousel";
 export default {
   name: "OrderDetail",
@@ -139,11 +125,13 @@ export default {
       mail_serial_num: "",
       addressee_phone: "",
       statusText: "",
+      apply_status:"",
+      qrurl:"",
       addre: ""
     };
   },
   components: {
-    airshowCarousel
+    airshowCarousel,vueQr
   },
   mounted() {
     var me = this;
@@ -152,14 +140,14 @@ export default {
     me.$api.orderapi.GetOrderDetail(me.detail_id).then(res => {
       if (res.data.statusCode == "200") {
         me.exhibition_name = res.data.data.exhibition_name;
-        me.detail_id = res.data.data.detail_id;
+        me.qrurl =  me.detail_id +'&_t='+ new Date().getTime();
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
         me.client_cardtype = "身份证";
-        if(res.data.data.client_card_type=="1"){
+        if (res.data.data.client_card_type == "1") {
           me.client_cardtype = "护照";
-        }else if(res.data.data.client_card_type=="2"){
+        } else if (res.data.data.client_card_type == "2") {
           me.client_cardtype = "港澳通行证";
         }
         me.client_phone = res.data.data.client_phone;
@@ -179,34 +167,26 @@ export default {
         }
         switch (parseInt(me.apply_status)) {
           case 2:
-            me.statusText =
-              '<i class="iconfont iCBlue" style="color:#5eafee;margin-right: 5px;font-size: 18px">&#xe615;</i><span style="color:#5eafee" class="iCBlue">待领取</span>';
+            me.statusText = "待领取";
             break;
           case 0:
-            me.statusText =
-              '<i class="iconfont " style="color:#f57d58;margin-right: 5px;font-size: 18px">&#xe620;</i><span  style="color:#f57d58" class="iCOrigin">待出票</span>';
+            me.statusText = "待出票";
             break;
           case 1:
-            me.statusText =
-              '<i class="iconfont iCRed"  style="color:#e84335;margin-right: 5px;font-size: 18px">&#xe66f;</i><span  style="color:#e84335" class="iCRed">申请失败</span>';
+            me.statusText = "申请失败";
             break;
           case 3:
             var text = "已领取";
             if (me.ismail) {
               text = "已领取(" + me.mail_status_name + ")";
             }
-            me.statusText =
-              '<i class="iconfont iCGreen"  style="color:#75bc4a;margin-right: 5px;font-size: 18px">&#xe63c;</i><span  style="color:#75bc4a" class="iCGreen">' +
-              text +
-              "</span>";
+            me.statusText = text;
             break;
           case 4:
-            me.statusText =
-              '<i class="iconfont iCGreen"  style="color:#75bc4a;margin-right: 5px;font-size: 18px">&#xe63c;</i><span class="iCGreen"  style="color:#75bc4a">已激活</span>';
+            me.statusText = "已激活";
             break;
           case 5:
-            me.statusText =
-              '<div class="cCGreen"  style="color:#75bc4a;margin-right: 5px;font-size: 18px"><i class="iconfont"  style="color:#75bc4a">&#xe66f;</i>已退款</div>';
+            me.statusText = "已退款";
             break;
         }
       }

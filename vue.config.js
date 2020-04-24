@@ -11,7 +11,7 @@ function resolve(dir) {
 // 需要gzip压缩的文件后缀
 
 let prod =
-    process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test";
+    process.env.NODE_ENV === "production" ;
 module.exports = {
     outputDir: 'dist',
     publicPath: "/mobile/newapp/",
@@ -39,6 +39,22 @@ module.exports = {
                 proxy: {
                     '/api': {
                         target: 'http://59.110.175.131:1111/service',
+                        changeOrigin: true,
+                        pathRewrite: {
+                            '^/api': '/'
+                        }
+                    }
+                }
+            }
+
+
+        }
+        if (process.env.NODE_ENV == "test") {
+            myConfig.devServer = {
+                port: 8902,
+                proxy: {
+                    '/api': {
+                        target: 'http://localhost:52317/service',
                         changeOrigin: true,
                         pathRewrite: {
                             '^/api': '/'
