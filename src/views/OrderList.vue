@@ -1,11 +1,11 @@
 <template>
   <div>
     <airshowCarousel :type="14"></airshowCarousel>
-    <!-- <v-tabs grow v-model="tabIndex">
+    <v-tabs grow v-model="tabIndex">
         <v-tab :key="0" @click="tabIndex=0">门票</v-tab>
-        <v-tab :key="1" @click="tabIndex=1">观展套餐</v-tab>
-        <v-tab :key="2" @click="tabIndex=2">工作证</v-tab>
-    </v-tabs>-->
+        <v-tab :key="1" @click="tabIndex=1">工作证</v-tab>
+        <v-tab :key="2" @click="tabIndex=2">服务产品</v-tab>
+    </v-tabs>
     <div style="width:100%;border:1px #ccc solid;" class="listbox">
       <v-container>
         <fieldset v-for="item in items" :key="item.exhibition_name">

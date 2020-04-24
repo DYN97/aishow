@@ -10,7 +10,7 @@
       </v-tabs>
       <div style="width:100%">
         <v-subheader isnet>{{action}}基本信息：</v-subheader>
-        <div v-if="tabIndex==2" style="margin-bottom:10px">
+        <div v-if="tabIndex==2" style="margin-bottom:20px">
           <van-card
             v-for="item in playPackages"
             :key="item.pro_code"
@@ -28,7 +28,7 @@
               for="doc-ipt-3"
             ><i class="iconfont">&#xe650;</i>观展日期:</div>
             <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.applyDate">
+              <select style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;" v-model="form.applyDate">
                 <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </div>

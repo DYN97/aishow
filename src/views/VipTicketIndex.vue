@@ -127,7 +127,11 @@
               for="doc-ipt-3"
             >工作证:</v-col>
             <v-col align-self="center" cols="8" class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.workcard">
+              <select
+                style="width:95%;height:46px"
+                v-model="form.workcard"
+                @change="showCardDetail"
+              >
                 <option
                   v-for="item in workcards"
                   :key="item.pro_code"
@@ -275,7 +279,6 @@
                 text
                 style="width:80%"
                 bottom
-                
                 small
                 :loading="YZMloading"
                 :disabled="YZMloading"
@@ -305,6 +308,16 @@
     <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
       <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
     </van-popup>
+    <v-dialog v-model="workcardDialog" width="500">
+      <v-card>
+        <v-card-title class="headline">温馨提示</v-card-title>
+        <v-card-text>{{workcardTips}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="workcardDialog = false">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
@@ -316,7 +329,7 @@ export default {
   data() {
     return {
       action: "购票",
-      xieyi:"购票",
+      xieyi: "购票",
       imgs: [
         {
           src:
@@ -332,6 +345,7 @@ export default {
       YZMloading: false,
       CountDown: 60,
       tabIndex: 1,
+      workcardDialog:false,
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
@@ -346,6 +360,7 @@ export default {
       agreementPass: false,
       carText: "",
       workcards: [],
+      workcardTips:"",
       form: {
         fullname: "",
         cardtype: 0,
@@ -380,7 +395,7 @@ export default {
       }
     },
     tabIndex(val) {
-      this.agreementPass =false;
+      this.agreementPass = false;
       if (val == 1) {
         this.action = "购票";
         this.xieyi = "购票";
@@ -390,6 +405,7 @@ export default {
       } else {
         this.action = "工作证";
         this.xieyi = "购买";
+         this.workcardDialog =true;
       }
     },
     "form.playPackage": function(val) {
@@ -418,6 +434,7 @@ export default {
             } else {
               me.workcards = res.data.data;
               me.form.workcard = res.data.data[0].pro_code;
+              me.workcardTips=res.data.data[0].purchase_tips
             }
           }
         }
@@ -589,6 +606,12 @@ export default {
           }
         });
       }
+    },
+    showCardDetail() {
+      var me = this;
+      var info = this.workcards.find(t => t.pro_code == me.form.workcard);
+      me.workcardTips = info.purchase_tips;
+      me.workcardDialog =true;
     }
   },
 
