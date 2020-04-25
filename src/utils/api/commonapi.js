@@ -6,18 +6,24 @@ axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '/service/' : '
 
 const commonapi = {
     // 获取菜单列表
-    GetComCitys(pid,level) {
-        return axios.get('/ss/GetComCitys.aspx?pid='+pid+'&level='+level);
+    GetComCitys(pid, level) {
+        return axios.get('/ss/GetComCitys.aspx?pid=' + pid + '&level=' + level);
     },
     //设置菜单顺序
     GetInformationList(type) {
         return axios.get(`/GetInformationList2.aspx?type_code=` + type);
     },
-    AddClickData(id){
+    AddClickData(id) {
         return axios.get(`/AddClickData.aspx?id=` + id);
     },
-    GetYunDaExpressInfo(mail_no){
+    GetYunDaExpressInfo(mail_no) {
         return axios.get(`/Express/GetYunDaExpressInfo.aspx?mail_no=` + mail_no);
+    },
+    SendIdentifyingCode(phoneNum, code) {
+        return axios.get(`/sms/SendIdentifyingCode.aspx?phoneNum=` + phoneNum + "&code=" + code);
+    },
+    CheckCode(code, vifcode) {
+        return axios.get(`/sms/CheckCode.aspx?code=` + code + "&vifcode=" + vifcode);
     }
     // 其他接口…………
 }

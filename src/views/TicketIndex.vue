@@ -22,23 +22,22 @@
         </div>
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont">&#xe650;</i>观展日期:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe650;</i>观展日期:
+            </div>
             <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;" v-model="form.applyDate">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.applyDate"
+              >
                 <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型:
+            </div>
             <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.playPackage">
                 <option
@@ -50,11 +49,9 @@
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位:
+            </div>
             <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.packageLevel">
                 <option
@@ -66,23 +63,23 @@
             </div>
           </v-row>
           <v-row no-gutters v-if="tabIndex==2">
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车:
+            </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
               <v-checkbox v-model="form.needCar" :label="carText" type="checkbox" required></v-checkbox>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont" style="font-size: 18px;">&#xe61c;</i>门票类型:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px;">&#xe61c;</i>门票类型:
+            </div>
             <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.TicketCode" @change="changeTicket">
+              <select
+                style="width:95%;height:46px"
+                v-model="form.TicketCode"
+                @change="changeTicket"
+              >
                 <option
                   v-for="item in exhibition.tickets"
                   :key="item.ticket_code"
@@ -92,12 +89,9 @@
             </div>
           </v-row>
           <v-row height="46px" no-gutters>
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            >
-              <i class="iconfont">&#xe63f;</i><label v-html="'姓　　名:'"></label>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe63f;</i>
+              <label v-html="'姓　　名:'"></label>
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -112,11 +106,9 @@
             </div>
           </v-row>
           <v-row no-gutters>
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont">&#xe690;</i>证件类型:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe690;</i>证件类型:
+            </div>
             <div align-self="center" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.cardtype">
                 <option value="0">身份证</option>
@@ -126,11 +118,9 @@
             </div>
           </v-row>
           <v-row no-gutters>
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont">&#xe614;</i>证件号码:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe614;</i>证件号码:
+            </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
                 v-model="form.cardnum"
@@ -144,11 +134,9 @@
             </div>
           </v-row>
           <v-row no-gutters>
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont">&#xe659;</i>联系电话:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe659;</i>联系电话:
+            </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
                 maxlength="11"
@@ -164,11 +152,9 @@
             </div>
           </v-row>
           <v-row height="46px" no-gutters style="position: relative">
-            <div
-              align-self="center"
-              class="tag-name"
-              for="doc-ipt-3"
-            ><i class="iconfont">&#xe605;</i>验证码:</div>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe605;</i>验证码:
+            </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
                 style="padding-bottom:12px"
@@ -181,14 +167,18 @@
                 regular
               ></v-text-field>
             </div>
-            <div class="am-u-sm-8" align-self="center" style="position: absolute;right: 20px;bottom: 18px;">
+            <div
+              class="am-u-sm-8"
+              align-self="center"
+              style="position: absolute;right: 20px;bottom: 18px;"
+            >
               <v-btn
                 text
                 bottom
                 small
                 :loading="YZMloading"
                 :disabled="YZMloading"
-                @click="YZMloading = true"
+                @click="SendIdentifyingCode"
                 class="get-code"
               >
                 获取验证码
@@ -200,9 +190,9 @@
           </v-row>
           <v-row height="46px" no-gutters class="agree-box">
             <p class="cCommonAgreeBox" sta="0" @click="agreementPass=!agreementPass">
-        <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
-        <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意{{xieyi}}协议</a>
-      </p>
+              <i class="iconfont agree-icon" :class="{'iCblue':agreementPass}">&#xe63c;</i>
+              <a :class="{'iCblue':agreementPass}" @click="showAgreement = true">同意{{xieyi}}协议</a>
+            </p>
           </v-row>
           <v-row justify="center" style="margin: 0">
             <v-col cols="8" style="padding: 0 0 20px 0;">
@@ -220,13 +210,13 @@
 <script>
 import airshowCarousel from "../components/Carousel";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast,Popup } from "vant";
+import { Card, Toast, Popup } from "vant";
 export default {
   name: "TicketIndex",
   data() {
     return {
       action: "赠票",
-      xieyi:"赠票",
+      xieyi: "赠票",
       imgs: [
         {
           src:
@@ -253,9 +243,10 @@ export default {
       playPackages: [],
       packageLevels: [],
       carText: "",
+      vifcode: "",
       workcards: [],
-        showAgreement:false,
-        agreementPass:false,
+      showAgreement: false,
+      agreementPass: false,
       form: {
         fullname: "",
         cardtype: 0,
@@ -326,22 +317,45 @@ export default {
   methods: {
     GetServiceItems(type, code) {
       var me = this;
-      this.$api.orderapi.GetServiceItems(code,me.exhibition.exhibition_code).then(res => {
-        if (res.status == "200") {
-          if (res.data.statusCode == "200") {
-            if (type == "package") {
-              me.playPackages = res.data.data;
-              me.form.playPackage = res.data.data[0].pro_code;
-            } else if (type == "level") {
-              me.packageLevels = res.data.data;
-              me.form.packageLevel = res.data.data[0].pro_code;
-            } else if (type == "car") {
-              me.form.carcode = res.data.data[0].pro_code;
-              me.carText = res.data.data[0].pro_name;
+      this.$api.orderapi
+        .GetServiceItems(code, me.exhibition.exhibition_code)
+        .then(res => {
+          if (res.status == "200") {
+            if (res.data.statusCode == "200") {
+              if (type == "package") {
+                me.playPackages = res.data.data;
+                me.form.playPackage = res.data.data[0].pro_code;
+              } else if (type == "level") {
+                me.packageLevels = res.data.data;
+                me.form.packageLevel = res.data.data[0].pro_code;
+              } else if (type == "car") {
+                me.form.carcode = res.data.data[0].pro_code;
+                me.carText = res.data.data[0].pro_name;
+              }
             }
           }
-        }
-      });
+        });
+    },
+    SendIdentifyingCode() {
+      if (isPhone(this.form.mobile)) {
+        Toast("请填写正确的手机号码！");
+        return false;
+      }
+      var charactors = "1234567890";
+      var value = "",
+        i;
+      for (j = 1; j <= 4; j++) {
+        i = parseInt(10 * Math.random());
+        value = value + charactors.charAt(i);
+      }
+      this.vifcode = value;
+
+      this.$api.commonapi
+        .SendIdentifyingCode(this.form.mobile, this.vifcode)
+        .then(res => {
+          Toast("发送成功，请注意查收！");
+          this.YZMloading = true;
+        });
     },
     agree() {
       this.showAgreement = false;
@@ -387,6 +401,17 @@ export default {
         t => t.ticket_code == me.form.TicketCode
       ).ticket_cost;
     },
+    CheckCode() {
+      this.$api.commonapi
+        .CheckCode(this.vifcode, this.form.yanzhengma)
+        .then(res => {
+          if(res.data.statusCode=="200"){
+            return true;
+          }else{
+            return false;
+          }
+        });
+    },
     submit() {
       var me = this;
       let _name = this.form.fullname,
@@ -399,7 +424,8 @@ export default {
         Toast("请填写姓名！");
         this.once = true;
         return;
-      } if (!this.agreementPass) {
+      }
+      if (!this.agreementPass) {
         Toast("请阅读免责声明！");
         this.once = true;
         return;
@@ -451,7 +477,7 @@ export default {
                 },
                 query: {
                   type: 0,
-                  order_code:res.data.data.ordercode
+                  order_code: res.data.data.ordercode
                 }
               });
             } else {
@@ -465,21 +491,20 @@ export default {
                 "&total_fee=" +
                 res.data.data.money +
                 "&exhibition_id=" +
-                me.exhibition.exhibition_code+"&way=Normal";
+                me.exhibition.exhibition_code +
+                "&way=Normal";
             }
-          }
-          else
-          {
+          } else {
             this.$router.push({
-                name: "Result",
-                params: {
-                  result: "fail"
-                },
-                query: {
-                  type: this.tabIndex,
-                  message:res.data.message
-                }
-              });
+              name: "Result",
+              params: {
+                result: "fail"
+              },
+              query: {
+                type: this.tabIndex,
+                message: res.data.message
+              }
+            });
           }
         });
       } else {
@@ -510,19 +535,19 @@ export default {
               "&total_fee=" +
               res.data.data.money +
               "&exhibition_id=" +
-              me.exhibition.exhibition_code+"&way=Normal";
-          } else
-          {
-             this.$router.push({
-                name: "Result",
-                params: {
-                  result: "fail"
-                },
-                query: {
-                  type: this.tabIndex,
-                  message:res.data.message
-                }
-              });
+              me.exhibition.exhibition_code +
+              "&way=Normal";
+          } else {
+            this.$router.push({
+              name: "Result",
+              params: {
+                result: "fail"
+              },
+              query: {
+                type: this.tabIndex,
+                message: res.data.message
+              }
+            });
           }
         });
       }
@@ -532,18 +557,18 @@ export default {
     airshowCarousel,
     agreementPage,
     [Card.name]: Card,
-    [Popup.name]: Popup,
+    [Popup.name]: Popup
   }
 };
 </script>
 <style scoped>
-  .van-card__title{
-    color: #0f9ae0;
-    font-size: 14px;
-  }
-  .van-card__content{
-    padding: 10px 0 5px;
-  }
+.van-card__title {
+  color: #0f9ae0;
+  font-size: 14px;
+}
+.van-card__content {
+  padding: 10px 0 5px;
+}
 .cCommonAgreeBox .agree-icon {
   position: unset;
   font-size: 18px;
@@ -578,37 +603,37 @@ export default {
   height: calc(100vh - 150px);
   overflow: auto;
 }
-.v-input{
+.v-input {
   margin: 0 !important;
 }
-  .v-subheader{
-    background: #eef7ff;
-    color: #333;
-  }
-  .listbox .tag-name .iconfont{
-    /*position: absolute;*/
-    /*left: 5px;*/
-    /*top: 14px;*/
-    line-height: 16px;
-    color: #0f9ae0;
-    font-size: 16px;
-    font-weight: bold;
-    margin-right: 5px;
-  }
-  .container{
-    width: calc(100% - 24px);
-    /* padding: 12px; */
-    box-shadow: 1px 1px 5px #ddd;
-    margin: 12px auto;
-    padding: 0;
-    height: calc(100vh - 180px);
-    background: #fff;
-  }
-.agree-box{
+.v-subheader {
+  background: #eef7ff;
+  color: #333;
+}
+.listbox .tag-name .iconfont {
+  /*position: absolute;*/
+  /*left: 5px;*/
+  /*top: 14px;*/
+  line-height: 16px;
+  color: #0f9ae0;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+.container {
+  width: calc(100% - 24px);
+  /* padding: 12px; */
+  box-shadow: 1px 1px 5px #ddd;
+  margin: 12px auto;
+  padding: 0;
+  height: calc(100vh - 180px);
+  background: #fff;
+}
+.agree-box {
   border-top: #ddd solid 1px;
   padding-top: 15px;
 }
-.tag-name{
+.tag-name {
   position: relative;
   font-size: 16px;
   color: #666;
@@ -618,18 +643,18 @@ export default {
   overflow: hidden;
   text-indent: 12px;
 }
-  .get-code{
-    background: #ff9000;
-    color: #FFF !important;
-    display: block;
-    height: 26px;
-    line-height: 26px;
-    border-radius: 4px;
-    padding: 0 5px !important;
-    margin: 0 auto;
-    box-sizing: border-box;
-  }
-  .list-right{
-    width: calc(100% - 130px);
-  }
+.get-code {
+  background: #ff9000;
+  color: #fff !important;
+  display: block;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 4px;
+  padding: 0 5px !important;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.list-right {
+  width: calc(100% - 130px);
+}
 </style>
