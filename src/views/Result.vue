@@ -196,6 +196,7 @@ export default {
   mounted() {
     var me = this;
     var result = this.$route.params.result;
+    console.log(result);
     if (result == "success") {
       me.type = 1;
     } else if (result == "payfail") {
@@ -241,7 +242,7 @@ export default {
         me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
-             me.ticketDate = detail.exhibition_date.substring(0,10);
+            me.ticketDate = detail.exhibition_date.substring(0, 10);
 
             me.packageType = detail.parentname;
             me.packageLevel = detail.pro_name;
@@ -326,15 +327,15 @@ export default {
       if (this.way == "vip") {
         this.$router.push({
           name: "Invitation",
-          params:{
-            exhibitionCode:this.exhibition_id
+          params: {
+            exhibitionCode: this.exhibition_id
           }
         });
-      }else{
+      } else {
         this.$router.push({
           name: "TicketIndex",
-          params:{
-            exhibitionCode:this.exhibition_id
+          params: {
+            exhibitionCode: this.exhibition_id
           }
         });
       }

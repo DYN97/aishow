@@ -1,13 +1,20 @@
 <template>
-  <v-carousel cycle :interval="2000" height="150" hide-delimiter-background :show-arrows="false">
-    <v-carousel-item v-for="(img, i) in imgs" :key="i" :src="img.app_img_url" @click="gotoPage(img)">
+  <van-swipe :autoplay="3000" height="150">
+    <van-swipe-item v-for="(img, i) in imgs" :key="i" @click="gotoPage(img)">
+      <img :src="img.app_img_url" width="100%" />
       <span class="ad" v-if="img.ext1==1">广告</span>
-    </v-carousel-item>
-  </v-carousel>
+    </van-swipe-item>
+  </van-swipe>
 </template>
 <script>
+import { Swipe, SwipeItem, Lazyload } from "vant";
 export default {
   name: "airshowCarousel",
+  components: { 
+    [Swipe.name]: Swipe, 
+    [Lazyload.name]: Lazyload, 
+  [SwipeItem.name]: SwipeItem 
+  },
   data() {
     return {
       imgs: []
@@ -27,8 +34,8 @@ export default {
   mounted() {
     var me = this;
     this.$api.commonapi.GetInformationList(this.type).then(res => {
-      if (res.data.statusCode == "200") {        
-          me.imgs = res.data.data.imgList;        
+      if (res.data.statusCode == "200") {
+        me.imgs = res.data.data.imgList;
       }
     });
   }

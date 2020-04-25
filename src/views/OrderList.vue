@@ -8,10 +8,15 @@
     </v-tabs>
     <div style="width:100%;border:1px #ccc solid;" class="listbox">
       <v-container v-if="tabIndex==0">
-        <fieldset v-for="item in ticketitems" :key="item.exhibition_name" >
+
+         <v-list three-line v-if="ticketitems.length==0" style="text-align:center">
+           暂无数据
+          </v-list>
+        <fieldset v-else v-for="item in ticketitems" :key="item.exhibition_name" >
           <legend style="margin-left:20px">{{item.exhibition_name}}</legend>
 
           <v-list three-line>
+
             <template v-for="(childItem, index) in item.list">
               <v-divider v-if="index>0" :key="index"></v-divider>
               <v-list-item :key="childItem.order_detail_id" @click="toOrderDetail(childItem.order_detail_id)">
@@ -37,7 +42,10 @@
         </fieldset>
       </v-container>
        <v-container v-else-if="tabIndex==1">
-        <fieldset v-for="item in carditems" :key="item.exhibition_name" >
+         <v-list three-line v-if="carditems.length==0" style="text-align:center">
+           暂无数据
+          </v-list>
+        <fieldset  v-else  v-for="item in carditems" :key="item.exhibition_name" >
           <legend style="margin-left:20px">{{item.exhibition_name}}</legend>
 
           <v-list three-line>
@@ -66,7 +74,10 @@
         </fieldset>
       </v-container>
       <v-container v-else>
-        <fieldset v-for="item in sqitems" :key="item.exhibition_name" >
+        <v-list three-line v-if="sqitems.length==0" style="text-align:center">
+           暂无数据
+          </v-list>
+        <fieldset   v-else v-for="item in sqitems" :key="item.exhibition_name" >
           <legend style="margin-left:20px">{{item.exhibition_name}}</legend>
 
           <v-list three-line>

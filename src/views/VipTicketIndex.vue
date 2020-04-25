@@ -345,7 +345,7 @@ export default {
       YZMloading: false,
       CountDown: 60,
       tabIndex: 1,
-      workcardDialog:false,
+      workcardDialog: false,
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
@@ -360,7 +360,7 @@ export default {
       agreementPass: false,
       carText: "",
       workcards: [],
-      workcardTips:"",
+      workcardTips: "",
       form: {
         fullname: "",
         cardtype: 0,
@@ -405,7 +405,7 @@ export default {
       } else {
         this.action = "工作证";
         this.xieyi = "购买";
-         this.workcardDialog =true;
+        this.workcardDialog = true;
       }
     },
     "form.playPackage": function(val) {
@@ -419,7 +419,8 @@ export default {
   methods: {
     GetServiceItems(type, code) {
       var me = this;
-      this.$api.orderapi.GetServiceItems(code,me.exhibition.exhibition_code).then(res => {
+      let exhibition_code = this.$route.params.exhibitionCode;
+      this.$api.orderapi.GetServiceItems(code, exhibition_code).then(res => {
         if (res.status == "200") {
           if (res.data.statusCode == "200") {
             if (type == "package") {
@@ -434,7 +435,7 @@ export default {
             } else {
               me.workcards = res.data.data;
               me.form.workcard = res.data.data[0].pro_code;
-              me.workcardTips=res.data.data[0].purchase_tips
+              me.workcardTips = res.data.data[0].purchase_tips;
             }
           }
         }
@@ -478,11 +479,48 @@ export default {
       if (arrVarifyCode[n] != idnumber.substr(17, 1)) return false;
       return true;
     },
+    async CheckCode() {
+      var result = await this.$api.commonapi.CheckCode(
+        this.vifcode,
+        this.form.yanzhengma
+      );
+      if (result.data.statusCode == "200") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     changeTicket() {
       var me = this;
       this.ticketCost = this.exhibition.tickets.find(
         t => t.ticket_code == me.form.TicketCode
       ).ticket_cost;
+    },
+    SendIdentifyingCode() {
+      if (!this.isPhone(this.form.mobile)) {
+        Toast("请填写正确的手机号码！");
+        return false;
+      }
+      var charactors = "1234567890";
+      var value = "",
+        i,
+        j;
+      for (j = 1; j <= 4; j++) {
+        i = parseInt(10 * Math.random());
+        value = value + charactors.charAt(i);
+      }
+      this.vifcode = value;
+
+      this.$api.commonapi
+        .SendIdentifyingCode(this.form.mobile, this.vifcode)
+        .then(res => {
+          if (res.data.statusCode == "200") {
+            Toast("发送成功，请注意查收！");
+            this.YZMloading = true;
+          } else {
+            console.log(res.data);
+          }
+        });
     },
     submit() {
       var me = this;
@@ -611,7 +649,7 @@ export default {
       var me = this;
       var info = this.workcards.find(t => t.pro_code == me.form.workcard);
       me.workcardTips = info.purchase_tips;
-      me.workcardDialog =true;
+      me.workcardDialog = true;
     }
   },
 

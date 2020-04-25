@@ -316,34 +316,34 @@ export default {
   },
   methods: {
     GetServiceItems(type, code) {
+      let exhibition_code = this.$route.params.exhibitionCode;
       var me = this;
-      this.$api.orderapi
-        .GetServiceItems(code, me.exhibition.exhibition_code)
-        .then(res => {
-          if (res.status == "200") {
-            if (res.data.statusCode == "200") {
-              if (type == "package") {
-                me.playPackages = res.data.data;
-                me.form.playPackage = res.data.data[0].pro_code;
-              } else if (type == "level") {
-                me.packageLevels = res.data.data;
-                me.form.packageLevel = res.data.data[0].pro_code;
-              } else if (type == "car") {
-                me.form.carcode = res.data.data[0].pro_code;
-                me.carText = res.data.data[0].pro_name;
-              }
+      this.$api.orderapi.GetServiceItems(code, exhibition_code).then(res => {
+        if (res.status == "200") {
+          if (res.data.statusCode == "200") {
+            if (type == "package") {
+              me.playPackages = res.data.data;
+              me.form.playPackage = res.data.data[0].pro_code;
+            } else if (type == "level") {
+              me.packageLevels = res.data.data;
+              me.form.packageLevel = res.data.data[0].pro_code;
+            } else if (type == "car") {
+              me.form.carcode = res.data.data[0].pro_code;
+              me.carText = res.data.data[0].pro_name;
             }
           }
-        });
+        }
+      });
     },
     SendIdentifyingCode() {
-      if (isPhone(this.form.mobile)) {
+      if (!this.isPhone(this.form.mobile)) {
         Toast("请填写正确的手机号码！");
         return false;
       }
       var charactors = "1234567890";
       var value = "",
-        i;
+        i,
+        j;
       for (j = 1; j <= 4; j++) {
         i = parseInt(10 * Math.random());
         value = value + charactors.charAt(i);
@@ -353,8 +353,12 @@ export default {
       this.$api.commonapi
         .SendIdentifyingCode(this.form.mobile, this.vifcode)
         .then(res => {
-          Toast("发送成功，请注意查收！");
-          this.YZMloading = true;
+          if (res.data.statusCode == "200") {
+            Toast("发送成功，请注意查收！");
+            this.YZMloading = true;
+          } else {
+            console.log(res.data);
+          }
         });
     },
     agree() {
@@ -401,18 +405,8 @@ export default {
         t => t.ticket_code == me.form.TicketCode
       ).ticket_cost;
     },
-    CheckCode() {
-      this.$api.commonapi
-        .CheckCode(this.vifcode, this.form.yanzhengma)
-        .then(res => {
-          if(res.data.statusCode=="200"){
-            return true;
-          }else{
-            return false;
-          }
-        });
-    },
-    submit() {
+    async CheckCode() {},
+    async submit() {
       var me = this;
       let _name = this.form.fullname,
         _tel = this.form.mobile,
@@ -449,6 +443,22 @@ export default {
         Toast("请输入正确的验证码");
         this.once = true;
         return;
+      } else {
+        var result = await this.$api.commonapi.CheckCode(
+          this.vifcode,
+          this.form.yanzhengma
+        );
+
+        if (result.data.statusCode != "200") {
+          Toast("请输入正确的验证码");
+          this.once = true;
+          return;
+        }
+      }
+      if (!this.CheckCode()) {
+        Toast("请输入正确的验证码");
+        this.once = true;
+        return;
       }
       if (this.tabIndex != 2) {
         let params = {
@@ -476,7 +486,7 @@ export default {
                   result: "success"
                 },
                 query: {
-                  type: 0,
+                  type: "0",
                   order_code: res.data.data.ordercode
                 }
               });
