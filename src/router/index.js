@@ -12,6 +12,8 @@
  import Home from '../views/Home.vue';
  import OrderList from '../views/OrderList.vue';
  import OrderDetail from '../views/OrderDetail.vue';
+ import CardDetail from '../views/CardDetail.vue';
+ import SqDetail from '../views/SqDetail.vue';
  import MailDetail from '../views/MailDetail.vue';
  import MailList from '../views/MailList.vue';
  import ConsigneeText from '../views/consigneeText.vue';
@@ -78,6 +80,16 @@
          title: "订单详情",
          component: OrderDetail
      }, {
+         path: "/CardDetail/:id",
+         name: "CardDetail",
+         title: "工作证详情",
+         component: CardDetail
+     }, {
+         path: "/SqDetail/:id",
+         name: "SqDetail",
+         title: "观展服务详情",
+         component: SqDetail
+     }, {
          path: "/MailDetail/:id",
          name: "MailDetail",
          title: "快递详情",
@@ -141,8 +153,11 @@
          case "ConsigneeText":
              title = "申请邮寄";
              break;
-         case "OrderDetail":
-             title = "订单详情";
+         case "CardDetail":
+             title = "工作证详情";
+             break;
+         case "SqDetail":
+             title = "观展服务详情";
              break;
          case "MailDetail":
              title = "快递详情";

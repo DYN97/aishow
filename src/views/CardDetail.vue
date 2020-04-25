@@ -4,8 +4,12 @@
     <ul class="detailList listbox">
       <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
       <li class="clearfix">
-        <b class="name">门票日期:</b>
+        <b class="name">观展日期:</b>
         <span class="text">{{ticket_date}}</span>
+      </li>
+      <li class="clearfix">
+        <b class="name">产品类型:</b>
+        <span class="text">{{parentname}}--{{order_type_name}}</span>
       </li>
       <li class="clearfix">
         <b class="name" v-html="'申请人　'"></b>
@@ -28,56 +32,6 @@
         <span class="text">{{statusText}}</span>
       </li>
     </ul>
-    <ul class="detailPersonList" v-if="ismail&&apply_status==3">
-      <li class="clearfix">
-        <b class="name">领取方式:</b>
-        <span class="text">{{receive_type_name}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">领取时间:</b>
-        <span class="text">{{receive_time}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">快递单号:</b>
-        <span
-          class="text"
-          style="color:cornflowerblue;text-decoration:underline"
-          id="mailDetail"
-        >{{mail_serial_num}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">收件信息:</b>
-        <div class="text">
-          <p>{{addressee}} {{addressee_phone}}</p>
-          <p style="padding-top: 10px;font-size: 14px;color: #999">{{addre}}</p>
-        </div>
-      </li>
-    </ul>
-    <div class="paybtnBox clearfix" style="margin-bottom: 20px;text-align:center">
-      <a @click="mailList" type="button" class="blueBtn button" v-if="apply_status==2">门票邮寄</a>
-      <a
-        id="refund"
-        type="button"
-        @click="dialog = true"
-        class="blueBtn button"
-        v-if="apply_status==0&&ticket_cost>0"
-      >申请退款</a>
-    </div>
-    <v-dialog v-model="dialog" max-width="290">
-      <v-card>
-        <v-card-title class="headline">提示</v-card-title>
-
-        <v-card-text>是否要退款</v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn color="green darken-1" text @click="dialog = false">取消</v-btn>
-
-          <v-btn color="green darken-1" text @click="refundMoney">确认</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 <script>
@@ -116,6 +70,7 @@ export default {
       addressee: "",
       mail_serial_num: "",
       addressee_phone: "",
+      parentname: "",
       statusText: "",
       addre: ""
     };
@@ -127,7 +82,7 @@ export default {
     var me = this;
     me.detail_id = this.$route.params.id;
 
-    me.$api.orderapi.GetOrderDetail(me.detail_id).then(res => {
+    me.$api.orderapi.GetProductDetail(me.detail_id).then(res => {
       if (res.data.statusCode == "200") {
         me.exhibition_name = res.data.data.exhibition_name;
         me.detail_id = res.data.data.detail_id;
@@ -140,9 +95,9 @@ export default {
         } else if (res.data.data.client_card_type == "2") {
           me.client_cardtype = "港澳通行证";
         }
-        me.client_phone = res.data.data.client_phone;
         me.order_type_name = res.data.data.order_type_name;
         me.ticket_date = res.data.data.ticket_date;
+        me.parentname = res.data.data.parentname;
         me.ticket_cost = res.data.data.ticket_cost;
         me.apply_time = res.data.data.apply_time;
         me.receive_type_name = res.data.data.receive_type_name;
@@ -152,9 +107,7 @@ export default {
         me.addressee_phone = res.data.data.addressee_phone;
         me.addre = res.data.data.addre;
         me.apply_status = res.data.data.apply_status;
-        if (me.receive_type_name == "邮寄") {
-          me.ismail = true;
-        }
+  
         switch (parseInt(me.apply_status)) {
           case 2:
             me.statusText =
@@ -193,7 +146,6 @@ export default {
     },
     refundMoney() {
       let detail_id = this.$route.params.id;
-      console.log(detail_id);
       this.$api.orderapi.RefundMoney(detail_id).then(res => {
         if (res.data.statusCode == "200") {
           alert("退款成功!");

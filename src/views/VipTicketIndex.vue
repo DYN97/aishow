@@ -419,7 +419,7 @@ export default {
   methods: {
     GetServiceItems(type, code) {
       var me = this;
-      this.$api.orderapi.GetServiceItems(code).then(res => {
+      this.$api.orderapi.GetServiceItems(code,me.exhibition.exhibition_code).then(res => {
         if (res.status == "200") {
           if (res.data.statusCode == "200") {
             if (type == "package") {

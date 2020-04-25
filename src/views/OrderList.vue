@@ -43,7 +43,7 @@
           <v-list three-line>
             <template v-for="(childItem, index) in item.list">
               <v-divider v-if="index>0" :key="index"></v-divider>
-              <v-list-item :key="childItem.order_detail_id" @click="toOrderDetail(childItem.order_detail_id)">
+              <v-list-item :key="childItem.order_detail_id" @click="toCardDetail(childItem.order_detail_id)">
                 <v-list-item-content style>
                   <v-list-item-title style="white-space:unset;font-size:16px">
                     <v-row no-gutters justify="space-between">
@@ -72,7 +72,7 @@
           <v-list three-line>
             <template v-for="(childItem, index) in item.list">
               <v-divider v-if="index>0" :key="index"></v-divider>
-              <v-list-item :key="childItem.order_detail_id" @click="toOrderDetail(childItem.order_detail_id)">
+              <v-list-item :key="childItem.order_detail_id" @click="toSqDetail(childItem.order_detail_id)">
                 <v-list-item-content style>
                   <v-list-item-title style="white-space:unset;font-size:16px">
                     <v-row no-gutters justify="space-between">
@@ -136,6 +136,22 @@ export default {
     });
   },
   methods: {
+    toCardDetail(detail_id){
+      this.$router.push({
+        name:"CardDetail",
+        params:{
+          id:detail_id
+        }
+      });
+    },
+    toSqDetail(detail_id){
+      this.$router.push({
+        name:"SqDetail",
+        params:{
+          id:detail_id
+        }
+      });
+    },
     toOrderDetail(detail_id){
       this.$router.push({
         name:"OrderDetail",
@@ -146,8 +162,8 @@ export default {
     },
     GetStatusName(type,status){
       switch(status){
-        case "0":return "待审核";
-        case "1":return type=="ticket"?"申请失败": "待审核";
+        case "0":return "待出票";
+        case "1":return type=="ticket"?"申请失败": "待出票";
         case "2":return "待领取";
         case "3":return "已领取";
       }
