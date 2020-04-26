@@ -7,8 +7,8 @@
         <b class="name">门票类型</b>
         <span class="text">电子门票</span>
       </li>
-      <li class="clearfix" >
-        <vue-qr :text="qrurl" :margin="0" colorDark="#000000" colorLight="#fff"  :logoScale="0.3" :size="180" style="margin-left:50px"></vue-qr>
+      <li class="clearfix" style="text-align:center">
+        <vue-qr :text="qrurl" :margin="0" colorDark="#000000" colorLight="#fff"  :logoScale="0.3" :size="180" style="margin:0 auto"></vue-qr>
       </li>
       <li class="clearfix">
         <b class="name">门票日期</b>
@@ -544,7 +544,7 @@ ol {
   text-indent: 12%;
 }
 .detailList {
-  padding-left: 10%;
+  padding: 0 10%;
   margin: 15px 0 30px;
 }
 .detailList li {

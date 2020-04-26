@@ -9,7 +9,7 @@
         <v-tab :key="2" @click="tabIndex=2">观展套餐</v-tab>
       </v-tabs>
       <div style="width:100%">
-        <v-subheader isnet>{{action}}基本信息：</v-subheader>
+        <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <div v-if="tabIndex==2" style="margin-bottom:20px">
           <van-card
             v-for="item in playPackages"
@@ -23,7 +23,7 @@
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe650;</i>观展日期:
+              <i class="iconfont">&#xe650;</i>观展日期
             </div>
             <div class="am-u-sm-8 list-right">
               <select
@@ -36,7 +36,7 @@
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型:
+              <i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型
             </div>
             <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.playPackage">
@@ -50,7 +50,7 @@
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位:
+              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
             </div>
             <div class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.packageLevel">
@@ -64,7 +64,7 @@
           </v-row>
           <v-row no-gutters v-if="tabIndex==2">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车:
+              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
               <v-checkbox v-model="form.needCar" :label="carText" type="checkbox" required></v-checkbox>
@@ -72,7 +72,7 @@
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px;">&#xe61c;</i>门票类型:
+              <i class="iconfont" style="font-size: 18px;">&#xe61c;</i>门票类型
             </div>
             <div class="am-u-sm-8 list-right">
               <select
@@ -91,7 +91,7 @@
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe63f;</i>
-              <label v-html="'姓　　名:'"></label>
+              <label v-html="'姓　　名'"></label>
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -107,7 +107,7 @@
           </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe690;</i>证件类型:
+              <i class="iconfont">&#xe690;</i>证件类型
             </div>
             <div align-self="center" class="am-u-sm-8 list-right">
               <select style="width:95%;height:46px" v-model="form.cardtype">
@@ -119,7 +119,7 @@
           </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe614;</i>证件号码:
+              <i class="iconfont">&#xe614;</i>证件号码
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -135,7 +135,7 @@
           </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe659;</i>联系电话:
+              <i class="iconfont">&#xe659;</i>联系电话
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -153,7 +153,7 @@
           </v-row>
           <v-row height="46px" no-gutters style="position: relative">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe605;</i>验证码:
+              <i class="iconfont">&#xe605;</i>验证码
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -176,6 +176,8 @@
                 text
                 bottom
                 small
+                
+                width="85"
                 :loading="YZMloading"
                 :disabled="YZMloading"
                 @click="SendIdentifyingCode"
@@ -611,7 +613,9 @@ export default {
 }
 .listbox {
   height: calc(100vh - 150px);
-  overflow: auto;
+  
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .v-input {
   margin: 0 !important;

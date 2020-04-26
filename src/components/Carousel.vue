@@ -10,10 +10,10 @@
 import { Swipe, SwipeItem, Lazyload } from "vant";
 export default {
   name: "airshowCarousel",
-  components: { 
-    [Swipe.name]: Swipe, 
-    [Lazyload.name]: Lazyload, 
-  [SwipeItem.name]: SwipeItem 
+  components: {
+    [Swipe.name]: Swipe,
+    [Lazyload.name]: Lazyload,
+    [SwipeItem.name]: SwipeItem
   },
   data() {
     return {
