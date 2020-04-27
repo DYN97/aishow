@@ -23,7 +23,7 @@
         <v-form style="background-color:white">
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe78c;</i>
+              <i class="iconfont">&#xe65a;</i>
               <label>邀请码</label>
             </div>
             <div class="am-u-sm-8 list-right">
@@ -191,7 +191,7 @@
           </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe659;</i>单位名称
+              <i class="iconfont">&#xe656;</i>单位名称
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -207,7 +207,7 @@
           </v-row>
           <v-row no-gutters>
              <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe659;</i><label v-html="'职　　务'"></label>
+              <i class="iconfont">&#xe618;</i><label v-html="'职　　务'"></label>
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field

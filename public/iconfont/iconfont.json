@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "5777537",
+      "name": "职务管理",
+      "font_class": "zhiwei",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "11672365",
+      "name": "职务管理",
+      "font_class": "zhiwuguanli1",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "1133814",
+      "name": "施工单位",
+      "font_class": "loufang",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "1506752",
+      "name": "邀请码",
+      "font_class": "yaoqingma",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "8832795",
+      "name": "职务管理",
+      "font_class": "zhiwuguanli",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
       "icon_id": "193410",
       "name": "档位",
       "font_class": "dangwei",
