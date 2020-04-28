@@ -16,6 +16,9 @@ const orderapi = {
     GetServiceItems(productCode, exhibition_code) {
         return axios.get("/newOrders/GetServiceItems.aspx?productCode=" + productCode + "&exhibition_code=" + exhibition_code);
     },
+    GetServiceItem(productCode) {
+        return axios.get("/newOrders/GetServiceItem.aspx?productCode=" + productCode );
+    },
     GetOrderInfo(order_code) {
         return axios.get("/newOrders/GetOrderInfo.aspx?order_code=" + order_code);
     },

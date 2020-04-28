@@ -17,7 +17,8 @@
             :price="item.selling_price"
             :desc="item.pro_desc"
             :title="item.pro_name"
-            thumb="http://59.110.175.131:1111/upfiles/2019-04-08/微信图片_20190331135313_20190408220305477.jpg"
+            :thumb="item.thumb?item.thumb:'http://59.110.175.131:1111/upfiles/2019-04-08/微信图片_20190331135313_20190408220305477.jpg'"
+            @click="OpenDetailPage(item.pro_code)"
           />
         </div>
         <v-form style="background-color:white">
@@ -176,7 +177,6 @@
                 text
                 bottom
                 small
-                
                 width="85"
                 :loading="YZMloading"
                 :disabled="YZMloading"
@@ -206,11 +206,16 @@
       <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
         <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
       </van-popup>
+      <van-popup v-model="showDetail" position="left" :style="{width:'100%',height:'100%'}">
+        <AirIframe src="http://www.baidu.com" title="测试"  @closeChoseBox="showDetail=false"/>
+      </van-popup>
+
     </v-container>
   </div>
 </template>
 <script>
 import airshowCarousel from "../components/Carousel";
+import AirIframe from "../components/AirIframe";
 import agreementPage from "../components/agreementPage";
 import { Card, Toast, Popup } from "vant";
 export default {
@@ -231,6 +236,7 @@ export default {
           isguanggao: false
         }
       ],
+      showDetail:false,
       YZMloading: false,
       CountDown: 60,
       tabIndex: 0,
@@ -336,6 +342,9 @@ export default {
           }
         }
       });
+    },
+    OpenDetailPage() {
+      this.showDetail =true;
     },
     SendIdentifyingCode() {
       if (!this.isPhone(this.form.mobile)) {
@@ -568,6 +577,7 @@ export default {
   components: {
     airshowCarousel,
     agreementPage,
+    AirIframe,
     [Card.name]: Card,
     [Popup.name]: Popup
   }
@@ -613,7 +623,7 @@ export default {
 }
 .listbox {
   height: calc(100vh - 150px);
-  
+
   overflow-y: auto;
   overflow-x: hidden;
 }
