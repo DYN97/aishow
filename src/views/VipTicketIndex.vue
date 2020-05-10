@@ -16,6 +16,7 @@
             :price="item.selling_price"
             :desc="item.pro_desc"
             :title="item.pro_name"
+            @click="OpenDetailPage(item)"
             thumb="http://59.110.175.131:1111/upfiles/2019-04-08/微信图片_20190331135313_20190408220305477.jpg"
           />
         </div>
@@ -29,7 +30,7 @@
             <div class="am-u-sm-8 list-right">
               <v-text-field
                 class="mainForm"
-                v-model="form.invite_code" 
+                v-model="form.invite_code"
                 hide-details="auto"
                 disabled
                 height="30"
@@ -37,51 +38,58 @@
                 regular
               ></v-text-field>
             </div>
-            
           </v-row>
           <v-row height="46px" no-gutters>
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe650;</i>观展日期:
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe650;</i>观展日期
             </div>
             <div class="am-u-sm-8 list-right">
               <select
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.applyDate"
               >
+                <option value>请选择</option>
                 <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型:
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型
             </div>
             <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;" v-model="form.playPackage">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.playPackage"
+              >
+                <option value>请选择</option>
                 <option
                   v-for="item in playPackages"
-                  :key="item.pro_code"
-                  :value="item.pro_code"
-                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
-              </select>
-            </div>
-          </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px;;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;" v-model="form.packageLevel">
-                <option
-                  v-for="item in packageLevels"
                   :key="item.pro_code"
                   :value="item.pro_code"
                 >{{item.pro_name}}</option>
               </select>
             </div>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2">
-           <div align-self="center" class="tag-name" for="doc-ipt-3">
+          <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.packageLevel"
+              >
+                <option
+                  v-for="item in packageLevels"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
+              </select>
+            </div>
+          </v-row>
+          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
@@ -98,8 +106,9 @@
                 v-model="form.TicketCode"
                 @change="changeTicket"
               >
+                <option value>请选择</option>
                 <option
-                  v-for="item in exhibition.tickets"
+                  v-for="item in tickets"
                   :key="item.ticket_code"
                   :value="item.ticket_code"
                 >{{item.out_ticket_name+'(￥'+item.ticket_cost+')'}}</option>
@@ -107,23 +116,23 @@
             </div>
           </v-row>
           <v-row no-gutters v-if="tabIndex==3">
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;">&#xe614;</i>工作证
             </div>
             <div class="am-u-sm-8 list-right">
               <select
                 style="width:95%;height:46px;;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.workcard"
-                @change="showCardDetail"
+                @change="showCardDetail('card')"
               >
-                 <option
+                <option value>请选择</option>
+                <option
                   v-for="item in workcards"
                   :key="item.pro_code"
                   :value="item.pro_code"
                 >{{item.pro_name}}</option>
               </select>
             </div>
-          
           </v-row>
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -147,7 +156,10 @@
               <i class="iconfont">&#xe690;</i>证件类型
             </div>
             <div align-self="center" class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px;;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;" v-model="form.cardtype">
+              <select
+                style="width:95%;height:46px;;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.cardtype"
+              >
                 <option value="0">身份证</option>
                 <option value="1">护照</option>
                 <option value="2">港澳通行证</option>
@@ -155,7 +167,7 @@
             </div>
           </v-row>
           <v-row no-gutters>
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>证件号码
             </div>
             <div class="am-u-sm-8 list-right">
@@ -172,7 +184,7 @@
           </v-row>
 
           <v-row no-gutters>
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe659;</i>联系电话
             </div>
             <div class="am-u-sm-8 list-right">
@@ -206,8 +218,9 @@
             </div>
           </v-row>
           <v-row no-gutters>
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe618;</i><label v-html="'职　　务'"></label>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe618;</i>
+              <label v-html="'职　　务'"></label>
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -221,7 +234,7 @@
               ></v-text-field>
             </div>
           </v-row>
-          <v-row height="46px" no-gutters  style="position: relative">
+          <v-row height="46px" no-gutters style="position: relative">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe605;</i>验证码
             </div>
@@ -276,6 +289,9 @@
     <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
       <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
     </van-popup>
+    <van-popup v-model="showDetail" position="left" :style="{width:'100%',height:'100%'}">
+      <AirIframe :src="packageLink" :title="packageName" @closeChoseBox="showDetail=false" />
+    </van-popup>
     <v-dialog v-model="workcardDialog" width="500">
       <v-card>
         <v-card-title class="headline">温馨提示</v-card-title>
@@ -290,6 +306,7 @@
 </template>
 <script>
 import agreementPage from "../components/agreementPage";
+import AirIframe from "../components/AirIframe";
 import { Card, Toast, Popup } from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
@@ -321,6 +338,9 @@ export default {
         days: []
       },
       lookUp: "0",
+      showDetail: false,
+      packageLink: "",
+      packageName: "",
       ticketCost: 0,
       playPackages: [],
       packageLevels: [],
@@ -329,6 +349,7 @@ export default {
       carText: "",
       workcards: [],
       workcardTips: "",
+      tickets: [],
       form: {
         fullname: "",
         cardtype: 0,
@@ -375,6 +396,24 @@ export default {
         this.xieyi = "购买";
         this.workcardDialog = true;
       }
+      this.form = {
+        fullname: "",
+        cardtype: 0,
+        invite_code: "",
+        cardnum: "",
+        applyDate: "",
+        mobile: "",
+        company: "",
+        duty: "",
+        TicketCode: "",
+        TicketName: "",
+        playPackage: "",
+        packageLevel: "",
+        carcode: "",
+        needCar: "",
+        workcard: "",
+        yanzhengma: ""
+      };
     },
     "form.playPackage": function(val) {
       //
@@ -385,6 +424,11 @@ export default {
     }
   },
   methods: {
+    OpenDetailPage(item) {
+      this.showDetail = true;
+      this.packageName = item.pro_name;
+      this.packageLink = item.pro_detail_url;
+    },
     GetServiceItems(type, code) {
       var me = this;
       let exhibition_code = this.$route.params.exhibitionCode;
@@ -393,17 +437,26 @@ export default {
           if (res.data.statusCode == "200") {
             if (type == "package") {
               me.playPackages = res.data.data;
-              me.form.playPackage = res.data.data[0].pro_code;
+              if (res.data.data && res.data.data.length > 0) {
+                me.form.playPackage = res.data.data[0].pro_code;
+              }
             } else if (type == "level") {
               me.packageLevels = res.data.data;
-              me.form.packageLevel = res.data.data[0].pro_code;
+              if (res.data.data && res.data.data.length > 0) {
+                me.form.packageLevel = res.data.data[0].pro_code;
+              }
             } else if (type == "car") {
-              me.form.carcode = res.data.data[0].pro_code;
-              me.carText = res.data.data[0].pro_name;
+              if (res.data.data && res.data.data.length > 0) {
+                me.form.carcode = res.data.data[0].pro_code;
+                me.carText = res.data.data[0].pro_name;
+              }
             } else {
               me.workcards = res.data.data;
-              me.form.workcard = res.data.data[0].pro_code;
-              me.workcardTips = res.data.data[0].purchase_tips;
+              if (res.data.data && res.data.data.length > 0) {
+                me.form.carcode = res.data.data[0].pro_code;
+                me.form.workcard = res.data.data[0].pro_code;
+                me.workcardTips = res.data.data[0].purchase_tips;
+              }
             }
           }
         }
@@ -460,9 +513,11 @@ export default {
     },
     changeTicket() {
       var me = this;
-      this.ticketCost = this.exhibition.tickets.find(
+      var choseTicket = this.exhibition.tickets.find(
         t => t.ticket_code == me.form.TicketCode
-      ).ticket_cost;
+      );
+      this.ticketCost = choseTicket.ticket_cost;
+      me.showCardDetail("ticket", choseTicket.remark);
     },
     SendIdentifyingCode() {
       if (!this.isPhone(this.form.mobile)) {
@@ -493,6 +548,10 @@ export default {
     submit() {
       var me = this;
       let _name = this.form.fullname,
+        _applyDate = this.form.applyDate,
+        _TicketCode = this.form.TicketCode,
+        _playPackage = this.form.playPackage,
+        _workcard = this.form.workcard,
         _tel = this.form.mobile,
         _idcard = this.form.cardnum,
         cardtype = this.form.cardtype,
@@ -503,6 +562,11 @@ export default {
         this.once = true;
         return;
       }
+      if (_applyDate == "") {
+        Toast("请选择观展日期！");
+        this.once = true;
+        return;
+      }
       if (!this.agreementPass) {
         Toast("请阅读免责声明！");
         this.once = true;
@@ -510,6 +574,21 @@ export default {
       }
       if (_idcard.length == 0) {
         Toast("请填写证件号码！");
+        this.once = true;
+        return;
+      }
+      if (this.tabIndex == "1" && _TicketCode == "") {
+        Toast("请选择门票类型！");
+        this.once = true;
+        return;
+      }
+      if (this.tabIndex == "2" && _playPackage == "") {
+        Toast("请选择套餐类型！");
+        this.once = true;
+        return;
+      }
+      if (this.tabIndex == "3" && _workcard == "") {
+        Toast("请选择工作证类型！");
         this.once = true;
         return;
       }
@@ -613,10 +692,16 @@ export default {
         });
       }
     },
-    showCardDetail() {
+    showCardDetail(type, text) {
       var me = this;
-      var info = this.workcards.find(t => t.pro_code == me.form.workcard);
-      me.workcardTips = info.purchase_tips;
+      if (type == "card") {
+        var info = this.workcards.find(t => t.pro_code == me.form.workcard);
+        me.workcardTips = info.purchase_tips;
+      }
+      if (text) {
+        me.workcardTips = text;
+      }
+
       me.workcardDialog = true;
     }
   },
@@ -624,6 +709,7 @@ export default {
   components: {
     airshowCarousel,
     agreementPage,
+    AirIframe,
     [Card.name]: Card,
     [Popup.name]: Popup
   },
@@ -635,13 +721,14 @@ export default {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {
           me.exhibition = res.data.data;
+          me.tickets = res.data.data.tickets.filter(t => t.apple_type == 1);
           me.form.applyDate = res.data.data.days[0];
-          me.form.TicketCode = res.data.data.tickets[0].ticket_code;
+          me.form.TicketCode = me.tickets[0].ticket_code;
         }
       }
     });
-    me.GetServiceItems("package", "FW1102");
-    me.GetServiceItems("workcard", "FW1101");
+    me.GetServiceItems("package", "FW1202");
+    me.GetServiceItems("workcard", "FW1201");
   }
 };
 </script>
