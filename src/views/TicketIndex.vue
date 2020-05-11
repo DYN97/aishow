@@ -623,7 +623,6 @@ export default {
 }
 .listbox {
   height: calc(100vh - 150px);
-
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -681,4 +680,5 @@ export default {
 .list-right {
   width: calc(100% - 130px);
 }
+
 </style>
