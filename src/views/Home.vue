@@ -28,6 +28,13 @@
               class="home-button"
             > <router-link to="/MailList">邮寄列表</router-link></v-col>
           </v-row>
+          <v-row no-gutters>
+            <v-col
+              align-self="center"
+              for="doc-ipt-3"
+              class="home-button"
+            > <router-link to="/ApplyCommand">管理员申请</router-link></v-col>
+          </v-row>
     
   </div>
 </template>

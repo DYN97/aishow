@@ -17,6 +17,7 @@
  import MailDetail from '../views/MailDetail.vue';
  import MailList from '../views/MailList.vue';
  import ConsigneeText from '../views/consigneeText.vue';
+ import ApplyCommand from '../views/ApplyCommand.vue';
 
  Vue.use(VueRouter);
 
@@ -94,10 +95,15 @@
          name: "MailDetail",
          title: "快递详情",
          component: MailDetail
-     }
+     }, {
+        path: "/ApplyCommand",
+        name: "ApplyCommand",
+        title: "权限申请",
+        component:  ApplyCommand
+
+    }
 
  ];
-
  const router = new VueRouter({
      routes,
      base: "/mobile/newapp",
@@ -161,6 +167,9 @@
              break;
          case "MailDetail":
              title = "快递详情";
+             break;
+         case "ApplyCommand":
+             title = "权限申请";
              break;
      }
      setTitle(title);
