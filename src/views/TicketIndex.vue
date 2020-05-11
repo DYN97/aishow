@@ -534,23 +534,23 @@ export default {
         this.once = true;
         return;
       } 
-      // else {
-      //   var result = await this.$api.commonapi.CheckCode(
-      //     this.vifcode,
-      //     this.form.yanzhengma
-      //   );
+      else {
+        var result = await this.$api.commonapi.CheckCode(
+          this.vifcode,
+          this.form.yanzhengma
+        );
 
-      //   if (result.data.statusCode != "200") {
-      //     Toast("请输入正确的验证码");
-      //     this.once = true;
-      //     return;
-      //   }
-      // }
-      // if (!this.CheckCode()) {
-      //   Toast("请输入正确的验证码");
-      //   this.once = true;
-      //   return;
-      // }
+        if (result.data.statusCode != "200") {
+          Toast("请输入正确的验证码");
+          this.once = true;
+          return;
+        }
+      }
+      if (!this.CheckCode()) {
+        Toast("请输入正确的验证码");
+        this.once = true;
+        return;
+      }
       if (this.tabIndex != 2) {
         let params = {
           persons: JSON.stringify([
