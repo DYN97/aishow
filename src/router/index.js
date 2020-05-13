@@ -17,19 +17,22 @@
  import MailDetail from '../views/MailDetail.vue';
  import MailList from '../views/MailList.vue';
  import ConsigneeText from '../views/consigneeText.vue';
+ import Chart from '../views/Chart.vue';
 
  Vue.use(VueRouter);
 
  const routes = [{
+         path: '/',
+         redirect: "/home"
+     }, {
+         path: '/home',
+         name: 'home',
+         component: Home
+     }, {
          path: '/ExhibitionList',
          name: 'ExhibitionList',
          title: "展会列表",
          component: ExhibitionList
-     },
-     {
-         path: '/',
-         name: 'home',
-         component: Home
      },
      {
          path: '/TicketIndex/:exhibitionCode',
@@ -94,6 +97,11 @@
          name: "MailDetail",
          title: "快递详情",
          component: MailDetail
+     }, {
+         path: "/chart",
+         name: "chart",
+         title: "快递详情",
+         component: Chart
      }
 
  ];
@@ -175,8 +183,8 @@
      if (/iphone|ipad|ipod/.test(mobile)) {
          var iframe = document.createElement('iframe');
          iframe.style.display = 'none'
-         var iframeCallback = function() {
-             setTimeout(function() {
+         var iframeCallback = function () {
+             setTimeout(function () {
                  iframe.removeEventListener('load', iframeCallback);
                  document.body.removeChild(iframe);
              }, 0);
