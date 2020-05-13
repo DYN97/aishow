@@ -134,7 +134,7 @@
 
  });
  router.afterEach((transition) => {
-     let title = "聚航 Airshow"
+     let title = "聚航 Airshow";
      let type = transition.query.type ? transition.query.type : "普通";
      let result = transition.params ? transition.params.result : "";
      switch (transition.name) {
@@ -188,13 +188,13 @@
      var mobile = navigator.userAgent.toLowerCase();
      if (/iphone|ipad|ipod/.test(mobile)) {
          var iframe = document.createElement('iframe');
-         iframe.style.display = 'none'
+         iframe.style.display = 'none';
          var iframeCallback = function () {
              setTimeout(function () {
                  iframe.removeEventListener('load', iframeCallback);
                  document.body.removeChild(iframe);
              }, 0);
-         }
+         };
          iframe.addEventListener('load', iframeCallback);
          document.body.appendChild(iframe);
      }
