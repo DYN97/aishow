@@ -17,6 +17,7 @@
  import MailDetail from '../views/MailDetail.vue';
  import MailList from '../views/MailList.vue';
  import ConsigneeText from '../views/consigneeText.vue';
+ import ApplyCommand from '../views/ApplyCommand.vue';
  import Chart from '../views/Chart.vue';
 
  Vue.use(VueRouter);
@@ -97,6 +98,11 @@
          name: "MailDetail",
          title: "快递详情",
          component: MailDetail
+     },{
+        path: "/ApplyCommand",
+        name: "ApplyCommand",
+        title: "权限申请",
+        component:  ApplyCommand
      }, {
          path: "/chart",
          name: "chart",
@@ -178,7 +184,7 @@
 
 
  function setTitle(title) {
-     document.title = title
+     document.title = title;
      var mobile = navigator.userAgent.toLowerCase();
      if (/iphone|ipad|ipod/.test(mobile)) {
          var iframe = document.createElement('iframe');

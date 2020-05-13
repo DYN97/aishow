@@ -18,7 +18,7 @@
             :desc="item.pro_desc"
             :title="item.pro_name"
             :thumb="item.thumb?item.thumb:'http://59.110.175.131:1111/upfiles/2019-04-08/微信图片_20190331135313_20190408220305477.jpg'"
-            @click="OpenDetailPage(item.pro_code)"
+            @click="OpenDetailPage(item)"
           />
         </div>
         <v-form style="background-color:white">
@@ -31,6 +31,7 @@
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.applyDate"
               >
+                <option value>请选择</option>
                 <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </div>
@@ -40,30 +41,37 @@
               <i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型
             </div>
             <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.playPackage">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.playPackage"
+              >
+                <option value>请选择</option>
                 <option
                   v-for="item in playPackages"
-                  :key="item.pro_code"
-                  :value="item.pro_code"
-                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
-              </select>
-            </div>
-          </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.packageLevel">
-                <option
-                  v-for="item in packageLevels"
                   :key="item.pro_code"
                   :value="item.pro_code"
                 >{{item.pro_name}}</option>
               </select>
             </div>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2">
+          <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.packageLevel"
+              >
+                <option
+                  v-for="item in packageLevels"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
+              </select>
+            </div>
+          </v-row>
+          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车
             </div>
@@ -77,12 +85,13 @@
             </div>
             <div class="am-u-sm-8 list-right">
               <select
-                style="width:95%;height:46px"
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.TicketCode"
                 @change="changeTicket"
               >
+                <option value>请选择</option>
                 <option
-                  v-for="item in exhibition.tickets"
+                  v-for="item in tickets"
                   :key="item.ticket_code"
                   :value="item.ticket_code"
                 >{{item.out_ticket_name+'(￥'+item.ticket_cost+')'}}</option>
@@ -111,7 +120,10 @@
               <i class="iconfont">&#xe690;</i>证件类型
             </div>
             <div align-self="center" class="am-u-sm-8 list-right">
-              <select style="width:95%;height:46px" v-model="form.cardtype">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.cardtype"
+              >
                 <option value="0">身份证</option>
                 <option value="1">护照</option>
                 <option value="2">港澳通行证</option>
@@ -207,9 +219,18 @@
         <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
       </van-popup>
       <van-popup v-model="showDetail" position="left" :style="{width:'100%',height:'100%'}">
-        <AirIframe src="http://www.baidu.com" title="测试"  @closeChoseBox="showDetail=false"/>
+        <AirIframe :src="packageLink" :title="packageName" @closeChoseBox="showDetail=false" />
       </van-popup>
-
+      <v-dialog v-model="workcardDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">温馨提示</v-card-title>
+          <v-card-text>{{workcardTips}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="workcardDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -236,16 +257,18 @@ export default {
           isguanggao: false
         }
       ],
-      showDetail:false,
+      showDetail: false,
       YZMloading: false,
       CountDown: 60,
       tabIndex: 0,
+      packageName: "",
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
         tickets: [],
         days: []
       },
+      tickets: [],
       lookUp: "0",
       ticketCost: 0,
       playPackages: [],
@@ -253,8 +276,11 @@ export default {
       carText: "",
       vifcode: "",
       workcards: [],
+      packageLink: "",
       showAgreement: false,
       agreementPass: false,
+      workcardDialog: false,
+      workcardTips: "",
       form: {
         fullname: "",
         cardtype: 0,
@@ -299,6 +325,24 @@ export default {
         this.action = "观展服务";
         this.xieyi = "购买";
       }
+      this.form = {
+        fullname: "",
+        cardtype: 0,
+        invite_code: "",
+        cardnum: "",
+        applyDate: "",
+        mobile: "",
+        company: "",
+        duty: "",
+        TicketCode: "",
+        TicketName: "",
+        playPackage: "",
+        packageLevel: "",
+        carcode: "",
+        needCar: "",
+        workcard: "",
+        yanzhengma: ""
+      };
     },
     "form.playPackage": function(val) {
       this.GetServiceItems("level", val);
@@ -315,8 +359,9 @@ export default {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {
           me.exhibition = res.data.data;
+          me.tickets = res.data.data.tickets.filter(t => t.apple_type == 0);
           me.form.applyDate = res.data.data.days[0];
-          me.form.TicketCode = res.data.data.tickets[0].ticket_code;
+          me.form.TicketCode = me.tickets[0].ticket_code;
         }
       }
     });
@@ -343,8 +388,10 @@ export default {
         }
       });
     },
-    OpenDetailPage() {
-      this.showDetail =true;
+    OpenDetailPage(item) {
+      this.showDetail = true;
+      this.packageName = item.pro_name;
+      this.packageLink = item.pro_detail_url;
     },
     SendIdentifyingCode() {
       if (!this.isPhone(this.form.mobile)) {
@@ -412,14 +459,31 @@ export default {
     },
     changeTicket() {
       var me = this;
-      this.ticketCost = this.exhibition.tickets.find(
+      var choseTicket = this.exhibition.tickets.find(
         t => t.ticket_code == me.form.TicketCode
-      ).ticket_cost;
+      );
+      this.ticketCost = choseTicket.ticket_cost;
+      me.showCardDetail("ticket", choseTicket.remark);
     },
     async CheckCode() {},
+    showCardDetail(type, text) {
+      var me = this;
+      if (type == "card") {
+        var info = this.workcards.find(t => t.pro_code == me.form.workcard);
+        me.workcardTips = info.purchase_tips;
+      }
+      if (text) {
+        me.workcardTips = text;
+      }
+
+      me.workcardDialog = true;
+    },
     async submit() {
       var me = this;
       let _name = this.form.fullname,
+        _applyDate = this.form.applyDate,
+        _TicketCode = this.form.TicketCode,
+        _playPackage = this.form.playPackage,
         _tel = this.form.mobile,
         _idcard = this.form.cardnum,
         cardtype = this.form.cardtype,
@@ -440,6 +504,11 @@ export default {
         this.once = true;
         return;
       }
+      if (_applyDate == "") {
+        Toast("请选择观展日期！");
+        this.once = true;
+        return;
+      }
       if (cardtype == 0 && (_idcard.length != 18 || !this.isIDCard(_idcard))) {
         Toast("请填写正确的身份证号！");
         this.once = true;
@@ -450,11 +519,22 @@ export default {
         this.once = true;
         return;
       }
+      if (this.tabIndex == "1" && _TicketCode == "") {
+        Toast("请选择门票类型！");
+        this.once = true;
+        return;
+      }
+      if (this.tabIndex == "2" && _playPackage == "") {
+        Toast("请选择套餐类型！");
+        this.once = true;
+        return;
+      }
       if (!yanzhengma || yanzhengma.length < 4) {
         Toast("请输入正确的验证码");
         this.once = true;
         return;
-      } else {
+      } 
+      else {
         var result = await this.$api.commonapi.CheckCode(
           this.vifcode,
           this.form.yanzhengma
@@ -623,7 +703,6 @@ export default {
 }
 .listbox {
   height: calc(100vh - 150px);
-
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -681,4 +760,5 @@ export default {
 .list-right {
   width: calc(100% - 130px);
 }
+
 </style>

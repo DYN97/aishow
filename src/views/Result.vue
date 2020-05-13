@@ -311,7 +311,9 @@ export default {
       window.location.href =
         "/appwxpay.aspx?token=" +
         me.$store.state.token +
-        "&ordercode=" +
+        "&type=" +
+        me.type +
+          "&ordercode=" +
         me.ordercode +
         "&total_fee=" +
         me.total_fee +

@@ -7,7 +7,7 @@
         <b class="name">门票类型</b>
         <span class="text">电子门票</span>
       </li>
-      <li class="clearfix" style="text-align:center">
+      <li class="clearfix" style="text-align:center" v-if="apply_status==2">
         <vue-qr :text="qrurl" :margin="0" colorDark="#000000" colorLight="#fff"  :logoScale="0.3" :size="180" style="margin:0 auto"></vue-qr>
       </li>
       <li class="clearfix">

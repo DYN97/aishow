@@ -21,7 +21,9 @@ export default {
   },
   methods: {
     // 获取路径
-    onClose() {}
+    onClose() {
+      this.$emit("closeChoseBox");
+    }
   },
   mounted() {}
 };
