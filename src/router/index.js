@@ -18,19 +18,22 @@
  import MailList from '../views/MailList.vue';
  import ConsigneeText from '../views/consigneeText.vue';
  import ApplyCommand from '../views/ApplyCommand.vue';
+ import Chart from '../views/Chart.vue';
 
  Vue.use(VueRouter);
 
  const routes = [{
+         path: '/',
+         redirect: "/home"
+     }, {
+         path: '/home',
+         name: 'home',
+         component: Home
+     }, {
          path: '/ExhibitionList',
          name: 'ExhibitionList',
          title: "展会列表",
          component: ExhibitionList
-     },
-     {
-         path: '/',
-         name: 'home',
-         component: Home
      },
      {
          path: '/TicketIndex/:exhibitionCode',
@@ -95,15 +98,20 @@
          name: "MailDetail",
          title: "快递详情",
          component: MailDetail
-     }, {
+     },{
         path: "/ApplyCommand",
         name: "ApplyCommand",
         title: "权限申请",
         component:  ApplyCommand
-
-    }
+     }, {
+         path: "/chart",
+         name: "chart",
+         title: "快递详情",
+         component: Chart
+     }
 
  ];
+
  const router = new VueRouter({
      routes,
      base: "/mobile/newapp",
@@ -126,7 +134,7 @@
 
  });
  router.afterEach((transition) => {
-     let title = "聚航 Airshow"
+     let title = "聚航 Airshow";
      let type = transition.query.type ? transition.query.type : "普通";
      let result = transition.params ? transition.params.result : "";
      switch (transition.name) {
@@ -168,9 +176,6 @@
          case "MailDetail":
              title = "快递详情";
              break;
-         case "ApplyCommand":
-             title = "权限申请";
-             break;
      }
      setTitle(title);
  });
@@ -179,17 +184,17 @@
 
 
  function setTitle(title) {
-     document.title = title
+     document.title = title;
      var mobile = navigator.userAgent.toLowerCase();
      if (/iphone|ipad|ipod/.test(mobile)) {
          var iframe = document.createElement('iframe');
-         iframe.style.display = 'none'
-         var iframeCallback = function() {
-             setTimeout(function() {
+         iframe.style.display = 'none';
+         var iframeCallback = function () {
+             setTimeout(function () {
                  iframe.removeEventListener('load', iframeCallback);
                  document.body.removeChild(iframe);
              }, 0);
-         }
+         };
          iframe.addEventListener('load', iframeCallback);
          document.body.appendChild(iframe);
      }
