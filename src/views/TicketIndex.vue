@@ -407,13 +407,12 @@ export default {
         value = value + charactors.charAt(i);
       }
       this.vifcode = value;
-
+      this.YZMloading = true;
       this.$api.commonapi
         .SendIdentifyingCode(this.form.mobile, this.vifcode)
         .then(res => {
           if (res.data.statusCode == "200") {
             Toast("发送成功，请注意查收！");
-            this.YZMloading = true;
           } else {
             console.log(res.data);
           }

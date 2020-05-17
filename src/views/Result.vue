@@ -257,7 +257,7 @@ export default {
         me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
-            // me.ticketDate = detail.ticket_date.substring(0,10);
+             me.ticketDate =  detail.exhibition_date.substring(0, 10);
             me.workcardType = detail.pro_name;
             me.clientName = detail.client_name;
             me.clientMobile = detail.client_phone;

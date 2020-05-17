@@ -177,6 +177,7 @@ export default {
         case "1":return type=="ticket"?"申请失败": "待出票";
         case "2":return "待领取";
         case "3":return "已领取";
+        case "4":return type=="ticket"?"已激活": "申请失败";
       }
     }
     

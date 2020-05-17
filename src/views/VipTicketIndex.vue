@@ -414,7 +414,9 @@ export default {
         workcard: "",
         yanzhengma: ""
       };
+      this.form.invite_code = this.$route.query.invite_code;
     },
+     
     "form.playPackage": function(val) {
       //
       this.GetServiceItems("level", val);
@@ -533,13 +535,12 @@ export default {
         value = value + charactors.charAt(i);
       }
       this.vifcode = value;
-
+      this.YZMloading = true;
       this.$api.commonapi
         .SendIdentifyingCode(this.form.mobile, this.vifcode)
         .then(res => {
           if (res.data.statusCode == "200") {
-            Toast("发送成功，请注意查收！");
-            this.YZMloading = true;
+            Toast("发送成功，请注意查收！");            
           } else {
             console.log(res.data);
           }
@@ -615,6 +616,7 @@ export default {
               Idcard: this.form.cardnum,
               CardType: this.form.cardtype,
               InviteCode: this.form.invite_code,
+              TicketCode: this.form.TicketCode,
               Mobile: this.form.mobile,
               TicketDate: this.form.applyDate,
               Duty: this.form.duty,
@@ -658,7 +660,7 @@ export default {
           cliend_cardtype: this.form.cardtype,
           client_phone: this.form.mobile,
           rec_company: this.form.company,
-          jobname: this.form.duty,
+          job_name: this.form.duty,
           pro_code:
             this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
           buy_num: 1
