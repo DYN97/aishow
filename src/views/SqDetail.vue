@@ -123,7 +123,7 @@ export default {
             break;
           case 1:
             me.statusText =
-              '申请失败';
+              '待审核';
             break;
           case 3:
             var text = "已领取";
@@ -134,7 +134,7 @@ export default {
             break;
           case 4:
             me.statusText =
-              '已激活';
+              '申请失败';
             break;
           case 5:
             me.statusText =
