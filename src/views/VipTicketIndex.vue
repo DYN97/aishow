@@ -166,6 +166,21 @@
               </select>
             </div>
           </v-row>
+          <v-row no-gutters v-if="tabIndex==2">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe690;</i>性别
+            </div>
+            <div align-self="center" class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.sex"
+              >
+                <option value="1">男</option>
+                <option value="0">女</option>
+              </select>
+            </div>
+          </v-row>
+
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>证件号码
@@ -185,7 +200,7 @@
 
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe659;</i>联系电话
+              <i class="iconfont">&#xe659;</i>手机号码
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
@@ -193,7 +208,43 @@
                 onkeyup="this.value=this.value.replace(/\D/g,'')"
                 v-model="form.mobile"
                 class="mainForm"
-                label="有效的联系电话"
+                label="有效的手机号码"
+                hide-details="auto"
+                height="30"
+                single-line
+                regular
+              ></v-text-field>
+            </div>
+          </v-row>
+          <v-row no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe659;</i>联系人
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <v-text-field
+                maxlength="11"
+                onkeyup="this.value=this.value.replace(/\D/g,'')"
+                v-model="form.link_man"
+                class="mainForm"
+                label="有效的手机号码"
+                hide-details="auto"
+                height="30"
+                single-line
+                regular
+              ></v-text-field>
+            </div>
+          </v-row>
+          <v-row no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe659;</i>联系电话
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <v-text-field
+                maxlength="11"
+                onkeyup="this.value=this.value.replace(/\D/g,'')"
+                v-model="form.link_phone"
+                class="mainForm"
+                label="有效的手机号码"
                 hide-details="auto"
                 height="30"
                 single-line
@@ -219,19 +270,20 @@
           </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe618;</i>
-              <label v-html="'职　　务'"></label>
+              <i class="iconfont">&#xe690;</i>职务
             </div>
-            <div class="am-u-sm-8 list-right">
-              <v-text-field
+            <div align-self="center" class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.duty"
-                class="mainForm"
-                label="填写职务"
-                hide-details="auto"
-                height="30"
-                single-line
-                regular
-              ></v-text-field>
+              >
+                <option value>请选择</option>
+                <option
+                  v-for="item in dutys"
+                  :key="item.com_code"
+                  :value="item.com_code"
+                >{{item.com_name}}</option>
+              </select>
             </div>
           </v-row>
           <v-row height="46px" no-gutters style="position: relative">
@@ -328,6 +380,7 @@ export default {
         }
       ],
       YZMloading: false,
+      dutys: [],
       CountDown: 60,
       tabIndex: 1,
       workcardDialog: false,
@@ -357,6 +410,9 @@ export default {
         cardnum: "",
         applyDate: "",
         mobile: "",
+        link_man: "",
+        link_phone: "",
+        sex: 0,
         company: "",
         duty: "",
         TicketCode: "",
@@ -401,8 +457,11 @@ export default {
         cardtype: 0,
         invite_code: "",
         cardnum: "",
+        sex: 0,
         applyDate: "",
         mobile: "",
+        link_man: "",
+        link_phone: "",
         company: "",
         duty: "",
         TicketCode: "",
@@ -552,6 +611,8 @@ export default {
         _TicketCode = this.form.TicketCode,
         _playPackage = this.form.playPackage,
         _workcard = this.form.workcard,
+        _link_phone = this.form.link_phone,
+        _link_man = this.form.link_man,
         _tel = this.form.mobile,
         _idcard = this.form.cardnum,
         cardtype = this.form.cardtype,
@@ -564,6 +625,11 @@ export default {
       }
       if (_applyDate == "") {
         Toast("请选择观展日期！");
+        this.once = true;
+        return;
+      }
+      if (_link_man == "") {
+        Toast("请填写联系人姓名！");
         this.once = true;
         return;
       }
@@ -597,8 +663,13 @@ export default {
         this.once = true;
         return;
       }
-      if (_tel.length < 11 || !this.isPhone(_tel)) {
+      if (_link_phone.length < 11 || !this.isPhone(_link_phone)) {
         Toast("请填写有效的联系电话！");
+        this.once = true;
+        return;
+      }
+      if (_tel.length < 11 || !this.isPhone(_tel)) {
+        Toast("请填写有效的电话号码！");
         this.once = true;
         return;
       }
@@ -618,6 +689,7 @@ export default {
               Mobile: this.form.mobile,
               TicketDate: this.form.applyDate,
               Duty: this.form.duty,
+              Sex: this.form.sex,
               CompanyName: this.form.company,
               Type: "1",
               TicketCost: this.ticketCost
@@ -657,6 +729,9 @@ export default {
           client_idcard: this.form.cardnum,
           cliend_cardtype: this.form.cardtype,
           client_phone: this.form.mobile,
+          link_man: this.form.link_man,
+          link_phone: this.form.link_phone,
+          sex: this.form.sex,
           rec_company: this.form.company,
           jobname: this.form.duty,
           pro_code:
@@ -717,6 +792,12 @@ export default {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
     me.form.invite_code = this.$route.query.invite_code;
+    this.$api.commonapi.GetDutys().then(res => {
+      if (res.data.statusCode == "200") {
+        me.dutys = res.data.data;
+      }
+    });
+
     this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {

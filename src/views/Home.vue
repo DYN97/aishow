@@ -1,13 +1,13 @@
 <template>
   <div class="home">
-     <v-row no-gutters>
+      <v-row no-gutters>
             <v-col
               align-self="center"
               class="home-button"
               for="doc-ipt-3"
             > <router-link to="/exhibitionList">普通观众订票</router-link></v-col>
           </v-row>
-   <v-row no-gutters>
+          <v-row no-gutters>
             <v-col
               align-self="center"
               class="home-button"
@@ -21,7 +21,7 @@
               for="doc-ipt-3"
             > <router-link to="/Orderlist">订单列表</router-link></v-col>
           </v-row>
-           <v-row no-gutters>
+          <v-row no-gutters>
             <v-col
               align-self="center"
               for="doc-ipt-3"

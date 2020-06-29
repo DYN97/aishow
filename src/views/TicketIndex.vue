@@ -6,7 +6,7 @@
       <v-tabs grow v-model="tabIndex">
         <v-tab :key="0" @click="tabIndex=0">申请赠票</v-tab>
         <v-tab :key="1" @click="tabIndex=1">购买门票</v-tab>
-        <v-tab :key="2" @click="tabIndex=2">观展套餐</v-tab>
+        <v-tab :key="2" @click="tabIndex=2">观展服务</v-tab>
       </v-tabs>
       <div style="width:100%">
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
@@ -35,6 +35,9 @@
                 <option v-for="date in exhibition.days" :key="date">{{date}}</option>
               </select>
             </div>
+          </v-row>
+          <v-row height="46px" no-gutters>
+            <v-col>不含普通门票</v-col>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -127,6 +130,20 @@
                 <option value="0">身份证</option>
                 <option value="1">护照</option>
                 <option value="2">港澳通行证</option>
+              </select>
+            </div>
+          </v-row>
+          <v-row no-gutters v-if="tabIndex==2">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe690;</i>性别
+            </div>
+            <div align-self="center" class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.sex"
+              >
+                <option value="1">男</option>
+                <option value="0">女</option>
               </select>
             </div>
           </v-row>
@@ -284,6 +301,7 @@ export default {
       form: {
         fullname: "",
         cardtype: 0,
+        sex:0,
         invite_code: "",
         cardnum: "",
         applyDate: "",
@@ -331,6 +349,7 @@ export default {
         invite_code: "",
         cardnum: "",
         applyDate: "",
+        sex: 0,
         mobile: "",
         company: "",
         duty: "",
@@ -562,6 +581,7 @@ export default {
               TicketDate: this.form.applyDate,
               Type: this.tabIndex,
               TicketCode: this.form.TicketCode,
+              Sex: this.form.sex,
               TicketCost: this.ticketCost
             }
           ]),
@@ -613,6 +633,7 @@ export default {
           client_name: this.form.fullname,
           client_idcard: this.form.cardnum,
           cliend_cardtype: this.form.cardtype,
+          sex: this.form.sex,
           client_phone: this.form.mobile,
           pro_code: this.form.packageLevel,
           exhibition_date: this.form.applyDate,
