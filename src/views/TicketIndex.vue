@@ -21,6 +21,7 @@
             @click="OpenDetailPage(item)"
           />
         </div>
+        <van-notice-bar scrollable text="技术是开发它的人的共同灵魂。" />
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -59,6 +60,23 @@
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px">&#xe655;</i>包车类型
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.carcode"
+              >
+                <option
+                  v-for="item in carlist"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
+              </select>
+            </div>
+          </v-row>
+          <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
             </div>
             <div class="am-u-sm-8 list-right">
@@ -76,10 +94,10 @@
           </v-row>
           <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车
+              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <v-checkbox v-model="form.needCar" :label="carText" type="checkbox" required></v-checkbox>
+              <v-checkbox v-model="form.needSingleRoom" :label="carText" type="checkbox" required></v-checkbox>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
@@ -255,25 +273,13 @@
 import airshowCarousel from "../components/Carousel";
 import AirIframe from "../components/AirIframe";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast, Popup } from "vant";
+import { Card, Toast, Popup,NoticeBar  } from "vant";
 export default {
   name: "TicketIndex",
   data() {
     return {
       action: "赠票",
       xieyi: "赠票",
-      imgs: [
-        {
-          src:
-            "http://59.110.175.131:1111/upfiles/2019-07-31/h5_20190731205844240.jpg",
-          isguanggao: true
-        },
-        {
-          src:
-            "http://59.110.175.131:1111/upfiles/2019-07-31/h7_20190731205944651.jpg",
-          isguanggao: false
-        }
-      ],
       showDetail: false,
       YZMloading: false,
       CountDown: 60,
@@ -679,6 +685,7 @@ export default {
     agreementPage,
     AirIframe,
     [Card.name]: Card,
+    [NoticeBar.name]: NoticeBar,
     [Popup.name]: Popup
   }
 };
