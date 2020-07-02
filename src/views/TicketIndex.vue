@@ -9,6 +9,8 @@
         <v-tab :key="2" @click="tabIndex=2">观展服务</v-tab>
       </v-tabs>
       <div style="width:100%">
+        
+        <van-notice-bar left-icon="volume-o" scrollable :text="rollingNotice.information_title" @click="ToOutLink(rollingNotice.information_content,'通知')"/>
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <div v-if="tabIndex==2" style="margin-bottom:20px">
           <van-card
@@ -21,7 +23,6 @@
             @click="OpenDetailPage(item)"
           />
         </div>
-        <van-notice-bar scrollable :text="rollingNotice[0].title" @click="ToOutLink(rollingNotice[0].information_content,'通知')"/>
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -58,23 +59,7 @@
               </select>
             </div>
           </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px">&#xe655;</i>包车类型
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.carcode"
-              >
-                <option
-                  v-for="item in carlist"
-                  :key="item.pro_code"
-                  :value="item.pro_code"
-                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
-              </select>
-            </div>
-          </v-row>
+         
           <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
@@ -92,12 +77,29 @@
               </select>
             </div>
           </v-row>
+           <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px">&#xe61d;</i>包车类型
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.carcode"
+              >
+                <option
+                  v-for="item in carList"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
+              </select>
+            </div>
+          </v-row>
           <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <v-checkbox v-model="form.needSingleRoom" :label="carText" type="checkbox" required></v-checkbox>
+              <v-checkbox v-model="form.needSingleRoom" label="需要单间" type="checkbox" required></v-checkbox>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
@@ -296,7 +298,8 @@ export default {
       ticketCost: 0,
       playPackages: [],
       packageLevels: [],
-      carText: "",
+      carList: [],
+      roomText: "",
       vifcode: "",
       workcards: [],
       packageLink: "",
@@ -308,7 +311,8 @@ export default {
       form: {
         fullname: "",
         cardtype: 0,
-        sex:1,        invite_code: "",
+        sex:1,
+        invite_code: "",
         cardnum: "",
         applyDate: "",
         mobile: "",
@@ -320,6 +324,7 @@ export default {
         packageLevel: "",
         carcode: "",
         needCar: "",
+        roomcode: "",
         workcard: "",
         yanzhengma: ""
       }
@@ -373,7 +378,7 @@ export default {
       this.GetServiceItems("level", val);
     },
     "form.packageLevel": function(val) {
-      this.GetServiceItems("car", val);
+      this.GetServiceItems("room", val);
     }
   },
   computed: {},
@@ -409,11 +414,14 @@ export default {
               me.playPackages = res.data.data;
               me.form.playPackage = res.data.data[0].pro_code;
             } else if (type == "level") {
-              me.packageLevels = res.data.data;
+              me.packageLevels = res.data.data.filter(t=>t.com_code=="1102");
+              me.GetServiceItems("car",res.data.data.find(t=>t.com_code=="11").pro_code);
               me.form.packageLevel = res.data.data[0].pro_code;
             } else if (type == "car") {
               me.form.carcode = res.data.data[0].pro_code;
-              me.carText = res.data.data[0].pro_name;
+              me.carList = res.data.data;
+            }else{
+              me.form.roomcode = res.data.data[0].pro_code;
             }
           }
         }
