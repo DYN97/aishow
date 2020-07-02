@@ -21,7 +21,7 @@
             @click="OpenDetailPage(item)"
           />
         </div>
-        <van-notice-bar scrollable text="技术是开发它的人的共同灵魂。" />
+        <van-notice-bar scrollable :text="rollingNotice[0].title" @click="ToOutLink(rollingNotice[0].information_content,'通知')"/>
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -273,7 +273,7 @@
 import airshowCarousel from "../components/Carousel";
 import AirIframe from "../components/AirIframe";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast, Popup,NoticeBar  } from "vant";
+import { Card, Toast, Popup, NoticeBar } from "vant";
 export default {
   name: "TicketIndex",
   data() {
@@ -303,11 +303,12 @@ export default {
       showAgreement: false,
       agreementPass: false,
       workcardDialog: false,
+      rollingNotice:[],
       workcardTips: "",
       form: {
         fullname: "",
         cardtype: 0,
-        sex:0,
+        sex: 0,
         invite_code: "",
         cardnum: "",
         applyDate: "",
@@ -380,6 +381,12 @@ export default {
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
+    this.$api.commonapi.GetInformationList(31).then(res => {
+      if (res.data.statusCode == "200") {
+        me.rollingNotice = res.data.data;
+      }
+    });
+
     this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {
@@ -442,6 +449,12 @@ export default {
             console.log(res.data);
           }
         });
+    },
+    ToOutLink(url,title){
+      this.showDetail = true;
+      this.packageName = title;
+      this.packageLink = url;
+
     },
     agree() {
       this.showAgreement = false;
@@ -557,8 +570,7 @@ export default {
         Toast("请输入正确的验证码");
         this.once = true;
         return;
-      } 
-      else {
+      } else {
         var result = await this.$api.commonapi.CheckCode(
           this.vifcode,
           this.form.yanzhengma
@@ -787,5 +799,4 @@ export default {
 .list-right {
   width: calc(100% - 130px);
 }
-
 </style>
