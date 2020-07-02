@@ -36,8 +36,8 @@
               </select>
             </div>
           </v-row>
-          <v-row height="46px" no-gutters>
-            <v-col>不含普通门票</v-col>
+          <v-row height="46px" no-gutters v-if="tabIndex==2">
+            <v-col style="padding-left:60px;color:red"><i class="iconfont">&#xe60f;</i>不含观展门票，请另行购买。</v-col>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -301,7 +301,7 @@ export default {
       form: {
         fullname: "",
         cardtype: 0,
-        sex:0,
+        sex:1,
         invite_code: "",
         cardnum: "",
         applyDate: "",
@@ -349,7 +349,7 @@ export default {
         invite_code: "",
         cardnum: "",
         applyDate: "",
-        sex: 0,
+        sex:1,
         mobile: "",
         company: "",
         duty: "",

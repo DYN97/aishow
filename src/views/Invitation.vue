@@ -31,7 +31,7 @@
       <v-card>
         <v-card-title class="headline" style="justify-content: center;">温馨提示</v-card-title>
         <v-card-text style="font-size:18px;margin-top:20px;text-align:center">
-          该验证码还可以使用
+          该邀请码还可以使用
           <span style="color:red;font-size:20px">{{restCount}}</span>次
         </v-card-text>
         <v-card-actions style="justify-content: center;">
