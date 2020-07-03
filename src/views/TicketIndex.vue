@@ -86,6 +86,7 @@
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.carcode"
               >
+              <option value="">请选择</option>
                 <option
                   v-for="item in carList"
                   :key="item.pro_code"
@@ -99,7 +100,7 @@
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <v-checkbox v-model="form.needSingleRoom" label="需要单间" type="checkbox" required></v-checkbox>
+              <v-checkbox v-model="form.needRoom" label="需要单间" type="checkbox" required></v-checkbox>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
@@ -323,7 +324,7 @@ export default {
         playPackage: "",
         packageLevel: "",
         carcode: "",
-        needCar: "",
+        needRoom: "",
         roomcode: "",
         workcard: "",
         yanzhengma: ""
@@ -369,7 +370,7 @@ export default {
         playPackage: "",
         packageLevel: "",
         carcode: "",
-        needCar: "",
+        needRoom: "",
         workcard: "",
         yanzhengma: ""
       };
@@ -418,7 +419,6 @@ export default {
               me.GetServiceItems("car",res.data.data.find(t=>t.com_code=="11").pro_code);
               me.form.packageLevel = res.data.data[0].pro_code;
             } else if (type == "car") {
-              me.form.carcode = res.data.data[0].pro_code;
               me.carList = res.data.data;
             }else{
               me.form.roomcode = res.data.data[0].pro_code;
@@ -658,17 +658,20 @@ export default {
           client_idcard: this.form.cardnum,
           cliend_cardtype: this.form.cardtype,
           sex: this.form.sex,
+          use_type:2,
           client_phone: this.form.mobile,
           pro_code: this.form.packageLevel,
           exhibition_date: this.form.applyDate,
           buy_num: 1
         };
-
-        if (this.form.needCar) {
-          params.other = [];
-          params.other.push(this.form.carcode);
+        var other = [];
+        if (this.form.needRoom) {          
+          other.push(this.form.roomcode);
         }
-
+        if(this.form.carcode!=""){
+          other.push(this.form.carcode);
+        }
+        params.other = JSON.stringify(other);
         this.$api.orderapi.CreateProductOrder(params).then(res => {
           if (res.data.statusCode == "200") {
             window.location.href =
