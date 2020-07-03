@@ -61,7 +61,7 @@ export default {
       ismail: false,
       dialog: false,
       exhibition_name: "",
-      detail_id: "",
+      order_code: "",
       client_name: "",
       client_idcard: "",
       client_phone: "",
@@ -84,12 +84,12 @@ export default {
   },
   mounted() {
     var me = this;
-    me.detail_id = this.$route.params.id;
+    me.order_code = this.$route.params.id;
 
-    me.$api.orderapi.GetProductDetail(me.detail_id).then(res => {
+    me.$api.orderapi.GetServerOrderInfo(me.order_code).then(res => {
       if (res.data.statusCode == "200") {
         me.exhibition_name = res.data.data.exhibition_name;
-        me.detail_id = res.data.data.detail_id;
+        me.order_code = res.data.data.sp_order_code;
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
@@ -112,7 +112,7 @@ export default {
         me.addressee_phone = res.data.data.addressee_phone;
         me.addre = res.data.data.addre;
         me.apply_status = res.data.data.apply_status;
-       switch (parseInt(me.apply_status)) {
+        switch (parseInt(me.apply_status)) {
           case 2:
             me.statusText =
               '待领取';
@@ -150,9 +150,8 @@ export default {
       this.$router.push({ name: "MailList" });
     },
     refundMoney() {
-      let detail_id = this.$route.params.id;
-      console.log(detail_id);
-      this.$api.orderapi.RefundMoney(detail_id).then(res => {
+      let order_code = this.$route.params.id;
+      this.$api.orderapi.RefundMoney(order_code).then(res => {
         if (res.data.statusCode == "200") {
           alert("退款成功!");
           window.location.reload();
