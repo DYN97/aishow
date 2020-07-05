@@ -8,6 +8,12 @@
         <v-tab :key="3" @click="tabIndex=3">工作证预订</v-tab>
       </v-tabs>
       <div style="width:100%;border:1px #ccc solid;">
+        <van-notice-bar
+          left-icon="volume-o"
+          scrollable
+          :text="rollingNotice.information_title"
+          @click="ToOutLink(rollingNotice.information_content,'通知')"
+        />
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <div v-if="tabIndex==2" style="margin-bottom:20px">
           <van-card
@@ -88,12 +94,30 @@
               </select>
             </div>
           </v-row>
+          <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px">&#xe61d;</i>包车类型
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.carcode"
+              >
+                <option value>请选择</option>
+                <option
+                  v-for="item in carList"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
+              </select>
+            </div>
+          </v-row>
           <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单独包车
+              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <v-checkbox v-model="form.needCar" :label="carText" type="checkbox" required></v-checkbox>
+              <v-checkbox v-model="form.needRoom" label="需要单间" type="checkbox" required></v-checkbox>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
@@ -222,11 +246,9 @@
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
-                maxlength="11"
-                onkeyup="this.value=this.value.replace(/\D/g,'')"
                 v-model="form.link_man"
                 class="mainForm"
-                label="有效的手机号码"
+                label="联系人姓名"
                 hide-details="auto"
                 height="30"
                 single-line
@@ -359,7 +381,7 @@
 <script>
 import agreementPage from "../components/agreementPage";
 import AirIframe from "../components/AirIframe";
-import { Card, Toast, Popup } from "vant";
+import { Card, Toast, Popup, NoticeBar } from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
   name: "TicketIndex",
@@ -397,22 +419,27 @@ export default {
       ticketCost: 0,
       playPackages: [],
       packageLevels: [],
+      carList: [],
+      roomText: "",
+      vifcode: "",
+      workcards: [],
       showAgreement: false,
       agreementPass: false,
       carText: "",
-      workcards: [],
+      rollingNotice: [],
       workcardTips: "",
       tickets: [],
       form: {
         fullname: "",
         cardtype: 0,
+        sex: 1,
         invite_code: "",
         cardnum: "",
         applyDate: "",
         mobile: "",
         link_man: "",
         link_phone: "",
-        sex: 1,
+
         company: "",
         duty: "",
         TicketCode: "",
@@ -420,7 +447,8 @@ export default {
         playPackage: "",
         packageLevel: "",
         carcode: "",
-        needCar: "",
+        needRoom: "",
+        roomcode: "",
         workcard: "",
         yanzhengma: ""
       }
@@ -469,20 +497,49 @@ export default {
         playPackage: "",
         packageLevel: "",
         carcode: "",
-        needCar: "",
+        needRoom: "",
         workcard: "",
         yanzhengma: ""
       };
       this.form.invite_code = this.$route.query.invite_code;
     },
-     
+
     "form.playPackage": function(val) {
       //
       this.GetServiceItems("level", val);
     },
     "form.packageLevel": function(val) {
-      this.GetServiceItems("car", val);
+      this.GetServiceItems("room", val);
     }
+  },
+  computed: {},
+  mounted() {
+    var me = this;
+    let exhibition_code = this.$route.params.exhibitionCode;
+    me.form.invite_code = this.$route.query.invite_code;
+    this.$api.commonapi.GetInformationList(31).then(res => {
+      if (res.data.statusCode == "200") {
+        me.rollingNotice = res.data.data;
+      }
+    });
+    this.$api.commonapi.GetDutys().then(res => {
+      if (res.data.statusCode == "200") {
+        me.dutys = res.data.data;
+      }
+    });
+
+    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
+      if (res.status == "200") {
+        if (res.data.statusCode == "200") {
+          me.exhibition = res.data.data;
+          me.tickets = res.data.data.tickets.filter(t => t.apple_type == 1);
+          me.form.applyDate = res.data.data.days[0];
+          me.form.TicketCode = me.tickets[0].ticket_code;
+        }
+      }
+    });
+    me.GetServiceItems("package", "FW1202");
+    me.GetServiceItems("workcard", "FW1201");
   },
   methods: {
     OpenDetailPage(item) {
@@ -502,19 +559,25 @@ export default {
                 me.form.playPackage = res.data.data[0].pro_code;
               }
             } else if (type == "level") {
-              me.packageLevels = res.data.data;
+              me.packageLevels = res.data.data.filter(
+                t => t.com_code == "1202"
+              );
+              me.GetServiceItems(
+                "car",
+                res.data.data.find(t => t.com_code == "12").pro_code
+              );
               if (res.data.data && res.data.data.length > 0) {
                 me.form.packageLevel = res.data.data[0].pro_code;
               }
             } else if (type == "car") {
               if (res.data.data && res.data.data.length > 0) {
-                me.form.carcode = res.data.data[0].pro_code;
-                me.carText = res.data.data[0].pro_name;
+                me.carList = res.data.data;
               }
+            } else if (type == "room") {
+              me.form.roomcode = res.data.data[0].pro_code;
             } else {
               me.workcards = res.data.data;
               if (res.data.data && res.data.data.length > 0) {
-                me.form.carcode = res.data.data[0].pro_code;
                 me.form.workcard = res.data.data[0].pro_code;
                 me.workcardTips = res.data.data[0].purchase_tips;
               }
@@ -581,7 +644,7 @@ export default {
       me.showCardDetail("ticket", choseTicket.remark);
     },
     SendIdentifyingCode() {
-      if (!this.isPhone(this.form.mobile)) {
+      if (!this.isPhone(this.form.link_phone)) {
         Toast("请填写正确的手机号码！");
         return false;
       }
@@ -596,10 +659,10 @@ export default {
       this.vifcode = value;
       this.YZMloading = true;
       this.$api.commonapi
-        .SendIdentifyingCode(this.form.mobile, this.vifcode)
+        .SendIdentifyingCode(this.form.link_phone, this.vifcode)
         .then(res => {
           if (res.data.statusCode == "200") {
-            Toast("发送成功，请注意查收！");            
+            Toast("发送成功，请注意查收！");
           } else {
             console.log(res.data);
           }
@@ -679,6 +742,11 @@ export default {
         this.once = true;
         return;
       }
+      if (!this.CheckCode()) {
+        Toast("请输入正确的验证码");
+        this.once = true;
+        return;
+      }
       if (this.tabIndex == 1) {
         let params = {
           persons: JSON.stringify([
@@ -707,7 +775,9 @@ export default {
               me.$store.state.token +
               "&ordercode=" +
               res.data.data.ordercode +
-              "&type=1&total_fee=0.01&exhibition_id=" +
+              "&type=1&total_fee=" +
+              res.data.data.money +
+              "&exhibition_id=" +
               me.exhibition.exhibition_code +
               "&way=vip";
           } else {
@@ -734,12 +804,22 @@ export default {
           link_man: this.form.link_man,
           link_phone: this.form.link_phone,
           sex: this.form.sex,
+          use_type: this.tabIndex == 3 ? 1 : 2,
           rec_company: this.form.company,
           job_name: this.form.duty,
+          exhibition_id: me.exhibition.exhibition_code ,
           pro_code:
             this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
           buy_num: 1
         };
+        var other = [];
+        if (this.form.needRoom) {
+          other.push(this.form.roomcode);
+        }
+        if (this.form.carcode != "") {
+          other.push(this.form.carcode);
+        }
+        params.other = JSON.stringify(other);
         this.$api.orderapi.CreateProductOrder(params).then(res => {
           if (res.data.statusCode == "200") {
             window.location.href =
@@ -788,30 +868,8 @@ export default {
     agreementPage,
     AirIframe,
     [Card.name]: Card,
+    [NoticeBar.name]: NoticeBar,
     [Popup.name]: Popup
-  },
-  mounted() {
-    var me = this;
-    let exhibition_code = this.$route.params.exhibitionCode;
-    me.form.invite_code = this.$route.query.invite_code;
-    this.$api.commonapi.GetDutys().then(res => {
-      if (res.data.statusCode == "200") {
-        me.dutys = res.data.data;
-      }
-    });
-
-    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
-      if (res.status == "200") {
-        if (res.data.statusCode == "200") {
-          me.exhibition = res.data.data;
-          me.tickets = res.data.data.tickets.filter(t => t.apple_type == 1);
-          me.form.applyDate = res.data.data.days[0];
-          me.form.TicketCode = me.tickets[0].ticket_code;
-        }
-      }
-    });
-    me.GetServiceItems("package", "FW1202");
-    me.GetServiceItems("workcard", "FW1201");
   }
 };
 </script>

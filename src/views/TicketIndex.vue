@@ -413,13 +413,17 @@ export default {
           if (res.data.statusCode == "200") {
             if (type == "package") {
               me.playPackages = res.data.data;
-              me.form.playPackage = res.data.data[0].pro_code;
+              if (res.data.data && res.data.data.length > 0) {
+                me.form.playPackage = res.data.data[0].pro_code;
+              }
             } else if (type == "level") {
               me.packageLevels = res.data.data.filter(t=>t.com_code=="1102");
               me.GetServiceItems("car",res.data.data.find(t=>t.com_code=="11").pro_code);
               me.form.packageLevel = res.data.data[0].pro_code;
             } else if (type == "car") {
-              me.carList = res.data.data;
+              if (res.data.data && res.data.data.length > 0) {
+               me.carList = res.data.data;
+              }
             }else{
               me.form.roomcode = res.data.data[0].pro_code;
             }
