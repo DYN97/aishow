@@ -394,21 +394,17 @@ export default {
           return;
         }
       }
-      if (!this.CheckCode()) {
-        Toast("请输入正确的验证码");
-        this.once = true;
-        return;
-      }
         let params = {
           client_name: this.form.fullname,
           client_idcard: this.form.cardnum,
           cliend_cardtype: this.form.cardtype,
           sex: this.form.sex,
-          use_type: 2,
+          use_type: 3,
           client_phone: this.form.mobile,
-          pro_code: this.form.packageLevel,
+          pro_code: "FW120103",
           exhibition_date: this.form.applyDate,
-          buy_num: 1
+          buy_num: 1,
+          photo:this.fileList[0].content
         };
         this.$api.orderapi.CreateProductOrder(params).then(res => {
           if (res.data.statusCode == "200") {
