@@ -35,6 +35,13 @@
               class="home-button"
             > <router-link to="/ApplyCommand">管理员申请</router-link></v-col>
           </v-row>
+           <v-row no-gutters>
+            <v-col
+              align-self="center"
+              for="doc-ipt-3"
+              class="home-button"
+            > <router-link to="/exhibitionList?type=carTicket">车证申请</router-link></v-col>
+          </v-row>
     
   </div>
 </template>

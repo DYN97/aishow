@@ -3,8 +3,6 @@
     <airshowCarousel :type="15"></airshowCarousel>
     <ul class="detailList listbox">
       <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
-      <ul class="detailList listbox">
-      <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
       <li class="clearfix">
         <b class="name">观展日期:</b>
         <span class="text">{{ticket_date}}</span>
@@ -34,9 +32,7 @@
         <span class="text">{{statusText}}</span>
       </li>
     </ul>
-
-
-    </ul>
+    
   </div>
 </template>
 <script>

@@ -90,6 +90,13 @@
           </v-col>
         </v-row>
       </div>
+      <div v-if="actionCode==5">
+        <v-row justify="center">
+          <v-col cols="10" style="text-align:center" align-self="center">
+            <span>请等待审核</span>
+          </v-col>
+        </v-row>
+      </div>
       <div v-if="actionCode==0">
         <v-row justify="center">
           <v-col cols="10" align-self="center">
@@ -109,7 +116,7 @@
       </div>
       <v-row v-if="actionCode!=4&&actionCode!=0" justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="green" @click="reOrder">继续购买</v-btn>
+          <v-btn block color="green" @click="reOrder">{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
         </v-col>
         <v-col cols="4" style="text-align:center" align-self="center">
           <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
@@ -257,7 +264,7 @@ export default {
         me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
-             me.ticketDate =  detail.exhibition_date.substring(0, 10);
+            me.ticketDate =  detail.exhibition_date.substring(0, 10);
             me.workcardType = detail.pro_name;
             me.clientName = detail.client_name;
             me.clientMobile = detail.client_phone;
@@ -266,6 +273,9 @@ export default {
         break;
       case "4":
         me.actionName = "邮寄申请";
+        break;
+      case "5":
+        me.actionName = "车辆通行证申请";
         break;
     }
   },
@@ -337,7 +347,9 @@ export default {
         this.$router.push({
           name: "TicketIndex",
           params: {
-            exhibitionCode: this.exhibition_id
+            exhibitionCode: this.exhibition_id,
+          },query:{
+            tabIndex:2
           }
         });
       }

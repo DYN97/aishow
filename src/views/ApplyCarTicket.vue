@@ -3,26 +3,14 @@
     <airshowCarousel :type="11"></airshowCarousel>
 
     <v-container class="listbox">
-      <v-tabs grow v-model="tabIndex">
-        <v-tab :key="0" @click="tabIndex=0">申请赠票</v-tab>
-        <v-tab :key="1" @click="tabIndex=1">购买门票</v-tab>
-        <v-tab :key="2" @click="tabIndex=2">观展服务</v-tab>
-      </v-tabs>
       <div style="width:100%">
-        
-        <van-notice-bar left-icon="volume-o" scrollable :text="rollingNotice.information_title" @click="ToOutLink(rollingNotice.information_content,'通知')"/>
+        <van-notice-bar
+          left-icon="volume-o"
+          scrollable
+          :text="rollingNotice.information_title"
+          @click="ToOutLink(rollingNotice.information_content,'通知')"
+        />
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
-        <div v-if="tabIndex==2" style="margin-bottom:20px">
-          <van-card
-            v-for="item in playPackages"
-            :key="item.pro_code"
-            :price="item.selling_price"
-            :desc="item.pro_desc"
-            :title="item.pro_name"
-            :thumb="item.thumb?item.thumb:'http://59.110.175.131:1111/upfiles/2019-04-08/微信图片_20190331135313_20190408220305477.jpg'"
-            @click="OpenDetailPage(item)"
-          />
-        </div>
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -38,88 +26,12 @@
               </select>
             </div>
           </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <v-col style="padding-left:60px;color:red"><i class="iconfont">&#xe60f;</i>不含观展门票，请另行购买。</v-col>
-          </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 19px;font-weight: normal">&#xe619;</i>套餐类型
+          <v-row height="88px" no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3" style="height:88px;line-height:88px">
+              <i class="iconfont">&#xe650;</i>车头照片
             </div>
             <div class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.playPackage"
-              >
-                <option value>请选择</option>
-                <option
-                  v-for="item in playPackages"
-                  :key="item.pro_code"
-                  :value="item.pro_code"
-                >{{item.pro_name}}</option>
-              </select>
-            </div>
-          </v-row>
-         
-          <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.packageLevel"
-              >
-                <option
-                  v-for="item in packageLevels"
-                  :key="item.pro_code"
-                  :value="item.pro_code"
-                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
-              </select>
-            </div>
-          </v-row>
-           <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px">&#xe61d;</i>包车类型
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.carcode"
-              >
-              <option value="">请选择</option>
-                <option
-                  v-for="item in carList"
-                  :key="item.pro_code"
-                  :value="item.pro_code"
-                >{{item.pro_name+'(￥'+item.selling_price+')'}}</option>
-              </select>
-            </div>
-          </v-row>
-          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
-            </div>
-            <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <v-checkbox v-model="form.needRoom" label="需要单间" type="checkbox" required></v-checkbox>
-            </div>
-          </v-row>
-          <v-row height="46px" no-gutters v-if="tabIndex==1">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px;">&#xe61c;</i>门票类型
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.TicketCode"
-                @change="changeTicket"
-              >
-                <option value>请选择</option>
-                <option
-                  v-for="item in tickets"
-                  :key="item.ticket_code"
-                  :value="item.ticket_code"
-                >{{item.out_ticket_name+'(￥'+item.ticket_cost+')'}}</option>
-              </select>
+              <van-uploader v-model="fileList" multiple :max-count="1" />
             </div>
           </v-row>
           <v-row height="46px" no-gutters>
@@ -256,33 +168,19 @@
       <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
         <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
       </van-popup>
-      <van-popup v-model="showDetail" position="left" :style="{width:'100%',height:'100%'}">
-        <AirIframe :src="packageLink" :title="packageName" @closeChoseBox="showDetail=false" />
-      </van-popup>
-      <v-dialog v-model="workcardDialog" width="500">
-        <v-card>
-          <v-card-title class="headline">温馨提示</v-card-title>
-          <v-card-text>{{workcardTips}}</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="workcardDialog = false">确认</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
     </v-container>
   </div>
 </template>
 <script>
 import airshowCarousel from "../components/Carousel";
-import AirIframe from "../components/AirIframe";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast, Popup, NoticeBar } from "vant";
+import { Card, Toast, Popup, NoticeBar,Uploader  } from "vant";
 export default {
-  name: "TicketIndex",
+  name: "ApplyCarTicket",
   data() {
     return {
-      action: "赠票",
-      xieyi: "赠票",
+      action: "车辆通行证",
+      xieyi: "车辆通行证",
       showDetail: false,
       YZMloading: false,
       CountDown: 60,
@@ -294,6 +192,7 @@ export default {
         tickets: [],
         days: []
       },
+      fileList:[],
       tickets: [],
       lookUp: "0",
       ticketCost: 0,
@@ -307,12 +206,13 @@ export default {
       showAgreement: false,
       agreementPass: false,
       workcardDialog: false,
-      rollingNotice:[],
+      rollingNotice: [],
       workcardTips: "",
+      
       form: {
         fullname: "",
         cardtype: 0,
-        sex:1,
+        sex: 1,
         invite_code: "",
         cardnum: "",
         applyDate: "",
@@ -343,95 +243,30 @@ export default {
           }
         }, 1000);
       }
-    },
-    tabIndex(val) {
-      if (val == 0) {
-        this.action = "赠票";
-        this.xieyi = "赠票";
-      } else if (val == 1) {
-        this.action = "购票";
-        this.xieyi = "购票";
-      } else {
-        this.action = "观展服务";
-        this.xieyi = "购买";
-      }
-      this.form = {
-        fullname: "",
-        cardtype: 0,
-        invite_code: "",
-        cardnum: "",
-        applyDate: "",
-        sex:1,
-        mobile: "",
-        company: "",
-        duty: "",
-        TicketCode: "",
-        TicketName: "",
-        playPackage: "",
-        packageLevel: "",
-        carcode: "",
-        needRoom: "",
-        workcard: "",
-        yanzhengma: ""
-      };
-    },
-    "form.playPackage": function(val) {
-      this.GetServiceItems("level", val);
-    },
-    "form.packageLevel": function(val) {
-      this.GetServiceItems("room", val);
     }
   },
   computed: {},
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
-    this.tabIndex = parseInt(this.$route.query.tabIndex);
+    this.exhibition.exhibition_code = exhibition_code;
     this.$api.commonapi.GetInformationList(31).then(res => {
       if (res.data.statusCode == "200") {
         me.rollingNotice = res.data.data;
       }
     });
-
     this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {
           me.exhibition = res.data.data;
-          me.tickets = res.data.data.tickets.filter(t => t.apple_type == 0);
           me.form.applyDate = res.data.data.days[0];
-          me.form.TicketCode = me.tickets[0].ticket_code;
         }
       }
     });
-    me.GetServiceItems("package", "FW1102");
+
+
   },
   methods: {
-    GetServiceItems(type, code) {
-      let exhibition_code = this.$route.params.exhibitionCode;
-      var me = this;
-      this.$api.orderapi.GetServiceItems(code, exhibition_code).then(res => {
-        if (res.status == "200") {
-          if (res.data.statusCode == "200") {
-            if (type == "package") {
-              me.playPackages = res.data.data;
-              if (res.data.data && res.data.data.length > 0) {
-                me.form.playPackage = res.data.data[0].pro_code;
-              }
-            } else if (type == "level") {
-              me.packageLevels = res.data.data.filter(t=>t.com_code=="1102");
-              me.GetServiceItems("car",res.data.data.find(t=>t.com_code=="11").pro_code);
-              me.form.packageLevel = res.data.data[0].pro_code;
-            } else if (type == "car") {
-              if (res.data.data && res.data.data.length > 0) {
-               me.carList = res.data.data;
-              }
-            }else{
-              me.form.roomcode = res.data.data[0].pro_code;
-            }
-          }
-        }
-      });
-    },
     OpenDetailPage(item) {
       this.showDetail = true;
       this.packageName = item.pro_name;
@@ -462,11 +297,10 @@ export default {
           }
         });
     },
-    ToOutLink(url,title){
+    ToOutLink(url, title) {
       this.showDetail = true;
       this.packageName = title;
       this.packageLink = url;
-
     },
     agree() {
       this.showAgreement = false;
@@ -506,33 +340,9 @@ export default {
       if (arrVarifyCode[n] != idnumber.substr(17, 1)) return false;
       return true;
     },
-    changeTicket() {
-      var me = this;
-      var choseTicket = this.exhibition.tickets.find(
-        t => t.ticket_code == me.form.TicketCode
-      );
-      this.ticketCost = choseTicket.ticket_cost;
-      me.showCardDetail("ticket", choseTicket.remark);
-    },
-    async CheckCode() {},
-    showCardDetail(type, text) {
-      var me = this;
-      if (type == "card") {
-        var info = this.workcards.find(t => t.pro_code == me.form.workcard);
-        me.workcardTips = info.purchase_tips;
-      }
-      if (text) {
-        me.workcardTips = text;
-      }
-
-      me.workcardDialog = true;
-    },
     async submit() {
-      var me = this;
       let _name = this.form.fullname,
         _applyDate = this.form.applyDate,
-        _TicketCode = this.form.TicketCode,
-        _playPackage = this.form.playPackage,
         _tel = this.form.mobile,
         _idcard = this.form.cardnum,
         cardtype = this.form.cardtype,
@@ -568,16 +378,6 @@ export default {
         this.once = true;
         return;
       }
-      if (this.tabIndex == "1" && _TicketCode == "") {
-        Toast("请选择门票类型！");
-        this.once = true;
-        return;
-      }
-      if (this.tabIndex == "2" && _playPackage == "") {
-        Toast("请选择套餐类型！");
-        this.once = true;
-        return;
-      }
       if (!yanzhengma || yanzhengma.length < 4) {
         Toast("请输入正确的验证码");
         this.once = true;
@@ -599,98 +399,29 @@ export default {
         this.once = true;
         return;
       }
-      if (this.tabIndex != 2) {
-        let params = {
-          persons: JSON.stringify([
-            {
-              Name: this.form.fullname,
-              Idcard: this.form.cardnum,
-              CardType: this.form.cardtype,
-              Mobile: this.form.mobile,
-              TicketDate: this.form.applyDate,
-              Type: this.tabIndex,
-              TicketCode: this.form.TicketCode,
-              Sex: this.form.sex,
-              TicketCost: this.ticketCost
-            }
-          ]),
-          type: this.tabIndex,
-          exhibition_id: this.exhibition.exhibition_code
-        };
-        this.$api.orderapi.CreateOrder(params).then(res => {
-          if (res.data.statusCode == "200") {
-            if (this.tabIndex == 0) {
-              this.$router.push({
-                name: "Result",
-                params: {
-                  result: "success"
-                },
-                query: {
-                  type: "0",
-                  order_code: res.data.data.ordercode
-                }
-              });
-            } else {
-              window.location.href =
-                "/appwxpay.aspx?token=" +
-                me.$store.state.token +
-                "&ordercode=" +
-                res.data.data.ordercode +
-                "&type=" +
-                this.tabIndex +
-                "&total_fee=" +
-                res.data.data.money +
-                "&exhibition_id=" +
-                me.exhibition.exhibition_code +
-                "&way=Normal";
-            }
-          } else {
-            this.$router.push({
-              name: "Result",
-              params: {
-                result: "fail"
-              },
-              query: {
-                type: this.tabIndex,
-                message: res.data.message
-              }
-            });
-          }
-        });
-      } else {
         let params = {
           client_name: this.form.fullname,
           client_idcard: this.form.cardnum,
           cliend_cardtype: this.form.cardtype,
           sex: this.form.sex,
-          use_type:2,
+          use_type: 2,
           client_phone: this.form.mobile,
           pro_code: this.form.packageLevel,
           exhibition_date: this.form.applyDate,
           buy_num: 1
         };
-        var other = [];
-        if (this.form.needRoom) {          
-          other.push(this.form.roomcode);
-        }
-        if(this.form.carcode!=""){
-          other.push(this.form.carcode);
-        }
-        params.other = JSON.stringify(other);
         this.$api.orderapi.CreateProductOrder(params).then(res => {
           if (res.data.statusCode == "200") {
-            window.location.href =
-              "/appwxpay.aspx?token=" +
-              me.$store.state.token +
-              "&ordercode=" +
-              res.data.data.ordercode +
-              "&type=" +
-              this.tabIndex +
-              "&total_fee=" +
-              res.data.data.money +
-              "&exhibition_id=" +
-              me.exhibition.exhibition_code +
-              "&way=Normal";
+             this.$router.push({
+                name: "Result",
+                params: {
+                  result: "success"
+                },
+                query: {
+                  type: "5",
+                  order_code: res.data.data.ordercode
+                }
+              });
           } else {
             this.$router.push({
               name: "Result",
@@ -698,21 +429,21 @@ export default {
                 result: "fail"
               },
               query: {
-                type: this.tabIndex,
+                type: "5",
                 message: res.data.message
               }
             });
           }
         });
       }
-    }
+    
   },
   components: {
     airshowCarousel,
     agreementPage,
-    AirIframe,
     [Card.name]: Card,
     [NoticeBar.name]: NoticeBar,
+    [Uploader.name]: Uploader,
     [Popup.name]: Popup
   }
 };

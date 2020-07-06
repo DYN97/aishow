@@ -16,6 +16,7 @@
  import SqDetail from '../views/SqDetail.vue';
  import MailDetail from '../views/MailDetail.vue';
  import MailList from '../views/MailList.vue';
+ import ApplyCarTicket from '../views/ApplyCarTicket.vue';
  import ConsigneeText from '../views/consigneeText.vue';
  import ApplyCommand from '../views/ApplyCommand.vue';
  import Chart from '../views/Chart.vue';
@@ -98,11 +99,16 @@
          name: "MailDetail",
          title: "快递详情",
          component: MailDetail
-     },{
-        path: "/ApplyCommand",
-        name: "ApplyCommand",
-        title: "权限申请",
-        component:  ApplyCommand
+     }, {
+         path: "/ApplyCommand",
+         name: "ApplyCommand",
+         title: "权限申请",
+         component: ApplyCommand
+     }, {
+         path: "/ApplyCarTicket/:exhibitionCode",
+         name: "ApplyCarTicket",
+         title: "车辆通行证申请",
+         component: ApplyCarTicket
      }, {
          path: "/chart",
          name: "chart",
@@ -175,6 +181,9 @@
              break;
          case "MailDetail":
              title = "快递详情";
+             break;
+         case "ApplyCarTicket":
+             title = "车辆通行证申请";
              break;
      }
      setTitle(title);
