@@ -1,42 +1,46 @@
 <template>
   <div class="detailBox">
-    <airshowCarousel :type="15"></airshowCarousel>
-    <ul class="detailList listbox">
-      <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
-      <li class="clearfix">
-        <b class="name">观展日期:</b>
-        <span class="text">{{ticket_date}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">产品类型:</b>
-        <span class="text">{{parentname}}--{{order_type_name}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name" v-html="'申请人　'"></b>
-        <span class="text">{{client_name}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">{{client_cardtype}}</b>
-        <span class="text">{{client_idcard}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">联系电话:</b>
-        <span class="text">{{client_phone}}</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">支付金额:</b>
-        <span class="text">{{ticket_cost}}元</span>
-      </li>
-      <li class="clearfix">
-        <b class="name">订单状态:</b>
-        <span class="text">{{statusText}}</span>
-      </li>
-    </ul>
-    
+    <div class="mainPanel">
+      <div
+        style="width:calc(100vw - 60px);height:230px;margin:50px 30px 20px 30px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; "
+      >
+        <ul>
+          <li>
+            <span class="name">套餐</span><span class="text">{{order_type_name}}</span>
+          </li>
+          <li>
+            <span class="name">购买人</span><span class="text">{{client_name}}</span>
+          </li>
+          <li>
+            <span class="name">联系电话</span><span class="text">{{client_phone}}</span>
+          </li>
+          <li>
+            <span class="name">证件号码</span><span class="text">{{client_idcard}}</span>
+          </li>
+          
+          <li>
+            <span class="name">订单状态</span><span class="text">{{statusText}}</span>
+          </li>
+          <li>
+            <span class="name">购买时间</span><span class="text">{{apply_time}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <van-cell-group style="margin-top:20px">
+      <van-cell title="包车信息" style="font-size:18px;color:#000"  icon="che1" icon-prefix="iconfont" />
+      <van-cell title="类型"  :value="carType" />
+      <van-cell title="价格"  :value="'￥'+carMoney" />
+    </van-cell-group>
+    <van-cell-group style="margin-top:20px">
+      <van-cell title="住宿信息" style="font-size:18px;color:#000"   icon="jiudian" icon-prefix="iconfont"  />
+      <van-cell title="类型" value="单间" />
+      <van-cell title="价格" :value="'￥'+roomMoney" />
+    </van-cell-group>
   </div>
 </template>
 <script>
-import airshowCarousel from "../components/Carousel";
+import { Cell, CellGroup, Popup, NoticeBar } from "vant";
 export default {
   name: "SqDetail",
   data() {
@@ -65,6 +69,9 @@ export default {
       client_cardtype: "",
       ticket_date: "",
       ticket_cost: "",
+      roomMoney:"",
+      carType:"",
+      carMoney:"",
       apply_time: "",
       receive_type_name: "",
       receive_time: "",
@@ -76,7 +83,10 @@ export default {
     };
   },
   components: {
-    airshowCarousel
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [NoticeBar.name]: NoticeBar,
+    [Popup.name]: Popup
   },
   mounted() {
     var me = this;
@@ -90,54 +100,64 @@ export default {
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
         me.client_cardtype = "身份证";
-        if(res.data.data.client_card_type=="1"){
+        if (res.data.data.client_card_type == "1") {
           me.client_cardtype = "护照";
-        }else if(res.data.data.client_card_type=="2"){
+        } else if (res.data.data.client_card_type == "2") {
           me.client_cardtype = "港澳通行证";
         }
         me.client_phone = res.data.data.client_phone;
-        me.order_type_name = res.data.data.order_type_name;
+        me.order_type_name = res.data.data.pro_name.substring(5);
         me.ticket_date = res.data.data.ticket_date;
         me.ticket_cost = res.data.data.ticket_cost;
         me.parentname = res.data.data.parentname;
-        me.apply_time = res.data.data.apply_time;
+        me.apply_time = res.data.data.buy_time;
         me.receive_type_name = res.data.data.receive_type_name;
         me.receive_time = res.data.data.receive_time;
         me.addressee = res.data.data.addressee;
         me.mail_serial_num = res.data.data.mail_serial_num;
         me.addressee_phone = res.data.data.addressee_phone;
         me.addre = res.data.data.addre;
-        me.apply_status = res.data.data.apply_status;
+        me.apply_status = res.data.data.sp_order_status;
         switch (parseInt(me.apply_status)) {
           case 2:
-            me.statusText =
-              '待领取';
+            me.statusText = "待领取";
             break;
           case 0:
-            me.statusText =
-              '待出票';
+            me.statusText = "待出票";
             break;
           case 1:
-            me.statusText =
-              '待审核';
+            me.statusText = "待审核";
             break;
           case 3:
             var text = "已领取";
             if (me.ismail) {
               text = "已领取(" + me.mail_status_name + ")";
             }
-            me.statusText = text ;
+            me.statusText = text;
             break;
           case 4:
-            me.statusText =
-              '申请失败';
+            me.statusText = "申请失败";
             break;
           case 5:
-            me.statusText =
-              '已退款';
+            me.statusText = "已退款";
             break;
         }
-      
+        if(res.data.data.details){
+          var car = res.data.data.details.find(t=>t.com_code=="1103"||t.com_code=="1203");
+          if(car){
+            var namelist = car.pro_name.split('-');
+            me.carType = namelist[namelist.length-1];
+            me.carMoney = car.one_money;
+          }
+          var room = res.data.data.details.find(t=>t.com_code=="1204"||t.com_code=="1204");
+          if(room){
+            me.roomMoney = room.one_money;
+          }
+
+
+        }
+
+
       }
     });
   },
@@ -170,6 +190,17 @@ body {
   /*height: calc(100vh - 150px);*/
   overflow: auto;
 }
+.mainPanel {
+  height: 300px;
+  width: 100vw;
+  background-image: linear-gradient(
+    0deg,
+    rgb(26, 171, 213) 0%,
+    rgb(26, 136, 213) 100%
+  );
+  opacity: 0.659;
+}
+
 input,
 button,
 a,
@@ -483,7 +514,7 @@ ol {
   bottom: 0;
   top: 0;
   overflow: auto;
-  background: #fff;
+  background: #f2f2f2;
 }
 .detailBox .tip {
   padding-top: 35px;
@@ -504,12 +535,12 @@ ol {
 .detailList li:first-child {
   /*padding-top: 0;*/
 }
-.detailList li .name {
+ li .name {
   display: block;
   float: left;
   width: 80px;
 }
-.detailList li .text {
+ li .text {
   display: block;
   margin-left: 80px;
   margin-right: 20px;
