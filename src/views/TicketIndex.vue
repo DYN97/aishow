@@ -9,8 +9,12 @@
         <v-tab :key="2" @click="tabIndex=2">观展服务</v-tab>
       </v-tabs>
       <div style="width:100%">
-        
-        <van-notice-bar left-icon="volume-o" scrollable :text="rollingNotice.information_title" @click="ToOutLink(rollingNotice.information_content,'通知')"/>
+        <van-notice-bar
+          left-icon="volume-o"
+          scrollable
+          :text="rollingNotice.information_title"
+          @click="ToOutLink(rollingNotice.information_content,'通知')"
+        />
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <div v-if="tabIndex==2" style="margin-bottom:20px">
           <van-card
@@ -39,7 +43,9 @@
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <v-col style="padding-left:60px;color:red"><i class="iconfont">&#xe60f;</i>不含观展门票，请另行购买。</v-col>
+            <v-col style="padding-left:60px;color:red">
+              <i class="iconfont">&#xe60f;</i>不含观展门票，请另行购买。
+            </v-col>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -59,7 +65,7 @@
               </select>
             </div>
           </v-row>
-         
+
           <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px">&#xe655;</i>套餐档位
@@ -77,7 +83,7 @@
               </select>
             </div>
           </v-row>
-           <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
+          <v-row height="46px" no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px">&#xe61d;</i>包车类型
             </div>
@@ -86,7 +92,7 @@
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.carcode"
               >
-              <option value="">请选择</option>
+                <option value>请选择</option>
                 <option
                   v-for="item in carList"
                   :key="item.pro_code"
@@ -259,6 +265,21 @@
       <van-popup v-model="showDetail" position="left" :style="{width:'100%',height:'100%'}">
         <AirIframe :src="packageLink" :title="packageName" @closeChoseBox="showDetail=false" />
       </van-popup>
+      <van-popup v-model="showorderdetail" position="bottom">
+        <van-collapse v-model="orderdetail">
+          <van-collapse-item title="订单详情" name="1" disabled>
+            <van-cell-group>
+              <van-cell title="套餐" :value="'￥'+packageMoney" />
+              <van-cell v-if="form.carcode" title="包车" :value="'￥'+CarMoney" />
+              <van-cell v-if="form.needRoom" title="单间" :value="'￥'+RoomMoney" />
+            </van-cell-group>
+            <van-cell-group>
+              <van-cell title="总计" value="￥2600" />
+            </van-cell-group>
+            <van-button type="primary" style="float:right;margin:20px 0" @click="SubmitForm">确认支付</van-button>
+          </van-collapse-item>
+        </van-collapse>
+      </van-popup>
       <v-dialog v-model="workcardDialog" width="500">
         <v-card>
           <v-card-title class="headline">温馨提示</v-card-title>
@@ -276,7 +297,17 @@
 import airshowCarousel from "../components/Carousel";
 import AirIframe from "../components/AirIframe";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast, Popup, NoticeBar } from "vant";
+import {
+  Card,
+  Toast,
+  Popup,
+  NoticeBar,
+  Cell,
+  CellGroup,
+  Collapse,
+  Button,
+  CollapseItem
+} from "vant";
 export default {
   name: "TicketIndex",
   data() {
@@ -294,6 +325,8 @@ export default {
         tickets: [],
         days: []
       },
+      orderdetail: ["1"],
+      showorderdetail: false,
       tickets: [],
       lookUp: "0",
       ticketCost: 0,
@@ -304,15 +337,18 @@ export default {
       vifcode: "",
       workcards: [],
       packageLink: "",
+      packageMoney:"",
+      CarMoney:"",
+      RoomMoney:"",
       showAgreement: false,
       agreementPass: false,
       workcardDialog: false,
-      rollingNotice:[],
+      rollingNotice: [],
       workcardTips: "",
       form: {
         fullname: "",
         cardtype: 0,
-        sex:1,
+        sex: 1,
         invite_code: "",
         cardnum: "",
         applyDate: "",
@@ -361,7 +397,7 @@ export default {
         invite_code: "",
         cardnum: "",
         applyDate: "",
-        sex:1,
+        sex: 1,
         mobile: "",
         company: "",
         duty: "",
@@ -377,9 +413,14 @@ export default {
     },
     "form.playPackage": function(val) {
       this.GetServiceItems("level", val);
+      console.log(val);
     },
     "form.packageLevel": function(val) {
       this.GetServiceItems("room", val);
+    },"form.carcode": function(val) {
+      var choseCar = this.carList.find(t=>t.pro_code ==val);
+      this.CarMoney = choseCar.selling_price;
+
     }
   },
   computed: {},
@@ -416,17 +457,25 @@ export default {
               me.playPackages = res.data.data;
               if (res.data.data && res.data.data.length > 0) {
                 me.form.playPackage = res.data.data[0].pro_code;
+               
               }
             } else if (type == "level") {
-              me.packageLevels = res.data.data.filter(t=>t.com_code=="1102");
-              me.GetServiceItems("car",res.data.data.find(t=>t.com_code=="11").pro_code);
-              me.form.packageLevel = res.data.data[0].pro_code;
+              me.packageLevels = res.data.data.filter(
+                t => t.com_code == "1102"
+              );
+              me.GetServiceItems(
+                "car",
+                res.data.data.find(t => t.com_code == "11").pro_code
+              );
+              me.form.packageLevel =  me.packageLevels[0].pro_code;
+               me.packageMoney =  me.packageLevels[0].selling_price;
             } else if (type == "car") {
               if (res.data.data && res.data.data.length > 0) {
-               me.carList = res.data.data;
+                me.carList = res.data.data;
               }
-            }else{
+            } else {
               me.form.roomcode = res.data.data[0].pro_code;
+              me.RoomMoney = res.data.data[0].selling_price;
             }
           }
         }
@@ -462,11 +511,10 @@ export default {
           }
         });
     },
-    ToOutLink(url,title){
+    ToOutLink(url, title) {
       this.showDetail = true;
       this.packageName = title;
       this.packageLink = url;
-
     },
     agree() {
       this.showAgreement = false;
@@ -658,22 +706,29 @@ export default {
           }
         });
       } else {
-        let params = {
+
+        this.showorderdetail  = true;
+       
+      }
+    },
+    SubmitForm(){
+      var me = this;
+       let params = {
           client_name: this.form.fullname,
           client_idcard: this.form.cardnum,
           cliend_cardtype: this.form.cardtype,
           sex: this.form.sex,
-          use_type:2,
+          use_type: 2,
           client_phone: this.form.mobile,
           pro_code: this.form.packageLevel,
           exhibition_date: this.form.applyDate,
           buy_num: 1
         };
         var other = [];
-        if (this.form.needRoom) {          
+        if (this.form.needRoom) {
           other.push(this.form.roomcode);
         }
-        if(this.form.carcode!=""){
+        if (this.form.carcode != "") {
           other.push(this.form.carcode);
         }
         params.other = JSON.stringify(other);
@@ -704,7 +759,6 @@ export default {
             });
           }
         });
-      }
     }
   },
   components: {
@@ -712,7 +766,12 @@ export default {
     agreementPage,
     AirIframe,
     [Card.name]: Card,
+    [Button.name]: Button,
     [NoticeBar.name]: NoticeBar,
+    [Cell.name]: Cell,
+    [Collapse.name]: Collapse,
+    [CollapseItem.name]: CollapseItem,
+    [CellGroup.name]: CellGroup,
     [Popup.name]: Popup
   }
 };
