@@ -376,6 +376,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <van-popup v-model="showorderdetail" position="bottom">
+      <van-collapse v-model="orderdetail">
+        <van-collapse-item title="订单详情" name="1" disabled>
+          <van-cell-group>
+            <van-cell title="套餐" :value="'￥'+packageMoney" />
+            <van-cell v-if="form.carcode" title="包车" :value="'￥'+CarMoney" />
+            <van-cell v-if="form.needRoom" title="单间" :value="'￥'+RoomMoney" />
+          </van-cell-group>
+          <van-cell-group>
+            <van-cell title="总计" :value="'￥'+sumMoney" />
+          </van-cell-group>
+          <van-button type="primary" style="float:right;margin:20px 0" @click="SubmitForm">确认支付</van-button>
+        </van-collapse-item>
+      </van-collapse>
+    </van-popup>
   </div>
 </template>
 <script>
@@ -423,11 +438,17 @@ export default {
       roomText: "",
       vifcode: "",
       workcards: [],
+      orderdetail: ["1"],
+      packageMoney: "",
+      CarMoney: "",
+      RoomMoney: "",
+      sumMoney: "",
       showAgreement: false,
       agreementPass: false,
       carText: "",
       rollingNotice: [],
       workcardTips: "",
+      showorderdetail: false,
       tickets: [],
       form: {
         fullname: "",
@@ -510,6 +531,10 @@ export default {
     },
     "form.packageLevel": function(val) {
       this.GetServiceItems("room", val);
+    },
+    "form.carcode": function(val) {
+      var choseCar = this.carList.find(t => t.pro_code == val);
+      this.CarMoney = choseCar.selling_price;
     }
   },
   computed: {},
@@ -568,6 +593,7 @@ export default {
               );
               if (res.data.data && res.data.data.length > 0) {
                 me.form.packageLevel = res.data.data[0].pro_code;
+                me.packageMoney = me.packageLevels[0].selling_price;
               }
             } else if (type == "car") {
               if (res.data.data && res.data.data.length > 0) {
@@ -575,6 +601,7 @@ export default {
               }
             } else if (type == "room") {
               me.form.roomcode = res.data.data[0].pro_code;
+              me.RoomMoney = res.data.data[0].selling_price;
             } else {
               me.workcards = res.data.data;
               if (res.data.data && res.data.data.length > 0) {
@@ -794,34 +821,55 @@ export default {
           }
         });
       } else {
-        let params = {
-          invite_code: this.form.invite_code,
-          exhibition_date: this.form.applyDate,
-          client_name: this.form.fullname,
-          client_idcard: this.form.cardnum,
-          cliend_cardtype: this.form.cardtype,
-          client_phone: this.form.mobile,
-          link_man: this.form.link_man,
-          link_phone: this.form.link_phone,
-          sex: this.form.sex,
-          use_type: this.tabIndex == 3 ? 1 : 2,
-          rec_company: this.form.company,
-          job_name: this.form.duty,
-          exhibition_id: me.exhibition.exhibition_code ,
-          pro_code:
-            this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
-          buy_num: 1
-        };
-        var other = [];
-        if (this.form.needRoom) {
-          other.push(this.form.roomcode);
+        if (this.tabIndex == 2) {
+          this.showorderdetail = true;
+        } else {
+          this.SubmitForm();
         }
-        if (this.form.carcode != "") {
-          other.push(this.form.carcode);
-        }
-        params.other = JSON.stringify(other);
-        this.$api.orderapi.CreateProductOrder(params).then(res => {
-          if (res.data.statusCode == "200") {
+      }
+    },
+    SubmitForm() {
+      var me = this;
+      let params = {
+        invite_code: this.form.invite_code,
+        exhibition_date: this.form.applyDate,
+        client_name: this.form.fullname,
+        client_idcard: this.form.cardnum,
+        cliend_cardtype: this.form.cardtype,
+        client_phone: this.form.mobile,
+        link_man: this.form.link_man,
+        link_phone: this.form.link_phone,
+        sex: this.form.sex,
+        use_type: this.tabIndex == 3 ? 1 : 2,
+        rec_company: this.form.company,
+        job_name: this.form.duty,
+        exhibition_id: me.exhibition.exhibition_code,
+        pro_code:
+          this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
+        buy_num: 1
+      };
+      var other = [];
+      if (this.form.needRoom) {
+        other.push(this.form.roomcode);
+      }
+      if (this.form.carcode != "") {
+        other.push(this.form.carcode);
+      }
+      params.other = JSON.stringify(other);
+      this.$api.orderapi.CreateProductOrder(params).then(res => {
+        if (res.data.statusCode == "200") {
+          if (res.data.data.money == "0") {
+            this.$router.push({
+                name: "Result",
+                params: {
+                  result: "success"
+                },
+                query: {
+                  type: this.tabIndex,
+                  order_code: res.data.data.ordercode
+                }
+              });
+          } else {
             window.location.href =
               "/appwxpay.aspx?token=" +
               me.$store.state.token +
@@ -834,20 +882,20 @@ export default {
               "&exhibition_id=" +
               me.exhibition.exhibition_code +
               "&way=vip";
-          } else {
-            this.$router.push({
-              name: "Result",
-              params: {
-                result: "fail"
-              },
-              query: {
-                type: this.tabIndex,
-                message: res.data.message
-              }
-            });
           }
-        });
-      }
+        } else {
+          this.$router.push({
+            name: "Result",
+            params: {
+              result: "fail"
+            },
+            query: {
+              type: this.tabIndex,
+              message: res.data.message
+            }
+          });
+        }
+      });
     },
     showCardDetail(type, text) {
       var me = this;
