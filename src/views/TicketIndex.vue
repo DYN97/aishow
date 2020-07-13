@@ -502,7 +502,7 @@ export default {
       var value = "",
         i,
         j;
-      for (j = 1; j <= 4; j++) {
+      for (j = 1; j <= 6; j++) {
         i = parseInt(10 * Math.random());
         value = value + charactors.charAt(i);
       }
