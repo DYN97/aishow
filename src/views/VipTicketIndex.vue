@@ -442,7 +442,6 @@ export default {
       packageMoney: "",
       CarMoney: "",
       RoomMoney: "",
-      sumMoney: "",
       showAgreement: false,
       agreementPass: false,
       carText: "",
@@ -537,7 +536,15 @@ export default {
       this.CarMoney = choseCar.selling_price;
     }
   },
-  computed: {},
+  computed: {
+    sumMoney() {
+      return (
+        parseInt(this.carMoney?this.carMoney:0) +
+        parseInt(this.roomMoney?this.roomMoney:0) +
+        parseInt(this.packageMoney?this.packageMoney:0)
+      );
+    }
+  },
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;

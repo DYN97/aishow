@@ -426,9 +426,9 @@ export default {
   computed: {
     sumMoney() {
       return (
-        parseInt(this.carMoney) +
-        parseInt(this.roomMoney) +
-        parseInt(this.packageMoney)
+        parseInt(this.carMoney?this.carMoney:0) +
+        parseInt(this.roomMoney?this.roomMoney:0) +
+        parseInt(this.packageMoney?this.packageMoney:0)
       );
     }
   },
