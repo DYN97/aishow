@@ -37,13 +37,13 @@
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe63f;</i>
-              <label v-html="'姓　　名'"></label>
+              <label v-html="'申请人'"></label>
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
                 class="mainForm"
                 v-model="form.fullname"
-                label="姓名与证件号码一致"
+                label="填写申请人"
                 hide-details="auto"
                 height="30"
                 single-line
@@ -53,42 +53,46 @@
           </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe690;</i>证件类型
+              <i class="iconfont">&#xe690;</i>申请类型
             </div>
             <div align-self="center" class="am-u-sm-8 list-right">
               <select
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.cardtype"
+                v-model="form.workcard"
               >
-                <option value="0">身份证</option>
-                <option value="1">护照</option>
-                <option value="2">港澳通行证</option>
+                 <option
+                  v-for="item in workcards"
+                  :key="item.pro_code"
+                  :value="item.pro_code"
+                >{{item.pro_name}}</option>
               </select>
             </div>
           </v-row>
           <v-row no-gutters v-if="tabIndex==2">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe690;</i>性别
+             <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe614;</i>申请单位
             </div>
-            <div align-self="center" class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.sex"
-              >
-                <option value="1">男</option>
-                <option value="0">女</option>
-              </select>
+            <div class="am-u-sm-8 list-right">
+              <v-text-field
+                v-model="form.company"
+                class="mainForm"
+                label="申请单位"
+                hide-details="auto"
+                height="30"
+                single-line
+                regular
+              ></v-text-field>
             </div>
           </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe614;</i>证件号码
+              <i class="iconfont">&#xe614;</i>车牌号码
             </div>
             <div class="am-u-sm-8 list-right">
               <v-text-field
-                v-model="form.cardnum"
+                v-model="form.carnum"
                 class="mainForm"
-                label="证件号与姓名一致"
+                label="车牌号码"
                 hide-details="auto"
                 height="30"
                 single-line
@@ -215,6 +219,7 @@ export default {
         sex: 1,
         invite_code: "",
         cardnum: "",
+        carnum:"",
         applyDate: "",
         mobile: "",
         company: "",
@@ -263,6 +268,7 @@ export default {
         }
       }
     });
+    me.GetServiceItems("package", "FW120103");
 
 
   },
@@ -271,6 +277,22 @@ export default {
       this.showDetail = true;
       this.packageName = item.pro_name;
       this.packageLink = item.pro_detail_url;
+    },
+    GetServiceItems(type, code) {
+      var me = this;
+      let exhibition_code = this.$route.params.exhibitionCode;
+      this.$api.orderapi.GetServiceItems(code, exhibition_code).then(res => {
+        if (res.status == "200") {
+         
+              if (res.data.data && res.data.data.length > 0) {
+                me.form.workcard = res.data.data[0].pro_code;
+                me.workcards =  res.data.data;
+              }
+            } 
+            
+          
+        
+      });
     },
     SendIdentifyingCode() {
       if (!this.isPhone(this.form.mobile)) {
@@ -344,8 +366,7 @@ export default {
       let _name = this.form.fullname,
         _applyDate = this.form.applyDate,
         _tel = this.form.mobile,
-        _idcard = this.form.cardnum,
-        cardtype = this.form.cardtype,
+        carnum = this.form.carnum,
         yanzhengma = this.form.yanzhengma;
 
       if (_name.length < 2) {
@@ -358,18 +379,13 @@ export default {
         this.once = true;
         return;
       }
-      if (_idcard.length == 0) {
-        Toast("请填写证件号码！");
+      if (carnum.length == 0) {
+        Toast("请填写车牌号码！");
         this.once = true;
         return;
       }
       if (_applyDate == "") {
         Toast("请选择观展日期！");
-        this.once = true;
-        return;
-      }
-      if (cardtype == 0 && (_idcard.length != 18 || !this.isIDCard(_idcard))) {
-        Toast("请填写正确的身份证号！");
         this.once = true;
         return;
       }
@@ -397,11 +413,12 @@ export default {
         let params = {
           client_name: this.form.fullname,
           client_idcard: this.form.cardnum,
+          carnum: this.form.carnum,
           cliend_cardtype: this.form.cardtype,
           sex: this.form.sex,
           use_type: 3,
           client_phone: this.form.mobile,
-          pro_code: "FW120103",
+          pro_code: this.form.workcard,
           exhibition_date: this.form.applyDate,
           buy_num: 1,
           photo:this.fileList[0].content

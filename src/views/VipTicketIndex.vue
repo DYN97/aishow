@@ -396,7 +396,9 @@
 <script>
 import agreementPage from "../components/agreementPage";
 import AirIframe from "../components/AirIframe";
-import { Card, Toast, Popup, NoticeBar } from "vant";
+import { Card, Toast, Popup, NoticeBar,Collapse,Cell,CellGroup,
+  Button,
+  CollapseItem} from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
   name: "TicketIndex",
@@ -919,11 +921,16 @@ export default {
   },
 
   components: {
-    airshowCarousel,
+     airshowCarousel,
     agreementPage,
     AirIframe,
     [Card.name]: Card,
+    [Button.name]: Button,
     [NoticeBar.name]: NoticeBar,
+    [Cell.name]: Cell,
+    [Collapse.name]: Collapse,
+    [CollapseItem.name]: CollapseItem,
+    [CellGroup.name]: CellGroup,
     [Popup.name]: Popup
   }
 };
