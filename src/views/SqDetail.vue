@@ -4,7 +4,7 @@
       <div
         style="width:calc(100vw - 60px);height:230px;margin:50px 30px 20px 30px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; "
       >
-        <ul>
+        <ul class="detailList">
           <li>
             <span class="name">套餐</span><span class="text">{{order_type_name}}</span>
           </li>
@@ -65,7 +65,7 @@ export default {
       client_name: "",
       client_idcard: "",
       client_phone: "",
-      order_type_name: "",
+      order_type_name: "　",
       client_cardtype: "",
       ticket_date: "",
       ticket_cost: "",
@@ -149,7 +149,7 @@ export default {
             me.carType = namelist[namelist.length-1];
             me.carMoney = car.one_money;
           }
-          var room = res.data.data.details.find(t=>t.com_code=="1204"||t.com_code=="1204");
+          var room = res.data.data.details.find(t=>t.com_code=="1104"||t.com_code=="1204");
           if(room){
             me.roomMoney = room.one_money;
           }
@@ -531,12 +531,12 @@ ol {
 }
 .detailList li {
   box-sizing: unset;
-  padding: 13px 0;
+  padding: 8px 0;
   line-height: 20px;
   color: #666;
 }
 .detailList li:first-child {
-  /*padding-top: 0;*/
+  padding-top: 0;
 }
  li .name {
   display: block;
@@ -545,6 +545,7 @@ ol {
 }
  li .text {
   display: block;
+  width:200px;
   margin-left: 80px;
   margin-right: 20px;
 }

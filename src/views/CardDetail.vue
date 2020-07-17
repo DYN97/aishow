@@ -9,13 +9,13 @@
       </li>
       <li class="clearfix">
         <b class="name">产品类型:</b>
-        <span class="text">{{parentname}}--{{order_type_name}}</span>
+        <span class="text">{{order_type_name}}</span>
       </li>
       <li class="clearfix">
         <b class="name" v-html="'申请人　'"></b>
         <span class="text">{{client_name}}</span>
       </li>
-      <li class="clearfix">
+      <li class="clearfix" v-if="!isCar">
         <b class="name">{{client_cardtype}}</b>
         <span class="text">{{client_idcard}}</span>
       </li>
@@ -23,7 +23,7 @@
         <b class="name">联系电话:</b>
         <span class="text">{{client_phone}}</span>
       </li>
-      <li class="clearfix">
+      <li class="clearfix"  v-if="!isCar">
         <b class="name">支付金额:</b>
         <span class="text">{{ticket_cost}}元</span>
       </li>
@@ -32,10 +32,20 @@
         <span class="text">{{statusText}}</span>
       </li>
     </ul>
+    <van-cell-group style="margin-top:20px"  v-if="isCar">
+      <van-cell title="车辆信息" style="font-size:18px;color:#000"  icon="che1" icon-prefix="iconfont" />
+      <van-cell title="车牌号"  :value="carnum" />
+      <van-cell title="车头照片" >
+        <template #label>
+          <img :src="carphoto" style="width:90vw" />
+        </template>
+        </van-cell>
+    </van-cell-group>
   </div>
 </template>
 <script>
 import airshowCarousel from "../components/Carousel";
+import { Cell, CellGroup, Popup, NoticeBar } from "vant";
 export default {
   name: "CardDetail",
   data() {
@@ -55,6 +65,7 @@ export default {
       ],
       ismail: false,
       dialog: false,
+      isCar:false,
       exhibition_name: "",
       detail_id: "",
       client_name: "",
@@ -72,11 +83,17 @@ export default {
       addressee_phone: "",
       parentname: "",
       statusText: "",
+      carnum: "",
+      carphoto: "",
       addre: ""
     };
   },
   components: {
-    airshowCarousel
+    airshowCarousel,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [NoticeBar.name]: NoticeBar,
+    [Popup.name]: Popup
   },
   mounted() {
     var me = this;
@@ -95,6 +112,15 @@ export default {
         } else if (res.data.data.client_card_type == "2") {
           me.client_cardtype = "港澳通行证";
         }
+        if(res.data.data.com_code=="1206"){
+          me.isCar = true;
+          var carInfo = res.data.data.carInfo;
+          if(carInfo){
+            me.carnum = carInfo.car_number;
+            me.carphoto = carInfo.car_photo;
+          }
+        }
+
         me.order_type_name = res.data.data.order_type_name;
         me.ticket_date = res.data.data.ticket_date;
         me.parentname = res.data.data.parentname;
