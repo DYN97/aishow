@@ -72,40 +72,47 @@ export default {
       ],
       cardnum: "",
       restCount: 10,
-      exhibitionCode:"",
-      errmessage:"",
+      exhibitionCode: "",
+      type:"",
+      errmessage: "",
       faildialog: false,
       passdialog: false
     };
   },
   watch: {},
   mounted() {
-   this.exhibitionCode= this.$route.params.exhibitionCode;
+    this.exhibitionCode = this.$route.params.exhibitionCode;
+    this.type = this.$route.query.type;
   },
   methods: {
-    CheckInvitation(){
-      var me = this;      
-      me.$api.exhibitionapi.CheckInvitation(me.exhibitionCode,me.cardnum).then(res=>{
-        if(res.data.statusCode=="200"){
-          me.restCount = res.data.data.usable_qty;
-          me.passdialog = true;
-        }else{
-          me.faildialog = true;
-          me.errmessage = res.data.message;
-        }
-      });
-
+    CheckInvitation() {
+      var me = this;
+      me.$api.exhibitionapi
+        .CheckInvitation(me.exhibitionCode, me.cardnum)
+        .then(res => {
+          if (res.data.statusCode == "200") {
+            me.restCount = res.data.data.usable_qty;
+            me.passdialog = true;
+          } else {
+            me.faildialog = true;
+            me.errmessage = res.data.message;
+          }
+        });
     },
-    ToTicketIndex(){
+    ToTicketIndex() {
+      if (this.type == "carTicket") {
         this.$router.push({
-            name: "VipTicketIndex",
-            params: { exhibitionCode: this.exhibitionCode },
-            query:{invite_code:this.cardnum}
-          });
-
+          name: "ApplyCarTicket",
+          params: { exhibitionCode: this.exhibitionCode }
+        });
+      } else {
+        this.$router.push({
+          name: "VipTicketIndex",
+          params: { exhibitionCode: this.exhibitionCode },
+          query: { invite_code: this.cardnum }
+        });
+      }
     }
-
-
   },
   components: {
     airshowCarousel

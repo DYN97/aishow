@@ -79,11 +79,14 @@ export default {
           if(this.type=="vip"){
             path = "Invitation"
           } else if(this.type=="carTicket"){
-            path = "ApplyCarTicket";
+            path = "Invitation";
           }             
           this.$router.push({
             name: path,
-            params: { exhibitionCode: exhibition_code }
+            params: { exhibitionCode: exhibition_code },
+            query:{
+              type:this.type
+            }
           });
           break;
         case 1:

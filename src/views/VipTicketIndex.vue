@@ -45,7 +45,7 @@
               ></v-text-field>
             </div>
           </v-row>
-          <v-row height="46px" no-gutters>
+          <v-row height="46px" no-gutters  v-if="tabIndex!=3">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe650;</i>观展日期
             </div>
@@ -55,7 +55,11 @@
                 v-model="form.applyDate"
               >
                 <option value>请选择</option>
-                <option v-for="date in exhibition.days" :key="date">{{date}}</option>
+                <option
+                  v-for="date in exhibitionDates"
+                  :key="date.value"
+                  :value="date.value"
+                >{{date.label}}</option>
               </select>
             </div>
           </v-row>
@@ -240,6 +244,40 @@
               ></v-text-field>
             </div>
           </v-row>
+           <v-row no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe656;</i>单位名称
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <v-text-field
+                v-model="form.company"
+                class="mainForm"
+                label="填写单位名称"
+                hide-details="auto"
+                height="30"
+                single-line
+                regular
+              ></v-text-field>
+            </div>
+          </v-row>
+          <v-row no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe690;</i>职务
+            </div>
+            <div align-self="center" class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.duty"
+              >
+                <option value>请选择</option>
+                <option
+                  v-for="item in dutys"
+                  :key="item.com_code"
+                  :value="item.com_code"
+                >{{item.com_name}}</option>
+              </select>
+            </div>
+          </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe659;</i>联系人
@@ -274,40 +312,7 @@
               ></v-text-field>
             </div>
           </v-row>
-          <v-row no-gutters>
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe656;</i>单位名称
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <v-text-field
-                v-model="form.company"
-                class="mainForm"
-                label="填写单位名称"
-                hide-details="auto"
-                height="30"
-                single-line
-                regular
-              ></v-text-field>
-            </div>
-          </v-row>
-          <v-row no-gutters>
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe690;</i>职务
-            </div>
-            <div align-self="center" class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.duty"
-              >
-                <option value>请选择</option>
-                <option
-                  v-for="item in dutys"
-                  :key="item.com_code"
-                  :value="item.com_code"
-                >{{item.com_name}}</option>
-              </select>
-            </div>
-          </v-row>
+         
           <v-row height="46px" no-gutters style="position: relative">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe605;</i>验证码
@@ -376,6 +381,26 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+     <v-dialog v-model="goupiaoDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">购票须知</v-card-title>
+          <v-card-text>{{goupiaoInfo}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="goupiaoDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="guanzhanDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">预购须知</v-card-title>
+          <v-card-text>{{guanzhanInfo}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="guanzhanDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     <van-popup v-model="showorderdetail" position="bottom">
       <van-collapse v-model="orderdetail">
         <van-collapse-item title="订单详情" name="1" disabled>
@@ -396,9 +421,17 @@
 <script>
 import agreementPage from "../components/agreementPage";
 import AirIframe from "../components/AirIframe";
-import { Card, Toast, Popup, NoticeBar,Collapse,Cell,CellGroup,
+import {
+  Card,
+  Toast,
+  Popup,
+  NoticeBar,
+  Collapse,
+  Cell,
+  CellGroup,
   Button,
-  CollapseItem} from "vant";
+  CollapseItem
+} from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
   name: "TicketIndex",
@@ -423,6 +456,10 @@ export default {
       CountDown: 60,
       tabIndex: 1,
       workcardDialog: false,
+      goupiaoDialog:false,
+      guanzhanDialog:false,
+      goupiaoInfo:"",
+      guanzhanInfo:"",
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
@@ -446,8 +483,10 @@ export default {
       RoomMoney: "",
       showAgreement: false,
       agreementPass: false,
+      firstGuanzhan:true,
       carText: "",
       rollingNotice: [],
+      exhibitionDates: [],
       workcardTips: "",
       showorderdetail: false,
       tickets: [],
@@ -497,6 +536,10 @@ export default {
       } else if (val == 2) {
         this.action = "观展服务";
         this.xieyi = "购买";
+        if(this.firstGuanzhan){
+          this.guanzhanDialog = true;
+          this.firstGuanzhan = false;       
+        }
       } else {
         this.action = "工作证";
         this.xieyi = "购买";
@@ -541,9 +584,9 @@ export default {
   computed: {
     sumMoney() {
       return (
-        parseInt(this.carMoney?this.carMoney:0) +
-        parseInt(this.roomMoney?this.roomMoney:0) +
-        parseInt(this.packageMoney?this.packageMoney:0)
+        parseInt(this.carMoney ? this.carMoney : 0) +
+        parseInt(this.roomMoney ? this.roomMoney : 0) +
+        parseInt(this.packageMoney ? this.packageMoney : 0)
       );
     }
   },
@@ -561,13 +604,27 @@ export default {
         me.dutys = res.data.data;
       }
     });
-
+  this.$api.commonapi.GetInfos().then(res=>{
+      if(res.data.statusCode=="200"){
+        me.goupiaoInfo = res.data.data.find(t=>t.com_code=="1402").com_value;
+        me.goupiaoDialog = true;
+        me.guanzhanInfo = res.data.data.find(t=>t.com_code=="1403").com_value;
+      }
+    });
     this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {
           me.exhibition = res.data.data;
+          me.exhibitionDates = [];
+          me.exhibition.days.forEach(t => {
+            var data = t.split("|");
+            me.exhibitionDates.push({
+              label: data[0] + "(" + data[1] + ")",
+              value: data[0]
+            });
+          });
           me.tickets = res.data.data.tickets.filter(t => t.apple_type == 1);
-          me.form.applyDate = res.data.data.days[0];
+          me.form.applyDate = me.exhibitionDates[0].value;
           me.form.TicketCode = me.tickets[0].ticket_code;
         }
       }
@@ -578,6 +635,7 @@ export default {
   methods: {
     OpenDetailPage(item) {
       this.showDetail = true;
+      this.$route.push("#");
       this.packageName = item.pro_name;
       this.packageLink = item.pro_detail_url;
     },
@@ -704,7 +762,7 @@ export default {
           }
         });
     },
-    submit() {
+    async submit() {
       var me = this;
       let _name = this.form.fullname,
         _applyDate = this.form.applyDate,
@@ -777,11 +835,17 @@ export default {
         Toast("请输入正确的验证码");
         this.once = true;
         return;
-      }
-      if (!this.CheckCode()) {
-        Toast("请输入正确的验证码");
-        this.once = true;
-        return;
+      } else {
+        var result = await this.$api.commonapi.CheckCode(
+          this.vifcode,
+          this.form.yanzhengma
+        );
+
+        if (result.data.statusCode != "200") {
+          Toast("请输入正确的验证码");
+          this.once = true;
+          return;
+        }
       }
       if (this.tabIndex == 1) {
         let params = {
@@ -869,15 +933,15 @@ export default {
         if (res.data.statusCode == "200") {
           if (res.data.data.money == "0") {
             this.$router.push({
-                name: "Result",
-                params: {
-                  result: "success"
-                },
-                query: {
-                  type: this.tabIndex,
-                  order_code: res.data.data.ordercode
-                }
-              });
+              name: "Result",
+              params: {
+                result: "success"
+              },
+              query: {
+                type: this.tabIndex,
+                order_code: res.data.data.ordercode
+              }
+            });
           } else {
             window.location.href =
               "/appwxpay.aspx?token=" +
@@ -921,7 +985,7 @@ export default {
   },
 
   components: {
-     airshowCarousel,
+    airshowCarousel,
     agreementPage,
     AirIframe,
     [Card.name]: Card,

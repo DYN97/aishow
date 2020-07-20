@@ -38,13 +38,17 @@
                 v-model="form.applyDate"
               >
                 <option value>请选择</option>
-                <option v-for="date in exhibition.days" :key="date">{{date}}</option>
+                <option
+                  v-for="date in exhibitionDates"
+                  :key="date.value"
+                  :value="date.value"
+                >{{date.label}}</option>
               </select>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
-            <v-col style="padding-left:60px;color:red">
-              <i class="iconfont">&#xe60f;</i>不含观展门票，请另行购买。
+            <v-col style="color:red" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="color:red">&#xe60f;</i>不含观展门票，请另行购买。
             </v-col>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==2">
@@ -107,6 +111,17 @@
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
               <v-checkbox v-model="form.needRoom" label="需要单间" type="checkbox" required></v-checkbox>
+            </div>
+          </v-row>
+          <v-row no-gutters v-if="tabIndex==2">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>接送机
+            </div>
+            <div class="am-u-sm-8 list-right" style="margin-top: 8px">
+              <van-checkbox-group v-model="result" direction="horizontal">
+                <van-checkbox  v-model="form.needRoom" label="接机" type="checkbox" required></van-checkbox>
+                <van-checkbox  v-model="form.needRoom" label="送机" type="checkbox" required></van-checkbox>
+              </van-checkbox-group>
             </div>
           </v-row>
           <v-row height="46px" no-gutters v-if="tabIndex==1">
@@ -290,6 +305,36 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="zengpiaoDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">赠票须知</v-card-title>
+          <v-card-text>{{zengpiaoInfo}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="zengpiaoDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="goupiaoDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">购票须知</v-card-title>
+          <v-card-text>{{goupiaoInfo}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="goupiaoDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="guanzhanDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">预购须知</v-card-title>
+          <v-card-text>{{guanzhanInfo}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="guanzhanDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -306,6 +351,8 @@ import {
   CellGroup,
   Collapse,
   Button,
+  Checkbox,
+  CheckboxGroup,
   CollapseItem
 } from "vant";
 export default {
@@ -316,6 +363,9 @@ export default {
       xieyi: "赠票",
       showDetail: false,
       YZMloading: false,
+      zengpiaoDialog: false,
+      goupiaoDialog: false,
+      guanzhanDialog: false,
       CountDown: 60,
       tabIndex: 0,
       packageName: "",
@@ -325,10 +375,14 @@ export default {
         tickets: [],
         days: []
       },
+      zengpiaoInfo: "",
+      goupiaoInfo: "",
+      guanzhanInfo: "",
       orderdetail: ["1"],
       showorderdetail: false,
       tickets: [],
       lookUp: "0",
+      exhibitionDates: [],
       ticketCost: 0,
       playPackages: [],
       packageLevels: [],
@@ -344,6 +398,8 @@ export default {
       agreementPass: false,
       workcardDialog: false,
       rollingNotice: [],
+      firstGoupiao: true,
+      firstGuanzhan: true,
       workcardTips: "",
       form: {
         fullname: "",
@@ -387,7 +443,15 @@ export default {
       } else if (val == 1) {
         this.action = "购票";
         this.xieyi = "购票";
+        if (this.firstGoupiao) {
+          this.goupiaoDialog = true;
+          this.firstGoupiao = false;
+        }
       } else {
+        if (this.firstGuanzhan) {
+          this.guanzhanDialog = true;
+          this.firstGuanzhan = false;
+        }
         this.action = "观展服务";
         this.xieyi = "购买";
       }
@@ -426,9 +490,9 @@ export default {
   computed: {
     sumMoney() {
       return (
-        parseInt(this.carMoney?this.carMoney:0) +
-        parseInt(this.roomMoney?this.roomMoney:0) +
-        parseInt(this.packageMoney?this.packageMoney:0)
+        parseInt(this.carMoney ? this.carMoney : 0) +
+        parseInt(this.roomMoney ? this.roomMoney : 0) +
+        parseInt(this.packageMoney ? this.packageMoney : 0)
       );
     }
   },
@@ -441,13 +505,34 @@ export default {
         me.rollingNotice = res.data.data;
       }
     });
-
+    this.$api.commonapi.GetInfos().then(res => {
+      if (res.data.statusCode == "200") {
+        me.zengpiaoInfo = res.data.data.find(
+          t => t.com_code == "1401"
+        ).com_value;
+        me.zengpiaoDialog = true;
+        me.goupiaoInfo = res.data.data.find(
+          t => t.com_code == "1402"
+        ).com_value;
+        me.guanzhanInfo = res.data.data.find(
+          t => t.com_code == "1403"
+        ).com_value;
+      }
+    });
     this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {
           me.exhibition = res.data.data;
+          me.exhibitionDates = [];
+          me.exhibition.days.forEach(t => {
+            var data = t.split("|");
+            me.exhibitionDates.push({
+              label: data[0] + "(" + data[1] + ")",
+              value: data[0]
+            });
+          });
           me.tickets = res.data.data.tickets.filter(t => t.apple_type == 0);
-          me.form.applyDate = res.data.data.days[0];
+          me.form.applyDate = me.exhibitionDates[0].value;
           me.form.TicketCode = me.tickets[0].ticket_code;
         }
       }
@@ -649,11 +734,6 @@ export default {
           return;
         }
       }
-      if (!this.CheckCode()) {
-        Toast("请输入正确的验证码");
-        this.once = true;
-        return;
-      }
       if (this.tabIndex != 2) {
         let params = {
           persons: JSON.stringify([
@@ -682,7 +762,8 @@ export default {
                 },
                 query: {
                   type: "0",
-                  order_code: res.data.data.ordercode
+                  order_code: res.data.data.ordercode,
+                  exhibition_id: this.exhibition.exhibition_code
                 }
               });
             } else {
@@ -707,6 +788,7 @@ export default {
               },
               query: {
                 type: this.tabIndex,
+                exhibition_id: this.exhibition.exhibition_code,
                 message: res.data.message
               }
             });
@@ -759,7 +841,8 @@ export default {
             },
             query: {
               type: this.tabIndex,
-              message: res.data.message
+              message: res.data.message,
+              exhibition_id: this.exhibition.exhibition_code
             }
           });
         }
@@ -777,6 +860,8 @@ export default {
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     [CellGroup.name]: CellGroup,
+    [Checkbox.name]: Checkbox,
+    [CheckboxGroup.name]: CheckboxGroup,
     [Popup.name]: Popup
   }
 };

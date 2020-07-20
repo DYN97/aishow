@@ -4,16 +4,16 @@
     <ul class="detailList listbox">
       <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
       <li class="clearfix">
-        <b class="name">观展日期:</b>
-        <span class="text">{{ticket_date}}</span>
-      </li>
-      <li class="clearfix">
         <b class="name">产品类型:</b>
         <span class="text">{{order_type_name}}</span>
       </li>
       <li class="clearfix">
         <b class="name" v-html="'申请人　'"></b>
         <span class="text">{{client_name}}</span>
+      </li>
+       <li class="clearfix">
+        <b class="name" v-html="'申请单位'"></b>
+        <span class="text">{{company}}</span>
       </li>
       <li class="clearfix" v-if="!isCar">
         <b class="name">{{client_cardtype}}</b>
@@ -69,6 +69,7 @@ export default {
       exhibition_name: "",
       detail_id: "",
       client_name: "",
+      company:"",
       client_idcard: "",
       client_phone: "",
       order_type_name: "",
@@ -120,7 +121,7 @@ export default {
             me.carphoto = carInfo.car_photo;
           }
         }
-
+        me.company = res.data.data.rec_company;
         me.order_type_name = res.data.data.order_type_name;
         me.ticket_date = res.data.data.ticket_date;
         me.parentname = res.data.data.parentname;

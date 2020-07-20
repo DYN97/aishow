@@ -4,7 +4,7 @@
     <div v-if="type==1">
       <v-row>
         <v-col cols="12" style="text-align:center;height:150px" align-self="start">
-          <span style="font-size:100px;color:green" class="icon iconfont icon-chenggong"></span>
+          <span style="font-size:100px;color:green" class="icon iconfont iconfont-chenggong"></span>
         </v-col>
       </v-row>
       <v-row>
@@ -116,7 +116,7 @@
       </div>
       <v-row v-if="actionCode!=4&&actionCode!=0" justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="green" @click="reOrder">{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
+          <v-btn block color="green" @click="reOrder(2)">{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
         </v-col>
         <v-col cols="4" style="text-align:center" align-self="center">
           <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
@@ -124,7 +124,7 @@
       </v-row>
       <v-row v-if="actionCode==0" justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="error" @click="reOrder">继续申请</v-btn>
+          <v-btn block color="error" @click="reOrder(0)">继续申请</v-btn>
         </v-col>
         <v-col cols="4" style="text-align:center" align-self="center">
           <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
@@ -142,7 +142,7 @@
     <div v-else-if="type==0">
       <v-row>
         <v-col cols="12" style="text-align:center;height:150px" align-self="start">
-          <span style="font-size:100px;color:red" class="icon iconfont icon-shanchu1"></span>
+          <span style="font-size:100px;color:red" class="icon iconfont iconfont-shanchu1"></span>
         </v-col>
       </v-row>
       <v-row>
@@ -264,7 +264,7 @@ export default {
         me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
-            me.ticketDate =  detail.exhibition_date.substring(0, 10);
+            me.ticketDate = detail.exhibition_date.substring(0, 10);
             me.workcardType = detail.pro_name;
             me.clientName = detail.client_name;
             me.clientMobile = detail.client_phone;
@@ -323,7 +323,7 @@ export default {
         me.$store.state.token +
         "&type=" +
         me.type +
-          "&ordercode=" +
+        "&ordercode=" +
         me.ordercode +
         "&total_fee=" +
         me.total_fee +
@@ -332,10 +332,13 @@ export default {
     },
     toRoute(name) {
       this.$router.push({
-        name: name
+        name: name,
+        query:{
+          type:this.actionCode
+        }
       });
     },
-    reOrder() {
+    reOrder(tab) {
       if (this.way == "vip") {
         this.$router.push({
           name: "Invitation",
@@ -345,11 +348,9 @@ export default {
         });
       } else {
         this.$router.push({
-          name: "TicketIndex",
-          params: {
-            exhibitionCode: this.exhibition_id,
-          },query:{
-            tabIndex:2
+          path: "/TicketIndex/"+this.exhibition_id,
+          query: {
+            tabIndex: tab
           }
         });
       }

@@ -102,7 +102,7 @@
      }, {
          path: "/ApplyCommand",
          name: "ApplyCommand",
-         title: "权限申请",
+         title: "管理员申请",
          component: ApplyCommand
      }, {
          path: "/ApplyCarTicket/:exhibitionCode",

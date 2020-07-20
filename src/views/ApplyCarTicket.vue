@@ -10,30 +10,9 @@
           :text="rollingNotice.information_title"
           @click="ToOutLink(rollingNotice.information_content,'通知')"
         />
+        
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <v-form style="background-color:white">
-          <v-row height="46px" no-gutters>
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe650;</i>观展日期
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.applyDate"
-              >
-                <option value>请选择</option>
-                <option v-for="date in exhibition.days" :key="date">{{date}}</option>
-              </select>
-            </div>
-          </v-row>
-          <v-row height="88px" no-gutters>
-            <div align-self="center" class="tag-name" for="doc-ipt-3" style="height:88px;line-height:88px">
-              <i class="iconfont">&#xe650;</i>车头照片
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <van-uploader v-model="fileList" multiple :max-count="1" />
-            </div>
-          </v-row>
           <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe63f;</i>
@@ -51,7 +30,23 @@
               ></v-text-field>
             </div>
           </v-row>
-          <v-row no-gutters>
+           <v-row no-gutters >
+             <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe614;</i>申请单位
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <v-text-field
+                v-model="form.company"
+                class="mainForm"
+                label="申请单位"
+                hide-details="auto"
+                height="30"
+                single-line
+                regular
+              ></v-text-field>
+            </div>
+          </v-row>
+           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe690;</i>申请类型
             </div>
@@ -68,22 +63,7 @@
               </select>
             </div>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2">
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe614;</i>申请单位
-            </div>
-            <div class="am-u-sm-8 list-right">
-              <v-text-field
-                v-model="form.company"
-                class="mainForm"
-                label="申请单位"
-                hide-details="auto"
-                height="30"
-                single-line
-                regular
-              ></v-text-field>
-            </div>
-          </v-row>
+          
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>车牌号码
@@ -100,6 +80,17 @@
               ></v-text-field>
             </div>
           </v-row>
+          <v-row height="88px" no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3" style="height:88px;line-height:88px">
+              <i class="iconfont">&#xe650;</i>车头照片
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <van-uploader v-model="fileList" multiple :max-count="1" />
+            </div>
+          </v-row>
+          
+         
+         
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe659;</i>联系电话
@@ -154,6 +145,22 @@
                   <span style="color: rgba(255,255,255,0.5) !important;">重新发送({{CountDown}})</span>
                 </template>
               </v-btn>
+            </div>
+          </v-row>
+            <v-row no-gutters >
+             <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe614;</i>备注
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <v-text-field
+                v-model="form.other"
+                class="mainForm"
+                label="备注"
+                hide-details="auto"
+                height="30"
+                single-line
+                regular
+              ></v-text-field>
             </div>
           </v-row>
           <v-row height="46px" no-gutters class="agree-box">
@@ -366,11 +373,17 @@ export default {
       let _name = this.form.fullname,
         _applyDate = this.form.applyDate,
         _tel = this.form.mobile,
+        _company = this.form.company,
         carnum = this.form.carnum,
         yanzhengma = this.form.yanzhengma;
 
       if (_name.length < 2) {
         Toast("请填写姓名！");
+        this.once = true;
+        return;
+      }
+       if (_company.length < 2) {
+        Toast("请填写单位名称！");
         this.once = true;
         return;
       }
@@ -415,6 +428,7 @@ export default {
           client_idcard: this.form.cardnum,
           carnum: this.form.carnum,
           cliend_cardtype: this.form.cardtype,
+          rec_company:this.form.company,
           sex: this.form.sex,
           use_type: 3,
           client_phone: this.form.mobile,
@@ -432,7 +446,8 @@ export default {
                 },
                 query: {
                   type: "5",
-                  order_code: res.data.data.ordercode
+                  order_code: res.data.data.ordercode,
+                  exhibition_id: this.exhibition.exhibition_code
                 }
               });
           } else {
@@ -443,7 +458,8 @@ export default {
               },
               query: {
                 type: "5",
-                message: res.data.message
+                message: res.data.message,
+                  exhibition_id: this.exhibition.exhibition_code
               }
             });
           }

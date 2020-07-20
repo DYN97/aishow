@@ -82,13 +82,13 @@ export default {
       var me = this;
       if (!me.once) return false;
       me.once = false;
-      if (me.form.apply_name === "") {
-        Toast("请填写姓名！");
+      if (me.form.apply_name === "" || this.stripscript(me.form.apply_name)) {
+        Toast("请正确填写姓名！");
         this.once = true;
         return;
       }
-      if (me.form.dept_name === "") {
-        Toast("请填写部门！");
+      if (me.form.dept_name === "" || this.stripscript(me.form.dept_name)) {
+        Toast("请正确填写部门！");
         this.once = true;
         return;
       }
@@ -127,6 +127,12 @@ export default {
         return `${val}日`;
       }
       return val;
+    },
+    stripscript(s) {
+      var pattern = new RegExp(
+        "[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？\"]"
+      );
+      return pattern.test(s);
     }
   }
 };

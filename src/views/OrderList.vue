@@ -3,7 +3,7 @@
     <airshowCarousel :type="14"></airshowCarousel>
     <v-tabs grow v-model="tabIndex">
         <v-tab :key="0" @click="tabIndex=0">门票</v-tab>
-        <v-tab :key="1" @click="tabIndex=1">工作证</v-tab>
+        <v-tab :key="1" @click="tabIndex=1">工作(车辆)证</v-tab>
         <v-tab :key="2" @click="tabIndex=2">服务产品</v-tab>
     </v-tabs>
     <div style="width:100%;border:1px #ccc solid;" class="listbox">
@@ -138,6 +138,7 @@ export default {
   },
   mounted() {
     var me = this ;
+    me.tabIndex = parseInt(this.$route.query.type); 
     me.$api.orderapi.GetOrderList0424("").then(res=>{
       if(res.data.statusCode=="200"){
         me.ticketitems = res.data.data.ticketlist;
@@ -218,6 +219,7 @@ legend{
     background: rgb(15, 154, 224);
     font-size: 14px;
     text-align: center;
+    height:20px;
     line-height: 20px;
     border-radius: 2px;
     color: #fff;
