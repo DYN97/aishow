@@ -3,117 +3,133 @@
     <airshowCarousel :type="11"></airshowCarousel>
     <div v-if="type==1">
       <v-row>
-        <v-col cols="12" style="text-align:center;height:150px" align-self="start">
-          <span style="font-size:100px;color:green" class="icon iconfont iconfont-chenggong"></span>
-        </v-col>
-      </v-row>
-      <v-row>
         <v-col cols="12" style="text-align:center" align-self="center">
-          <span style="font-size:20px;font-weight:bold">{{actionName}}成功</span>
+          <span
+            style="font-size: 40px;margin-top: 10px;color: rgb(95, 195, 100);position: relative;top: 7px;"
+            class="icon iconfont iconfont-chenggong1"
+          ></span>
+          <span
+            style="font-size:20px;font-weight:bold;line-height:40px;height:40px;display:inline-block"
+          >{{actionName}}成功</span>
         </v-col>
       </v-row>
-      <div v-if="actionCode==1">
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>观展日期：{{ticketDate}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>门票类型：{{ticketType}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span v-html="'申请人　：'+clientName"></span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>联系电话：{{clientMobile}}</span>
-          </v-col>
-        </v-row>
+      <div
+        style="width:80vw;margin:0 auto;box-shadow: 0px 6px 9.4px 0.6px rgba(4, 0, 0, 0.07);border-radius:6px;background:#ffffff"
+      >
+        <div v-if="actionCode==1">
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>观展日期：{{ticketDate}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>门票类型：{{ticketType}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span v-html="'申请人　：'+clientName"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>联系电话：{{clientMobile}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span  v-html="client_cardtype+'：'+client_idcard"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>支付金额：{{ticket_cost}}元</span>
+            </v-col>
+          </v-row>
+        </div>
+        <div v-if="actionCode==2">
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>观展日期：{{ticketDate}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>套餐类型：{{packageType}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>套餐档位：{{packageLevel}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span v-html="'申请人　：'+clientName"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>联系电话：{{clientMobile}}</span>
+            </v-col>
+          </v-row>
+        </div>
+        <div v-if="actionCode==3">
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>观展日期：{{ticketDate}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>工作证类型：{{workcardType}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span v-html="'申请人　：'+clientName"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>联系电话：{{clientMobile}}</span>
+            </v-col>
+          </v-row>
+        </div>
+        <div v-if="actionCode==4">
+          <v-row justify="center">
+            <v-col cols="10" style="text-align:center" align-self="center">
+              <span>请注意查收</span>
+            </v-col>
+          </v-row>
+        </div>
+        <div v-if="actionCode==5">
+          <v-row justify="center">
+            <v-col cols="10" style="text-align:center" align-self="center">
+              <span>请等待审核</span>
+            </v-col>
+          </v-row>
+        </div>
+        <div v-if="actionCode==0">
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>观展日期：{{ticketDate}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span v-html="'申请人　：'+clientName"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>联系电话：{{clientMobile}}</span>
+            </v-col>
+          </v-row>
+        </div>
       </div>
-      <div v-if="actionCode==2">
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>观展日期：{{ticketDate}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>套餐类型：{{packageType}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>套餐档位：{{packageLevel}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span v-html="'申请人　：'+clientName"></span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>联系电话：{{clientMobile}}</span>
-          </v-col>
-        </v-row>
-      </div>
-      <div v-if="actionCode==3">
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>观展日期：{{ticketDate}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>工作证类型：{{workcardType}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span v-html="'申请人　：'+clientName"></span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>联系电话：{{clientMobile}}</span>
-          </v-col>
-        </v-row>
-      </div>
-      <div v-if="actionCode==4">
-        <v-row justify="center">
-          <v-col cols="10" style="text-align:center" align-self="center">
-            <span>请注意查收</span>
-          </v-col>
-        </v-row>
-      </div>
-      <div v-if="actionCode==5">
-        <v-row justify="center">
-          <v-col cols="10" style="text-align:center" align-self="center">
-            <span>请等待审核</span>
-          </v-col>
-        </v-row>
-      </div>
-      <div v-if="actionCode==0">
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>观展日期：{{ticketDate}}</span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span v-html="'申请人　：'+clientName"></span>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="10" align-self="center">
-            <span>联系电话：{{clientMobile}}</span>
-          </v-col>
-        </v-row>
-      </div>
+
       <v-row v-if="actionCode!=4&&actionCode!=0" justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
           <v-btn block color="green" @click="reOrder(2)">{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
@@ -225,8 +241,20 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = "赠票";
-            me.clientName = detail.aclient_name;
+            me.clientName = detail.aclient_name.substring(0, 1) + "XX";
             me.clientMobile = detail.aclient_phone;
+            me.client_idcard = detail.aclient_idcard;
+            switch (detail.aclient_card_type) {
+              case 0:
+                me.client_cardtype = "身份证　";
+                break;
+              case 1:
+                me.client_cardtype = "护　照　";
+                break;
+              case 2:
+                me.client_cardtype = "港澳通行证";
+                break;
+            }
           }
         });
 
@@ -235,11 +263,25 @@ export default {
         me.actionName = "门票付款";
         me.$api.orderapi.GetOrderInfo(me.ordercode).then(res => {
           if (res.data.statusCode == "200") {
+            console.log(res);
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = detail.bticket_name;
             me.clientName = detail.aclient_name;
             me.clientMobile = detail.aclient_phone;
+            me.client_idcard = detail.aclient_idcard;
+            switch (detail.aclient_card_type) {
+              case 0:
+                me.client_cardtype = "身份证　";
+                break;
+              case 1:
+                me.client_cardtype = "护　照　";
+                break;
+              case 2:
+                me.client_cardtype = "港澳通行证";
+                break;
+            }
+            me.ticket_cost = res.data.data.receivable_money;
           }
         });
 
@@ -255,6 +297,17 @@ export default {
             me.packageLevel = detail.pro_name;
             me.clientName = detail.client_name;
             me.clientMobile = detail.client_phone;
+            switch (detail.aclient_card_type) {
+             case 0:
+                me.client_cardtype = "身份证　";
+                break;
+              case 1:
+                me.client_cardtype = "护　照　";
+                break;
+              case 2:
+                me.client_cardtype = "港澳通行证";
+                break;
+            }
           }
         });
 
@@ -268,6 +321,17 @@ export default {
             me.workcardType = detail.pro_name;
             me.clientName = detail.client_name;
             me.clientMobile = detail.client_phone;
+            switch (detail.aclient_card_type) {
+              case 0:
+                me.client_cardtype = "身份证　";
+                break;
+              case 1:
+                me.client_cardtype = "护　照　";
+                break;
+              case 2:
+                me.client_cardtype = "港澳通行证";
+                break;
+            }
           }
         });
         break;
@@ -305,6 +369,9 @@ export default {
       ticketType: "",
       clientName: "",
       clientMobile: "",
+      client_idcard: "",
+      ticket_cost: "",
+      client_cardtype: "",
       packageType: "",
       packageLevel: "",
       workcardType: ""
@@ -322,7 +389,7 @@ export default {
         "/appwxpay.aspx?token=" +
         me.$store.state.token +
         "&type=" +
-        me.type +
+        me.actionCode +
         "&ordercode=" +
         me.ordercode +
         "&total_fee=" +
@@ -333,8 +400,8 @@ export default {
     toRoute(name) {
       this.$router.push({
         name: name,
-        query:{
-          type:this.actionCode
+        query: {
+          type: this.actionCode
         }
       });
     },
@@ -348,7 +415,7 @@ export default {
         });
       } else {
         this.$router.push({
-          path: "/TicketIndex/"+this.exhibition_id,
+          path: "/TicketIndex/" + this.exhibition_id,
           query: {
             tabIndex: tab
           }

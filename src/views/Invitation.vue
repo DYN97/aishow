@@ -26,13 +26,18 @@
           <v-btn block rounded color="primary" large dark @click="CheckInvitation">确认提交</v-btn>
         </v-col>
       </v-row>
+      <v-row justify="center">
+        <v-col cols="24" style="text-align:center;color:red" >邀请码使用说明</v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="16" style="text-align:center">{{invitecodeInfomation}}</v-col>
+      </v-row>
     </v-container>
     <v-dialog v-model="passdialog" max-width="290">
       <v-card>
         <v-card-title class="headline" style="justify-content: center;">温馨提示</v-card-title>
         <v-card-text style="font-size:18px;margin-top:20px;text-align:center">
-          该邀请码还可以使用
-          <span style="color:red;font-size:20px">{{restCount}}</span>次
+          <v-row v-for="item in restData" :key="item.id"><v-col>{{changeName(item.type)}}剩余次数:{{item.usable_qty}}</v-col></v-row>
         </v-card-text>
         <v-card-actions style="justify-content: center;">
           <v-btn color="green darken-1" text @click="ToTicketIndex">确定</v-btn>
@@ -58,40 +63,45 @@ export default {
   data() {
     return {
       action: "订票",
-      imgs: [
-        {
-          src:
-            "http://59.110.175.131:1111/upfiles/2019-07-31/h5_20190731205844240.jpg",
-          isguanggao: true
-        },
-        {
-          src:
-            "http://59.110.175.131:1111/upfiles/2019-07-31/h7_20190731205944651.jpg",
-          isguanggao: false
-        }
-      ],
       cardnum: "",
       restCount: 10,
       exhibitionCode: "",
       type:"",
+      invitecodeInfomation:"",
       errmessage: "",
       faildialog: false,
-      passdialog: false
+      passdialog: false,
+      restData:[]
     };
   },
   watch: {},
   mounted() {
     this.exhibitionCode = this.$route.params.exhibitionCode;
     this.type = this.$route.query.type;
+    this.$api.commonapi.GetInfos().then(res => {
+      if (res.data.statusCode == "200") {
+        this.invitecodeInfomation = res.data.data.find(
+          t => t.com_code == "1404"
+        ).com_value;
+      }
+    });
   },
   methods: {
+    changeName(type){
+      switch(type){
+        case 0:return "门票";
+        case 1:return "工作证";
+        case 2:return "观展服务";
+        case 3:return "车证";
+      }
+    },
     CheckInvitation() {
       var me = this;
       me.$api.exhibitionapi
         .CheckInvitation(me.exhibitionCode, me.cardnum)
         .then(res => {
           if (res.data.statusCode == "200") {
-            me.restCount = res.data.data.usable_qty;
+            me.restData = res.data.data.detail;
             me.passdialog = true;
           } else {
             me.faildialog = true;

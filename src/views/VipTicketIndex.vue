@@ -194,22 +194,8 @@
               </select>
             </div>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2">
-            <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont">&#xe690;</i>性别
-            </div>
-            <div align-self="center" class="am-u-sm-8 list-right">
-              <select
-                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
-                v-model="form.sex"
-              >
-                <option value="1">男</option>
-                <option value="0">女</option>
-              </select>
-            </div>
-          </v-row>
 
-          <v-row no-gutters>
+            <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>证件号码
             </div>
@@ -225,6 +211,23 @@
               ></v-text-field>
             </div>
           </v-row>
+          
+          <v-row no-gutters v-if="tabIndex==2">
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
+              <i class="iconfont">&#xe690;</i>性别
+            </div>
+            <div align-self="center" class="am-u-sm-8 list-right">
+              <select
+                style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
+                v-model="form.sex"
+              >
+                <option value="1">男</option>
+                <option value="0">女</option>
+              </select>
+            </div>
+          </v-row>
+
+        
 
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -244,7 +247,7 @@
               ></v-text-field>
             </div>
           </v-row>
-           <v-row no-gutters>
+          <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe656;</i>单位名称
             </div>
