@@ -61,8 +61,11 @@
       <van-cell title="送机" :value="levelName" />
     </van-cell-group>
     <v-row justify="center">
-      <v-col cols="4">
+      <v-col cols="4" v-if="pay_status==1&&apply_status==1">
         <van-button type="primary" block @click="dialog = true">申请退款</van-button>
+      </v-col>
+      <v-col cols="4" v-if="pay_status==0&&apply_status==0">
+        <van-button type="primary" block @click="payAgain">重新支付</van-button>
       </v-col>
     </v-row>
      <v-dialog v-model="dialog" max-width="290">
@@ -123,6 +126,9 @@ export default {
       mail_serial_num: "",
       addressee_phone: "",
       statusText: "",
+      apply_status:0,
+      pay_status:0,
+      parentname:"",
       addre: ""
     };
   },
@@ -223,6 +229,20 @@ export default {
           window.location.reload();
         }
       });
+    },
+    payAgain(){
+        var me = this;
+        window.location.href =
+        "/appwxpay.aspx?token=" +
+        me.$store.state.token +
+        "&type=2" +
+        "&ordercode=" +
+        me.order_code +
+        "&total_fee=" +
+        me.ticket_cost +
+        "&exhibition_id=" +
+        me.exhibition_id;
+
     }
   },
   computed: {}

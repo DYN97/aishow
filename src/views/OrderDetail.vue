@@ -5,7 +5,7 @@
       <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
       <li class="clearfix">
         <b class="name">门票类型</b>
-        <span class="text">电子门票</span>
+        <span class="text">{{order_type_name}}</span>
       </li>
       <li class="clearfix" style="text-align:center" v-if="apply_status==2">
         <vue-qr :text="qrurl" :margin="0" colorDark="#000000" colorLight="#fff"  :logoScale="0.3" :size="180" style="margin:0 auto"></vue-qr>
@@ -65,9 +65,16 @@
       <a
         id="refund"
         type="button"
+        @click="payAgain"
+        class="blueBtn button"
+        v-if="apply_status==-1&&pay_status==0"
+      >再次支付</a>
+      <a
+        id="refund"
+        type="button"
         @click="dialog = true"
         class="blueBtn button"
-        v-if="apply_status==0&&ticket_cost>0"
+        v-if="apply_status==0&&pay_status==1&&ticket_cost>0"
       >申请退款</a>
     </div>
     <v-dialog v-model="dialog" max-width="290">
@@ -110,6 +117,7 @@ export default {
       ismail: false,
       dialog: false,
       exhibition_name: "",
+      exhibition_code:"",
       detail_id: "",
       client_name: "",
       client_idcard: "",
@@ -126,6 +134,8 @@ export default {
       addressee_phone: "",
       statusText: "",
       apply_status:"",
+      pay_status:"",
+      ordercode:"",
       qrurl:"",
       addre: ""
     };
@@ -140,11 +150,14 @@ export default {
     me.$api.orderapi.GetOrderDetail(me.detail_id).then(res => {
       if (res.data.statusCode == "200") {
         me.exhibition_name = res.data.data.exhibition_name;
+        me.exhibition_code = res.data.data.exhibition_code;
         me.qrurl =  me.detail_id +'&_t='+ new Date().getTime();
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
+        me.pay_status = res.data.data.pay_status;
         me.client_cardtype = "身份证";
+        me.ordercode =res.data.data.ordercode;
         if (res.data.data.client_card_type == "1") {
           me.client_cardtype = "护照";
         } else if (res.data.data.client_card_type == "2") {
@@ -166,6 +179,7 @@ export default {
           me.ismail = true;
         }
         switch (parseInt(me.apply_status)) {
+          case -1:me.statusText = '待支付';break;
           case 2:
             me.statusText = "待领取";
             break;
@@ -195,6 +209,19 @@ export default {
   methods: {
     mailList() {
       this.$router.push({ name: "MailList" });
+    },
+    payAgain(){
+      var me = this;
+        window.location.href =
+        "/appwxpay.aspx?token=" +
+        me.$store.state.token +
+        "&type=1" +
+        "&ordercode=" +
+        me.ordercode +
+        "&total_fee=" +
+        me.ticket_cost +
+        "&exhibition_id=" +
+        me.exhibition_id;
     },
     refundMoney() {
       let detail_id = this.$route.params.id;

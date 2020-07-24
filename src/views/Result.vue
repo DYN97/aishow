@@ -83,11 +83,6 @@
         <div v-if="actionCode==3">
           <v-row justify="center">
             <v-col cols="10" align-self="center">
-              <span>观展日期：{{ticketDate}}</span>
-            </v-col>
-          </v-row>
-          <v-row justify="center">
-            <v-col cols="10" align-self="center">
               <span>工作证类型：{{workcardType}}</span>
             </v-col>
           </v-row>
@@ -96,7 +91,16 @@
               <span v-html="'申请人　：'+clientName"></span>
             </v-col>
           </v-row>
-          
+           <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span  v-html="client_cardtype+'：'+client_idcard"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>支付金额：{{ticket_cost}}元</span>
+            </v-col>
+          </v-row>
           <v-row justify="center">
             <v-col cols="10" align-self="center">
               <span>联系电话：{{clientMobile}}</span>
@@ -250,9 +254,9 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = "赠票";
-            me.clientName = detail.aclient_name.substring(0, 1) + "XX";
-            me.clientMobile = detail.aclient_phone;
-            me.client_idcard = detail.aclient_idcard;
+           me.clientName = detail.client_name.substring(0,1)+'XX';
+            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
+             me.client_idcard =detail.client_idcard.length=="18"?detail.client_idcard.substring(0,6)+"xxxxxxxx"+detail.client_idcard.substring(14):detail.client_idcard;
             switch (detail.aclient_card_type) {
               case 0:
                 me.client_cardtype = "身份证　";
@@ -276,9 +280,9 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = detail.bticket_name;
-            me.clientName = detail.aclient_name;
-            me.clientMobile = detail.aclient_phone;
-            me.client_idcard = detail.aclient_idcard;
+             me.clientName = detail.client_name.substring(0,1)+'XX';
+            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
+             me.client_idcard =detail.client_idcard.length=="18"?detail.client_idcard.substring(0,6)+"xxxxxxxx"+detail.client_idcard.substring(14):detail.client_idcard;
             switch (detail.aclient_card_type) {
               case 0:
                 me.client_cardtype = "身份证　";
@@ -330,8 +334,9 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.exhibition_date.substring(0, 10);
             me.workcardType = detail.pro_name;
-            me.clientName = detail.client_name;
-            me.clientMobile = detail.client_phone;
+           me.clientName = detail.client_name.substring(0,1)+'XX';
+            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
+             me.client_idcard =detail.client_idcard.length=="18"?detail.client_idcard.substring(0,6)+"xxxxxxxx"+detail.client_idcard.substring(14):detail.client_idcard;
             switch (detail.aclient_card_type) {
               case 0:
                 me.client_cardtype = "身份证　";
@@ -344,6 +349,7 @@ export default {
                 break;
             }
           }
+          me.ticket_cost = res.data.data.receivable_money;
         });
         break;
       case "4":

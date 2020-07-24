@@ -826,10 +826,22 @@ export default {
         });
       } else {
         this.showorderdetail = true;
+        
       }
     },
     SubmitForm() {
       var me = this;
+      var is_tran = 0;
+      if(this.jiesongji.length==2){
+        is_tran=3;
+      }else{
+        if(this.jiesongji.indexOf("接机")>-1){
+          is_tran = 1;
+        }
+        if(this.jiesongji.indexOf("送机")>-1){
+          is_tran = 2;
+        }
+      }
       let params = {
         client_name: this.form.fullname,
         client_idcard: this.form.cardnum,
@@ -839,7 +851,8 @@ export default {
         client_phone: this.form.mobile,
         pro_code: this.form.packageLevel,
         exhibition_date: this.form.applyDate,
-        buy_num: 1
+        buy_num: 1,
+        jiesongji:is_tran
       };
       var other = [];
       if (this.form.needRoom) {
