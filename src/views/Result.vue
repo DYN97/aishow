@@ -69,6 +69,11 @@
               <span v-html="'申请人　：'+clientName"></span>
             </v-col>
           </v-row>
+           <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span  v-html="client_cardtype+'：'+client_idcard"></span>
+            </v-col>
+          </v-row>
           <v-row justify="center">
             <v-col cols="10" align-self="center">
               <span>联系电话：{{clientMobile}}</span>
@@ -91,6 +96,7 @@
               <span v-html="'申请人　：'+clientName"></span>
             </v-col>
           </v-row>
+          
           <v-row justify="center">
             <v-col cols="10" align-self="center">
               <span>联系电话：{{clientMobile}}</span>
@@ -133,6 +139,9 @@
       <v-row v-if="actionCode!=4&&actionCode!=0" justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
           <v-btn block color="green" @click="reOrder(2)">{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
+        </v-col>
+         <v-col cols="4" style="text-align:center" align-self="center" v-if="way=='vip'">
+          <v-btn block color="green" @click="reOrder(1)">继续购买</v-btn>
         </v-col>
         <v-col cols="4" style="text-align:center" align-self="center">
           <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
@@ -293,11 +302,13 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.exhibition_date.substring(0, 10);
 
-            me.packageType = detail.parentname;
-            me.packageLevel = detail.pro_name;
-            me.clientName = detail.client_name;
-            me.clientMobile = detail.client_phone;
-            switch (detail.aclient_card_type) {
+            me.packageType = res.data.data.parentname;
+            var list = res.data.data.pro_name.split('-');
+            me.packageLevel =list[list.length-1];
+            me.clientName = detail.client_name.substring(0,1)+'XX';
+            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
+             me.client_idcard =res.data.data.client_idcard.length=="18"?res.data.data.client_idcard.substring(0,6)+"xxxxxxxx"+res.data.data.client_idcard.substring(14):res.data.data.client_idcard;
+            switch (res.data.data.cliend_cardtype) {
              case 0:
                 me.client_cardtype = "身份证　";
                 break;

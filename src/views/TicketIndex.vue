@@ -110,17 +110,17 @@
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <v-checkbox v-model="form.needRoom" label="需要单间" type="checkbox" required></v-checkbox>
+                <van-checkbox   v-model="form.needRoom"  type="checkbox" required>需要单间</van-checkbox>
             </div>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2">
+          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''" >
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>接送机
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <van-checkbox-group v-model="result" direction="horizontal">
-                <van-checkbox  v-model="form.needRoom" label="接机" type="checkbox" required></van-checkbox>
-                <van-checkbox  v-model="form.needRoom" label="送机" type="checkbox" required></van-checkbox>
+              <van-checkbox-group v-model="jiesongji" direction="horizontal">
+                <van-checkbox name="接机"  type="checkbox" required>接机</van-checkbox>
+                <van-checkbox name="送机"  type="checkbox" required>送机</van-checkbox>
               </van-checkbox-group>
             </div>
           </v-row>
@@ -284,9 +284,13 @@
         <van-collapse v-model="orderdetail">
           <van-collapse-item title="订单详情" name="1" disabled>
             <van-cell-group>
-              <van-cell title="套餐" :value="'￥'+packageMoney" />
-              <van-cell v-if="form.carcode" title="包车" :value="'￥'+CarMoney" />
+              <van-cell title="姓名" :value="form.fullname" />
+              <van-cell title="证件号码" :value="form.cardnum" />
+              <van-cell title="联系电话" :value="form.mobile" />
+              <van-cell :title="'套餐('+levelName+')'" :value="'￥'+packageMoney" />
+              <van-cell v-if="form.carcode" :title="'包车('+carName+')'" :value="'￥'+CarMoney" />
               <van-cell v-if="form.needRoom" title="单间" :value="'￥'+RoomMoney" />
+              <van-cell v-if="jiesongji.length>0" title="接送机服务" :value="jiesongji.join(',')" />
             </van-cell-group>
             <van-cell-group>
               <van-cell title="总计" :value="'￥'+sumMoney" />
@@ -335,6 +339,16 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="growthDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">温馨提示</v-card-title>
+          <v-card-text>该档位于{{growth_date}}前为￥{{selling_price}}元,之后为￥{{growth_price}}元</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="growthDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -366,9 +380,14 @@ export default {
       zengpiaoDialog: false,
       goupiaoDialog: false,
       guanzhanDialog: false,
+      growthDialog: false,
       CountDown: 60,
       tabIndex: 0,
       packageName: "",
+      levelName:"",
+      carName:"",
+      growth_date: "",
+      growth_price: "",
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
@@ -391,9 +410,11 @@ export default {
       vifcode: "",
       workcards: [],
       packageLink: "",
-      packageMoney: "",
-      CarMoney: "",
-      RoomMoney: "",
+      packageMoney: 0,
+      jiesongji:[],
+      selling_price: "",
+      CarMoney: 0,
+      RoomMoney: 0,
       showAgreement: false,
       agreementPass: false,
       workcardDialog: false,
@@ -447,7 +468,7 @@ export default {
           this.goupiaoDialog = true;
           this.firstGoupiao = false;
         }
-      } else {
+      } else if (val == 2) {
         if (this.firstGuanzhan) {
           this.guanzhanDialog = true;
           this.firstGuanzhan = false;
@@ -480,20 +501,29 @@ export default {
       console.log(val);
     },
     "form.packageLevel": function(val) {
+      var chose = this.packageLevels.find(t => t.pro_code == val);
+      this.growth_date = chose.growth_date?chose.growth_date:"";
+      this.growth_price = chose.growth_price?chose.growth_price:"";
+      this.selling_price = chose.selling_price?chose.selling_price:"";
+      this.levelName = chose.pro_name;
       this.GetServiceItems("room", val);
+      if (new Date(this.growth_date) < new Date()) {
+        this.packageMoney = parseInt(this.growth_price);
+      } else {
+        this.packageMoney = parseInt(this.selling_price);
+      }
+      if (this.tabIndex == 2 && !this.guanzhanDialog) this.growthDialog = true;
     },
     "form.carcode": function(val) {
       var choseCar = this.carList.find(t => t.pro_code == val);
       this.CarMoney = choseCar.selling_price;
+      this.carName = choseCar.pro_name;
     }
   },
   computed: {
     sumMoney() {
-      return (
-        parseInt(this.carMoney ? this.carMoney : 0) +
-        parseInt(this.roomMoney ? this.roomMoney : 0) +
-        parseInt(this.packageMoney ? this.packageMoney : 0)
-      );
+      var mon =this.CarMoney  + this.RoomMoney + this.packageMoney ;
+      return mon;
     }
   },
   mounted() {

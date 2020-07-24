@@ -6,41 +6,84 @@
       >
         <ul class="detailList">
           <li>
-            <span class="name">套餐</span><span class="text">{{order_type_name}}</span>
+            <span class="name">套餐</span>
+            <span class="text">{{order_type_name}}</span>
           </li>
           <li>
-            <span class="name">购买人</span><span class="text">{{client_name}}</span>
+            <span class="name">购买人</span>
+            <span class="text">{{client_name}}</span>
           </li>
           <li>
-            <span class="name">联系电话</span><span class="text">{{client_phone}}</span>
+            <span class="name">联系电话</span>
+            <span class="text">{{client_phone}}</span>
           </li>
           <li>
-            <span class="name">证件号码</span><span class="text">{{client_idcard}}</span>
+            <span class="name">证件号码</span>
+            <span class="text">{{client_idcard}}</span>
           </li>
-          
+
           <li>
-            <span class="name">订单状态</span><span class="text">{{statusText}}</span>
+            <span class="name">订单状态</span>
+            <span class="text">{{statusText}}</span>
           </li>
           <li>
-            <span class="name">购买时间</span><span class="text">{{apply_time}}</span>
+            <span class="name">购买时间</span>
+            <span class="text">{{apply_time}}</span>
           </li>
         </ul>
       </div>
     </div>
     <van-cell-group style="margin-top:20px">
-      <van-cell title="包车信息" style="font-size:18px;color:#000"  icon="che1" icon-prefix="iconfont" />
-      <van-cell title="类型"  :value="carType" />
-      <van-cell title="价格"  :value="'￥'+carMoney" />
+      <van-cell title="包车信息" style="font-size:18px;color:#000" icon="che1" icon-prefix="iconfont" />
+      <van-cell title="类型" :value="carType" />
+      <van-cell title="价格" :value="'￥'+carMoney" />
     </van-cell-group>
     <van-cell-group style="margin-top:20px">
-      <van-cell title="住宿信息" style="font-size:18px;color:#000"   icon="jiudian" icon-prefix="iconfont"  />
+      <van-cell
+        title="住宿信息"
+        style="font-size:18px;color:#000"
+        icon="jiudian"
+        icon-prefix="iconfont"
+      />
+      <van-cell title="套餐" :value="parentname" />
+      <van-cell title="档位" :value="levelName" />
       <van-cell title="类型" value="单间" />
-      <van-cell title="价格" :value="'￥'+roomMoney" />
+      <van-cell title="差价" :value="'￥'+roomMoney" />
     </van-cell-group>
+    <van-cell-group style="margin-top:20px">
+      <van-cell
+        title="接送机服务"
+        style="font-size:18px;color:#000"
+        icon="jiudian"
+        icon-prefix="iconfont"
+      />
+      <van-cell title="接机" :value="parentname" />
+      <van-cell title="送机" :value="levelName" />
+    </van-cell-group>
+    <v-row justify="center">
+      <v-col cols="4">
+        <van-button type="primary" block @click="dialog = true">申请退款</van-button>
+      </v-col>
+    </v-row>
+     <v-dialog v-model="dialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">提示</v-card-title>
+
+        <v-card-text>是否要退款</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="green darken-1" text @click="dialog = false">取消</v-btn>
+
+          <v-btn color="green darken-1" text @click="refundMoney">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
-import { Cell, CellGroup, Popup, NoticeBar } from "vant";
+import { Cell, CellGroup, Popup, NoticeBar, Button } from "vant";
 export default {
   name: "SqDetail",
   data() {
@@ -66,12 +109,13 @@ export default {
       client_idcard: "",
       client_phone: "",
       order_type_name: "　",
+      levelName:"",
       client_cardtype: "",
       ticket_date: "",
       ticket_cost: "",
-      roomMoney:"",
-      carType:"",
-      carMoney:"",
+      roomMoney: "",
+      carType: "",
+      carMoney: "",
       apply_time: "",
       receive_type_name: "",
       receive_time: "",
@@ -86,6 +130,7 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [NoticeBar.name]: NoticeBar,
+    [Button.name]: Button,
     [Popup.name]: Popup
   },
   mounted() {
@@ -107,6 +152,8 @@ export default {
         }
         me.client_phone = res.data.data.client_phone;
         me.order_type_name = res.data.data.pro_name.substring(5);
+        var list = res.data.data.pro_name.split('-');
+        me.levelName = list[list.length-1];
         me.ticket_date = res.data.data.ticket_date;
         me.ticket_cost = res.data.data.ticket_cost;
         me.parentname = res.data.data.parentname;
@@ -142,22 +189,22 @@ export default {
             me.statusText = "已退款";
             break;
         }
-        if(res.data.data.details){
-          var car = res.data.data.details.find(t=>t.com_code=="1103"||t.com_code=="1203");
-          if(car){
-            var namelist = car.pro_name.split('-');
-            me.carType = namelist[namelist.length-1];
+        if (res.data.data.details) {
+          var car = res.data.data.details.find(
+            t => t.com_code == "1103" || t.com_code == "1203"
+          );
+          if (car) {
+            var namelist = car.pro_name.split("-");
+            me.carType = namelist[namelist.length - 1];
             me.carMoney = car.one_money;
           }
-          var room = res.data.data.details.find(t=>t.com_code=="1104"||t.com_code=="1204");
-          if(room){
+          var room = res.data.data.details.find(
+            t => t.com_code == "1104" || t.com_code == "1204"
+          );
+          if (room) {
             me.roomMoney = room.one_money;
           }
-
-
         }
-
-
       }
     });
   },
@@ -178,9 +225,7 @@ export default {
       });
     }
   },
-  computed:{
-   
-  }
+  computed: {}
 };
 </script>
 
@@ -205,7 +250,6 @@ body {
 }
 
 input,
-button,
 a,
 textarea {
   text-decoration: none;
@@ -538,14 +582,14 @@ ol {
 .detailList li:first-child {
   padding-top: 0;
 }
- li .name {
+li .name {
   display: block;
   float: left;
   width: 80px;
 }
- li .text {
+li .text {
   display: block;
-  width:200px;
+  width: 200px;
   margin-left: 80px;
   margin-right: 20px;
 }
