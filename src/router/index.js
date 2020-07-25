@@ -139,6 +139,7 @@
      base: "/mobile/newapp",
      mode: "history"
  });
+ var routerList = [];
  router.beforeEach((to, from, next) => {
      //console.log(to, from)
      if (to.name != "oath" && to.name != "home") {
@@ -151,6 +152,16 @@
              next("/oath?from=" + to.fullPath);
          }
      } else {
+         if (routerList.length && routerList.indexOf(to.name) === routerList.length - 1) {
+             // 后退
+             routerList.splice(routerList.length - 1, 1)
+             to.meta.isBack = true
+         } else {
+             // 前进
+             routerList.push(from.name || '/')
+             to.meta.isBack = false
+         }
+
          next();
      }
 
@@ -217,8 +228,8 @@
      if (/iphone|ipad|ipod/.test(mobile)) {
          var iframe = document.createElement('iframe');
          iframe.style.display = 'none';
-         var iframeCallback = function () {
-             setTimeout(function () {
+         var iframeCallback = function() {
+             setTimeout(function() {
                  iframe.removeEventListener('load', iframeCallback);
                  document.body.removeChild(iframe);
              }, 0);

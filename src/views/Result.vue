@@ -129,7 +129,17 @@
           </v-row>
           <v-row justify="center">
             <v-col cols="10" align-self="center">
+              <span>门票类型：赠票</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
               <span v-html="'申请人　：'+clientName"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span  v-html="client_cardtype+'：'+client_idcard"></span>
             </v-col>
           </v-row>
           <v-row justify="center">
@@ -137,6 +147,7 @@
               <span>联系电话：{{clientMobile}}</span>
             </v-col>
           </v-row>
+           
         </div>
       </div>
 
@@ -254,9 +265,9 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = "赠票";
-           me.clientName = detail.client_name.substring(0,1)+'XX';
-            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
-             me.client_idcard =detail.client_idcard.length=="18"?detail.client_idcard.substring(0,6)+"xxxxxxxx"+detail.client_idcard.substring(14):detail.client_idcard;
+           me.clientName = detail.aclient_name.substring(0,1)+'XX';
+            me.clientMobile = detail.aclient_phone.substring(0,3)+'XXXX'+detail.aclient_phone.substring(7);
+             me.client_idcard =detail.aclient_idcard.length=="18"?detail.aclient_idcard.substring(0,6)+"xxxxxxxx"+detail.aclient_idcard.substring(14):detail.aclient_idcard;
             switch (detail.aclient_card_type) {
               case 0:
                 me.client_cardtype = "身份证　";

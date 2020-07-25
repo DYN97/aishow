@@ -444,6 +444,30 @@ export default {
       }
     };
   },
+  activated(){
+    if(!this.$route.meta.isBack){
+      this.form = {
+        fullname: "",
+        cardtype: 0,
+        invite_code: "",
+        cardnum: "",
+        applyDate: "",
+        sex: 1,
+        mobile: "",
+        company: "",
+        duty: "",
+        TicketCode: "",
+        TicketName: "",
+        playPackage: "",
+        packageLevel: "",
+        carcode: "",
+        needRoom: "",
+        workcard: "",
+        yanzhengma: ""
+      };
+      this.jiesongji=[];
+    }
+  },
   watch: {
     $route(to, from) {
       // 如果要to(进入)的页面是需要keepAlive缓存的，把name push进include数组中
