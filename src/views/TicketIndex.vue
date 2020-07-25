@@ -445,6 +445,19 @@ export default {
     };
   },
   watch: {
+    $route(to, from) {
+      // 如果要to(进入)的页面是需要keepAlive缓存的，把name push进include数组中
+      if (to.meta.keepAlive) {
+        !this.include.includes(to.name) && this.include.push(to.name);
+      }
+      // 如果 要 form(离开) 的页面是 keepAlive缓存的，
+      // 再根据 deepth 来判断是前进还是后退
+      // 如果是后退：
+      if (from.meta.keepAlive && to.meta.deepth < from.meta.deepth) {
+        const index = this.include.indexOf(from.name);
+        index !== -1 && this.include.splice(index, 1);
+      }
+    }, 
     YZMloading(val) {
       if (val) {
         let cd = setInterval(() => {
@@ -604,9 +617,16 @@ export default {
       });
     },
     OpenDetailPage(item) {
-      this.showDetail = true;
-      this.packageName = item.pro_name;
-      this.packageLink = item.pro_detail_url;
+       this.$router.push({
+        name:"outHtml",
+        query:{
+          url:item.pro_detail_url,
+          title: item.pro_name
+        }
+      });
+      // this.showDetail = true;
+      // this.packageName = item.pro_name;
+      // this.packageLink = item.pro_detail_url;
     },
     SendIdentifyingCode() {
       if (!this.isPhone(this.form.mobile)) {
@@ -634,9 +654,16 @@ export default {
         });
     },
     ToOutLink(url, title) {
-      this.showDetail = true;
-      this.packageName = title;
-      this.packageLink = url;
+      this.$router.push({
+        name:"outHtml",
+        query:{
+          url:url,
+          title:title
+        }
+      });
+      // this.showDetail = true;
+      // this.packageName = title;
+      // this.packageLink = url;
     },
     agree() {
       this.showAgreement = false;

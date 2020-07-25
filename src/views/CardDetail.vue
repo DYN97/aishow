@@ -8,15 +8,15 @@
         <span class="text">{{order_type_name}}</span>
       </li>
       <li class="clearfix">
-        <b class="name" v-html="'申请人　'"></b>
+        <b class="name" v-html="'申请人　:'"></b>
         <span class="text">{{client_name}}</span>
       </li>
        <li class="clearfix">
-        <b class="name" v-html="'申请单位'"></b>
+        <b class="name" v-html="'申请单位:'"></b>
         <span class="text">{{company}}</span>
       </li>
       <li class="clearfix" v-if="!isCar">
-        <b class="name">{{client_cardtype}}</b>
+        <b class="name" v-html="client_cardtype+':'"></b>
         <span class="text">{{client_idcard}}</span>
       </li>
       <li class="clearfix">
@@ -107,9 +107,9 @@ export default {
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
-        me.client_cardtype = "身份证";
+        me.client_cardtype = "身份证　";
         if (res.data.data.client_card_type == "1") {
-          me.client_cardtype = "护照";
+          me.client_cardtype = "护　照　";
         } else if (res.data.data.client_card_type == "2") {
           me.client_cardtype = "港澳通行证";
         }

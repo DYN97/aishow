@@ -20,6 +20,7 @@
  import ConsigneeText from '../views/consigneeText.vue';
  import ApplyCommand from '../views/ApplyCommand.vue';
  import Chart from '../views/Chart.vue';
+ import outHtml from '../views/outHtml.vue';
 
  Vue.use(VueRouter);
 
@@ -40,7 +41,10 @@
          path: '/TicketIndex/:exhibitionCode',
          name: 'TicketIndex',
          title: "普通观众订票",
-         component: TicketIndex
+         component: TicketIndex,
+         meta: {
+             isKeepAlive: true
+         }
      }, {
          path: "/oath",
          name: "oath",
@@ -63,7 +67,10 @@
          path: "/VipTicketIndex/:exhibitionCode",
          name: "VipTicketIndex",
          title: "Vip观众订票",
-         component: VipTicketIndex
+         component: VipTicketIndex,
+         meta: {
+             isKeepAlive: true
+         }
      }, {
          path: "/OrderList",
          name: "OrderList",
@@ -108,12 +115,21 @@
          path: "/ApplyCarTicket/:exhibitionCode",
          name: "ApplyCarTicket",
          title: "车辆通行证申请",
-         component: ApplyCarTicket
+         component: ApplyCarTicket,
+         meta: {
+             isKeepAlive: true
+         }
      }, {
          path: "/chart",
          name: "chart",
          title: "快递详情",
          component: Chart
+     },
+     {
+         path: "/outHtml",
+         name: "outHtml",
+         title: "聚航",
+         component: outHtml
      }
 
  ];
@@ -184,6 +200,9 @@
              break;
          case "ApplyCarTicket":
              title = "车辆通行证申请";
+             break;
+         default:
+             title = transition.query.title ? transition.query.title : "聚航";
              break;
      }
      setTitle(title);

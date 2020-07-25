@@ -326,10 +326,17 @@ export default {
           }
         });
     },
-    ToOutLink(url, title) {
-      this.showDetail = true;
-      this.packageName = title;
-      this.packageLink = url;
+     ToOutLink(url, title) {
+      this.$router.push({
+        name:"outHtml",
+        query:{
+          url:url,
+          title:title
+        }
+      });
+      // this.showDetail = true;
+      // this.packageName = title;
+      // this.packageLink = url;
     },
     agree() {
       this.showAgreement = false;

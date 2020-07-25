@@ -553,6 +553,19 @@ export default {
     };
   },
   watch: {
+    $route(to, from) {
+      // 如果要to(进入)的页面是需要keepAlive缓存的，把name push进include数组中
+      if (to.meta.keepAlive) {
+        !this.include.includes(to.name) && this.include.push(to.name);
+      }
+      // 如果 要 form(离开) 的页面是 keepAlive缓存的，
+      // 再根据 deepth 来判断是前进还是后退
+      // 如果是后退：
+      if (from.meta.keepAlive && to.meta.deepth < from.meta.deepth) {
+        const index = this.include.indexOf(from.name);
+        index !== -1 && this.include.splice(index, 1);
+      }
+    }, 
     YZMloading(val) {
       if (val) {
         let cd = setInterval(() => {
@@ -682,11 +695,30 @@ export default {
     me.GetServiceItems("workcard", "FW1201");
   },
   methods: {
+    ToOutLink(url, title) {
+      this.$router.push({
+        name:"outHtml",
+        query:{
+          url:url,
+          title:title
+        }
+      });
+      // this.showDetail = true;
+      // this.packageName = title;
+      // this.packageLink = url;
+    },
     OpenDetailPage(item) {
-      this.showDetail = true;
-      this.$route.push("#");
-      this.packageName = item.pro_name;
-      this.packageLink = item.pro_detail_url;
+       this.$router.push({
+        name:"outHtml",
+        query:{
+          url:item.pro_detail_url,
+          title: item.pro_name
+        }
+      });
+      // this.showDetail = true;
+      // this.$route.push("#");
+      // this.packageName = item.pro_name;
+      // this.packageLink = item.pro_detail_url;
     },
     GetServiceItems(type, code) {
       var me = this;
@@ -952,6 +984,17 @@ export default {
     },
     SubmitForm() {
       var me = this;
+      var is_tran = 0;
+      if(this.jiesongji.length==2){
+        is_tran=3;
+      }else{
+        if(this.jiesongji.indexOf("接机")>-1){
+          is_tran = 1;
+        }
+        if(this.jiesongji.indexOf("送机")>-1){
+          is_tran = 2;
+        }
+      }
       let params = {
         invite_code: this.form.invite_code,
         exhibition_date: this.form.applyDate,
@@ -968,7 +1011,8 @@ export default {
         exhibition_id: me.exhibition.exhibition_code,
         pro_code:
           this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
-        buy_num: 1
+        buy_num: 1,
+        jiesongji:is_tran
       };
       var other = [];
       if (this.form.needRoom) {

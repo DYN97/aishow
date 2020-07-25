@@ -57,8 +57,8 @@
         icon="jiudian"
         icon-prefix="iconfont"
       />
-      <van-cell title="接机" :value="parentname" />
-      <van-cell title="送机" :value="levelName" />
+      <van-cell title="接机" :value="jieji" />
+      <van-cell title="送机" :value="songji" />
     </van-cell-group>
     <v-row justify="center">
       <v-col cols="4" v-if="pay_status==1&&apply_status==1">
@@ -114,6 +114,8 @@ export default {
       order_type_name: "　",
       levelName:"",
       client_cardtype: "",
+      jieji:"",
+      songji:"",
       ticket_date: "",
       ticket_cost: "",
       roomMoney: "",
@@ -171,6 +173,13 @@ export default {
         me.addressee_phone = res.data.data.addressee_phone;
         me.addre = res.data.data.addre;
         me.apply_status = res.data.data.sp_order_status;
+        switch(parseInt(res.data.data.is_tran)){
+          case 0 :me.jieji = '否';me.songji='否';break;
+          case 1 :me.jieji = '是';me.songji='否';break;
+          case 2 :me.jieji = '否';me.songji='是';break;
+          case 3 :me.jieji = '是';me.songji='是';break;
+        }
+
         switch (parseInt(me.apply_status)) {
           case 2:
             me.statusText = "待领取";
