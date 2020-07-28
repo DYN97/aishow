@@ -1,8 +1,8 @@
 <template>
   <div class="detailBox">
-    <div class="mainPanel">
+    <div class="mainPanel" >
       <div
-        style="width:calc(100vw - 60px);height:230px;margin:50px 30px 20px 30px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; "
+        style="width:calc(100vw - 60px);height:230px;margin:50px 30px 20px 30px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; overflow-x:hidden"
       >
         <ul class="detailList">
           <li>
@@ -173,6 +173,7 @@ export default {
         me.addressee_phone = res.data.data.addressee_phone;
         me.addre = res.data.data.addre;
         me.apply_status = res.data.data.sp_order_status;
+        me.pay_status = res.data.data.pay_status;
         switch(parseInt(res.data.data.is_tran)){
           case 0 :me.jieji = '否';me.songji='否';break;
           case 1 :me.jieji = '是';me.songji='否';break;
@@ -185,7 +186,7 @@ export default {
             me.statusText = "待领取";
             break;
           case 0:
-            me.statusText = "待出票";
+            me.statusText = "待支付";
             break;
           case 1:
             me.statusText = "待审核";
@@ -198,7 +199,7 @@ export default {
             me.statusText = text;
             break;
           case 4:
-            me.statusText = "申请失败";
+            me.statusText = "申请失败(已退款)";
             break;
           case 5:
             me.statusText = "已退款";
@@ -229,7 +230,7 @@ export default {
     },
     refundMoney() {
       let order_code = this.$route.params.id;
-      this.$api.orderapi.RefundMoney(order_code).then(res => {
+      this.$api.orderapi.RefundProductMoney(order_code).then(res => {
         if (res.data.statusCode == "200") {
           alert("退款成功!");
           window.location.reload();
@@ -589,7 +590,8 @@ ol {
   right: 0;
   bottom: 0;
   top: 0;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: #f2f2f2;
 }
 .detailBox .tip {

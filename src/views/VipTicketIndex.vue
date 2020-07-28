@@ -121,7 +121,7 @@
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <van-checkbox v-model="form.needRoom"  type="checkbox" required>需要单间</van-checkbox>
+              <van-checkbox v-model="form.needRoom"  type="checkbox" required>需要单间(￥{{RoomMoney}})</van-checkbox>
             </div>
           </v-row>
           <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''" >
@@ -777,9 +777,13 @@ export default {
               me.form.roomcode = res.data.data[0].pro_code;
               me.RoomMoney = res.data.data[0].selling_price;
             } else {
-              me.workcards = res.data.data;
+              
               if (res.data.data && res.data.data.length > 0) {
+                me.workcards  = res.data.data.filter(
+                t => t.com_code == "1205"
+              );
                 me.form.workcard = res.data.data[0].pro_code;
+                
                 me.workcardTips = res.data.data[0].purchase_tips;
               }
             }
@@ -888,7 +892,7 @@ export default {
         this.once = true;
         return;
       }
-      if (_applyDate == "") {
+      if (_applyDate == ""&&this.tabIndex!=3) {
         Toast("请选择观展日期！");
         this.once = true;
         return;

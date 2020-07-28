@@ -39,7 +39,7 @@
           </v-row>
           <v-row justify="center">
             <v-col cols="10" align-self="center">
-              <span  v-html="client_cardtype+'：'+client_idcard"></span>
+              <span v-html="client_cardtype+'：'+client_idcard"></span>
             </v-col>
           </v-row>
           <v-row justify="center">
@@ -69,9 +69,9 @@
               <span v-html="'申请人　：'+clientName"></span>
             </v-col>
           </v-row>
-           <v-row justify="center">
+          <v-row justify="center">
             <v-col cols="10" align-self="center">
-              <span  v-html="client_cardtype+'：'+client_idcard"></span>
+              <span v-html="client_cardtype+'：'+client_idcard"></span>
             </v-col>
           </v-row>
           <v-row justify="center">
@@ -91,9 +91,9 @@
               <span v-html="'申请人　：'+clientName"></span>
             </v-col>
           </v-row>
-           <v-row justify="center">
+          <v-row justify="center">
             <v-col cols="10" align-self="center">
-              <span  v-html="client_cardtype+'：'+client_idcard"></span>
+              <span v-html="client_cardtype+'：'+client_idcard"></span>
             </v-col>
           </v-row>
           <v-row justify="center">
@@ -115,6 +115,26 @@
           </v-row>
         </div>
         <div v-if="actionCode==5">
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>车证类型：{{workcardType}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span v-html="'申请人　：'+clientName"></span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>联系电话：{{clientMobile}}</span>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="10" align-self="center">
+              <span>车牌号码：{{carnum}}</span>
+            </v-col>
+          </v-row>
           <v-row justify="center">
             <v-col cols="10" style="text-align:center" align-self="center">
               <span>请等待审核</span>
@@ -139,7 +159,7 @@
           </v-row>
           <v-row justify="center">
             <v-col cols="10" align-self="center">
-              <span  v-html="client_cardtype+'：'+client_idcard"></span>
+              <span v-html="client_cardtype+'：'+client_idcard"></span>
             </v-col>
           </v-row>
           <v-row justify="center">
@@ -147,35 +167,78 @@
               <span>联系电话：{{clientMobile}}</span>
             </v-col>
           </v-row>
-           
         </div>
       </div>
 
-      <v-row v-if="actionCode!=4&&actionCode!=0" justify="space-around">
-        <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="green" @click="reOrder(2)">{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
+      <v-row
+        v-if="actionCode==1"
+        justify="space-around"
+        style="width:100vw"
+      >
+        <v-col cols="3" style="text-align:center" align-self="center">
+          <v-btn
+            block
+            color="#ff9000"
+            style="color:white"
+            @click="reOrder(2)"
+          >{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
         </v-col>
-         <v-col cols="4" style="text-align:center" align-self="center" v-if="way=='vip'">
-          <v-btn block color="green" @click="reOrder(1)">继续购买</v-btn>
+        <v-col cols="3" style="text-align:center" align-self="center" v-if="way!='vip'">
+          <v-btn block color="green" style="color:white" @click="reOrder(1)">继续购买</v-btn>
         </v-col>
-        <v-col cols="4" style="text-align:center" align-self="center">
+        <v-col cols="3" style="text-align:center" align-self="center">
           <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
         </v-col>
       </v-row>
-      <v-row v-if="actionCode==0" justify="space-around">
-        <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="error" @click="reOrder(0)">继续申请</v-btn>
+      <v-row
+        v-if="actionCode==2"
+        justify="space-around"
+        style="width:100vw"
+      >
+        <v-col cols="3" style="text-align:center" align-self="center" >
+          <v-btn block color="green" style="color:white" @click="reOrder(2)">继续购买</v-btn>
         </v-col>
-        <v-col cols="4" style="text-align:center" align-self="center">
+        <v-col cols="3" style="text-align:center" align-self="center">
+          <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
+        </v-col>
+      </v-row>
+       <v-row
+        v-if="actionCode==3"
+        justify="space-around"
+        style="width:100vw"
+      >
+        <v-col cols="3" style="text-align:center" align-self="center" >
+          <v-btn block color="green" style="color:white" @click="reOrder(3)">继续购买</v-btn>
+        </v-col>
+        <v-col cols="3" style="text-align:center" align-self="center">
+          <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-if="actionCode==5" justify="space-around" style="width:100vw">
+        <v-col cols="3" style="text-align:center" align-self="center">
+          <v-btn block color="#ff9000" style="color:white" @click="reOrder(5)">继续申请</v-btn>
+        </v-col>
+        <v-col cols="3" style="text-align:center" align-self="center">
+          <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-if="actionCode==0" justify="space-around" style="width:100vw">
+        <v-col cols="3" style="text-align:center" align-self="center">
+          <v-btn block color="#ff9000" style="color:white" @click="reOrder(0)">继续申请</v-btn>
+        </v-col>
+        <v-col cols="3" style="text-align:center" align-self="center">
+          <v-btn block color="green" style="color:white" @click="reOrder(2)">观展服务</v-btn>
+        </v-col>
+        <v-col cols="3" style="text-align:center" align-self="center">
           <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
         </v-col>
       </v-row>
       <v-row v-if="actionCode==4" justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="error" @click="toRoute('MailList')">返回</v-btn>
+          <v-btn block color="error" style="color:white" @click="toRoute('MailList')">返回</v-btn>
         </v-col>
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
+          <v-btn block color="primary" style="color:white" @click="toRoute('OrderList')">我的订单</v-btn>
         </v-col>
       </v-row>
     </div>
@@ -198,10 +261,10 @@
 
       <v-row justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="error" @click="back">返回</v-btn>
+          <v-btn block color="error" style="color:white" @click="back">返回</v-btn>
         </v-col>
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
+          <v-btn block color="primary" style="color:white" @click="toRoute('OrderList')">我的订单</v-btn>
         </v-col>
       </v-row>
     </div>
@@ -224,7 +287,7 @@
 
       <v-row justify="space-around">
         <v-col cols="4" style="text-align:center" align-self="center">
-          <v-btn block color="error" @click="payAgain">继续支付</v-btn>
+          <v-btn block color="error" style="color:white" @click="payAgain">继续支付</v-btn>
         </v-col>
         <v-col cols="4" style="text-align:center" align-self="center">
           <v-btn block color="primary" @click="toRoute('OrderList')">我的订单</v-btn>
@@ -238,7 +301,7 @@ import airshowCarousel from "../components/Carousel";
 export default {
   name: "Success",
   components: {
-    airshowCarousel
+    airshowCarousel,
   },
   mounted() {
     var me = this;
@@ -260,14 +323,22 @@ export default {
     switch (me.actionCode) {
       case "0":
         me.actionName = "门票申请";
-        me.$api.orderapi.GetOrderInfo(me.ordercode).then(res => {
+        me.$api.orderapi.GetOrderInfo(me.ordercode).then((res) => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = "赠票";
-           me.clientName = detail.aclient_name.substring(0,1)+'XX';
-            me.clientMobile = detail.aclient_phone.substring(0,3)+'XXXX'+detail.aclient_phone.substring(7);
-             me.client_idcard =detail.aclient_idcard.length=="18"?detail.aclient_idcard.substring(0,6)+"xxxxxxxx"+detail.aclient_idcard.substring(14):detail.aclient_idcard;
+            me.clientName = detail.aclient_name.substring(0, 1) + "XX";
+            me.clientMobile =
+              detail.aclient_phone.substring(0, 3) +
+              "XXXX" +
+              detail.aclient_phone.substring(7);
+            me.client_idcard =
+              detail.aclient_idcard.length == "18"
+                ? detail.aclient_idcard.substring(0, 6) +
+                  "xxxxxxxx" +
+                  detail.aclient_idcard.substring(14)
+                : detail.aclient_idcard;
             switch (detail.aclient_card_type) {
               case 0:
                 me.client_cardtype = "身份证　";
@@ -285,15 +356,23 @@ export default {
         break;
       case "1":
         me.actionName = "门票付款";
-        me.$api.orderapi.GetOrderInfo(me.ordercode).then(res => {
+        me.$api.orderapi.GetOrderInfo(me.ordercode).then((res) => {
           if (res.data.statusCode == "200") {
             console.log(res);
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = detail.bticket_name;
-             me.clientName = detail.client_name.substring(0,1)+'XX';
-            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
-             me.client_idcard =detail.client_idcard.length=="18"?detail.client_idcard.substring(0,6)+"xxxxxxxx"+detail.client_idcard.substring(14):detail.client_idcard;
+            me.clientName = detail.aclient_name.substring(0, 1) + "XX";
+            me.clientMobile =
+              detail.aclient_phone.substring(0, 3) +
+              "XXXX" +
+              detail.aclient_phone.substring(7);
+            me.client_idcard =
+              detail.aclient_idcard.length == "18"
+                ? detail.aclient_idcard.substring(0, 6) +
+                  "xxxxxxxx" +
+                  detail.aclient_idcard.substring(14)
+                : detail.aclient_idcard;
             switch (detail.aclient_card_type) {
               case 0:
                 me.client_cardtype = "身份证　";
@@ -312,19 +391,27 @@ export default {
         break;
       case "2":
         me.actionName = "服务包购买";
-        me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res => {
+        me.$api.orderapi.GetServerOrderInfo(me.ordercode).then((res) => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.exhibition_date.substring(0, 10);
 
             me.packageType = res.data.data.parentname;
-            var list = res.data.data.pro_name.split('-');
-            me.packageLevel =list[list.length-1];
-            me.clientName = detail.client_name.substring(0,1)+'XX';
-            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
-             me.client_idcard =res.data.data.client_idcard.length=="18"?res.data.data.client_idcard.substring(0,6)+"xxxxxxxx"+res.data.data.client_idcard.substring(14):res.data.data.client_idcard;
+            var list = res.data.data.pro_name.split("-");
+            me.packageLevel = list[list.length - 1];
+            me.clientName = detail.client_name.substring(0, 1) + "XX";
+            me.clientMobile =
+              detail.client_phone.substring(0, 3) +
+              "XXXX" +
+              detail.client_phone.substring(7);
+            me.client_idcard =
+              res.data.data.client_idcard.length == "18"
+                ? res.data.data.client_idcard.substring(0, 6) +
+                  "xxxxxxxx" +
+                  res.data.data.client_idcard.substring(14)
+                : res.data.data.client_idcard;
             switch (res.data.data.cliend_cardtype) {
-             case 0:
+              case 0:
                 me.client_cardtype = "身份证　";
                 break;
               case 1:
@@ -340,15 +427,23 @@ export default {
         break;
       case "3":
         me.actionName = "工作证购买";
-        me.$api.orderapi.GetServerOrderInfo(me.ordercode).then(res => {
+        me.$api.orderapi.GetServerOrderInfo(me.ordercode).then((res) => {
           if (res.data.statusCode == "200") {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.exhibition_date.substring(0, 10);
-            me.workcardType = detail.pro_name;
-           me.clientName = detail.client_name.substring(0,1)+'XX';
-            me.clientMobile = detail.client_phone.substring(0,3)+'XXXX'+detail.client_phone.substring(7);
-             me.client_idcard =detail.client_idcard.length=="18"?detail.client_idcard.substring(0,6)+"xxxxxxxx"+detail.client_idcard.substring(14):detail.client_idcard;
-            switch (detail.aclient_card_type) {
+            me.workcardType = detail.pro_name.substring(5);
+            me.clientName = detail.client_name.substring(0, 1) + "XX";
+            me.clientMobile =
+              detail.client_phone.substring(0, 3) +
+              "XXXX" +
+              detail.client_phone.substring(7);
+            me.client_idcard =
+              detail.client_idcard.length == "18"
+                ? detail.client_idcard.substring(0, 6) +
+                  "xxxxxxxx" +
+                  detail.client_idcard.substring(14)
+                : detail.client_idcard;
+            switch (detail.cliend_cardtype) {
               case 0:
                 me.client_cardtype = "身份证　";
                 break;
@@ -368,6 +463,18 @@ export default {
         break;
       case "5":
         me.actionName = "车辆通行证申请";
+        me.$api.orderapi.GetProductDetail(me.ordercode).then((res) => {
+          if (res.data.statusCode == "200") {
+            let detail = res.data.data;
+            me.workcardType = detail.order_type_name;
+            me.clientName = detail.client_name.substring(0, 1) + "XX";
+            me.clientMobile =
+              detail.client_phone.substring(0, 3) +
+              "XXXX" +
+              detail.client_phone.substring(7);
+            me.carnum = detail.carInfo.car_number;
+          }
+        });
         break;
     }
   },
@@ -377,13 +484,13 @@ export default {
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h5_20190731205844240.jpg",
-          isguanggao: true
+          isguanggao: true,
         },
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h7_20190731205944651.jpg",
-          isguanggao: false
-        }
+          isguanggao: false,
+        },
       ],
       type: 1,
       actionCode: "",
@@ -393,6 +500,7 @@ export default {
       way: "",
       ordercode: "",
       actionName: "",
+      carnum: "",
       ticketDate: "",
       ticketType: "",
       clientName: "",
@@ -402,7 +510,7 @@ export default {
       client_cardtype: "",
       packageType: "",
       packageLevel: "",
-      workcardType: ""
+      workcardType: "",
     };
   },
   methods: {
@@ -426,11 +534,18 @@ export default {
         me.exhibition_id;
     },
     toRoute(name) {
+      var type = this.actionCode;
+      if (this.actionCode == 5||this.actionCode==3) {
+        type = 1;
+      }
+      if(this.actionCode==1){
+        type = 0;
+      }
       this.$router.push({
         name: name,
         query: {
-          type: this.actionCode
-        }
+          type: type,
+        },
       });
     },
     reOrder(tab) {
@@ -438,19 +553,28 @@ export default {
         this.$router.push({
           name: "Invitation",
           params: {
-            exhibitionCode: this.exhibition_id
-          }
+            exhibitionCode: this.exhibition_id,
+          },
         });
       } else {
-        this.$router.push({
-          path: "/TicketIndex/" + this.exhibition_id,
-          query: {
-            tabIndex: tab
-          }
-        });
+        if (tab == 5) {
+          this.$router.push({
+            name: "ExhibitionList",
+            query: {
+              type: "carTicket",
+            },
+          });
+        } else {
+          this.$router.push({
+            path: "/TicketIndex/" + this.exhibition_id,
+            query: {
+              tabIndex: tab,
+            },
+          });
+        }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

@@ -42,7 +42,11 @@ const orderapi = {
     },
     RefundMoney(detail_id) {
         return axios.get("/newOrders/RefundMoney.aspx?order_detail_id=" + detail_id);
+    },
+    RefundProductMoney(detail_id) {
+        return axios.get("/newOrders/RefundProductMoney.aspx?sp_order_code=" + detail_id);
     }
+    
     // 其他接口…………
 }
 export default orderapi;

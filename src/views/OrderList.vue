@@ -30,7 +30,7 @@
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     <v-row no-gutters justify="space-between">
-                      <v-col cols="2">{{childItem.client_name}}</v-col>
+                      <v-col cols="3">{{childItem.client_name}}</v-col>
                       <v-col style="text-align:center" cols="7">{{childItem.client_idcard}}</v-col>
                       <v-col cols="2">￥{{childItem.ticket_cost}}</v-col>
                     </v-row>
@@ -88,15 +88,15 @@
                   <v-list-item-title style="white-space:unset;font-size:16px">
                     <v-row no-gutters justify="space-between">
                       <v-col cols="3" style="color: #0f9ae0">{{childItem.order_type_name}}</v-col>
-                      <v-col style="text-align:center" cols="7">{{childItem.ticket_date}}</v-col>
-                      <v-col cols="2" class="list-sta">{{childItem.status_name}}</v-col>
+                      <v-col style="text-align:center" cols="6">{{childItem.ticket_date}}</v-col>
+                      <v-col cols="3" class="list-sta">{{childItem.status_name}}</v-col>
                     </v-row>
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     <v-row no-gutters justify="space-between">
                       <v-col cols="2">{{childItem.client_name}}</v-col>
-                      <v-col style="text-align:center" cols="7">{{childItem.client_idcard}}</v-col>
-                      <v-col cols="2">￥{{childItem.ticket_cost}}</v-col>
+                      <v-col style="text-align:center" cols="6">{{childItem.client_idcard}}</v-col>
+                      <v-col cols="3">￥{{childItem.ticket_cost}}</v-col>
                     </v-row>
                   </v-list-item-subtitle>
                 </v-list-item-content>

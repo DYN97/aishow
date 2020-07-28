@@ -41,11 +41,35 @@
         </template>
         </van-cell>
     </van-cell-group>
+
+     <v-row justify="center">
+      <v-col cols="4" v-if="pay_status==1&&apply_status==1">
+        <van-button type="primary" block @click="dialog = true">申请退款</van-button>
+      </v-col>
+      <v-col cols="4" v-if="pay_status==0&&apply_status==0">
+        <van-button type="primary" block @click="payAgain">重新支付</van-button>
+      </v-col>
+    </v-row>
+     <v-dialog v-model="dialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">提示</v-card-title>
+
+        <v-card-text>是否要退款</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="green darken-1" text @click="dialog = false">取消</v-btn>
+
+          <v-btn color="green darken-1" text @click="refundMoney">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
 import airshowCarousel from "../components/Carousel";
-import { Cell, CellGroup, Popup, NoticeBar } from "vant";
+import { Cell, CellGroup, Popup, NoticeBar, Button } from "vant";
 export default {
   name: "CardDetail",
   data() {
@@ -79,11 +103,14 @@ export default {
       apply_time: "",
       receive_type_name: "",
       receive_time: "",
+      exhibition_id:"",
       addressee: "",
       mail_serial_num: "",
       addressee_phone: "",
       parentname: "",
       statusText: "",
+      pay_status:0,
+      apply_status:0,
       carnum: "",
       carphoto: "",
       addre: ""
@@ -94,6 +121,7 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [NoticeBar.name]: NoticeBar,
+    [Button.name]: Button,
     [Popup.name]: Popup
   },
   mounted() {
@@ -103,14 +131,15 @@ export default {
     me.$api.orderapi.GetProductDetail(me.detail_id).then(res => {
       if (res.data.statusCode == "200") {
         me.exhibition_name = res.data.data.exhibition_name;
-        me.detail_id = res.data.data.detail_id;
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
+        me.exhibition_id = res.data.data.exhibition_code;
         me.client_phone = res.data.data.client_phone;
         me.client_cardtype = "身份证　";
-        if (res.data.data.client_card_type == "1") {
+        
+        if (res.data.data.client_card_type == 1) {
           me.client_cardtype = "护　照　";
-        } else if (res.data.data.client_card_type == "2") {
+        } else if (res.data.data.client_card_type ==2) {
           me.client_cardtype = "港澳通行证";
         }
         if(res.data.data.com_code=="1206"){
@@ -134,7 +163,7 @@ export default {
         me.addressee_phone = res.data.data.addressee_phone;
         me.addre = res.data.data.addre;
         me.apply_status = res.data.data.apply_status;
-  
+        me.pay_status = res.data.data.pay_status;
         switch (parseInt(me.apply_status)) {
           case 2:
             me.statusText =
@@ -142,7 +171,7 @@ export default {
             break;
           case 0:
             me.statusText =
-              '待出票';
+              '待支付';
             break;
           case 1:
             me.statusText =
@@ -157,7 +186,7 @@ export default {
             break;
           case 4:
             me.statusText =
-              '审核失败';
+              '审核失败（已退款）';
             break;
           case 5:
             me.statusText =
@@ -173,7 +202,7 @@ export default {
     },
     refundMoney() {
       let detail_id = this.$route.params.id;
-      this.$api.orderapi.RefundMoney(detail_id).then(res => {
+      this.$api.orderapi.RefundProductMoney(detail_id).then(res => {
         if (res.data.statusCode == "200") {
           alert("退款成功!");
           window.location.reload();
@@ -182,6 +211,20 @@ export default {
           window.location.reload();
         }
       });
+    },
+    payAgain(){
+        var me = this;
+        window.location.href =
+        "/appwxpay.aspx?token=" +
+        me.$store.state.token +
+        "&type=3" +
+        "&ordercode=" +
+        me.detail_id +
+        "&total_fee=" +
+        me.ticket_cost +
+        "&exhibition_id=" +
+        me.exhibition_id;
+
     }
   }
 };

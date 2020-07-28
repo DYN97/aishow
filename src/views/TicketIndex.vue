@@ -577,7 +577,7 @@ export default {
         me.zengpiaoInfo = res.data.data.find(
           t => t.com_code == "1401"
         ).com_value;
-        me.zengpiaoDialog = true;
+        me.zengpiaoDialog = this.tabIndex==0?true:false;
         me.goupiaoInfo = res.data.data.find(
           t => t.com_code == "1402"
         ).com_value;
