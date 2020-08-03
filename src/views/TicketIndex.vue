@@ -11,10 +11,12 @@
       <div style="width:100%">
         <van-notice-bar
           left-icon="volume-o"
-          scrollable
-          :text="rollingNotice.information_title"
-          @click="ToOutLink(rollingNotice.information_content,'通知')"
-        />
+          :scrollable="false"
+        >
+          <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
+            <van-swipe-item v-for="item in rollingNotice" :key="item.id" @click="ToOutLink(item.information_content,'通知')">{{item.information_title}}</van-swipe-item>
+          </van-swipe>
+        </van-notice-bar>
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <div v-if="tabIndex==2" style="margin-bottom:20px">
           <van-card
@@ -110,17 +112,17 @@
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-                <van-checkbox   v-model="form.needRoom"  type="checkbox" required>需要单间</van-checkbox>
+              <van-checkbox v-model="form.needRoom" type="checkbox" required>需要单间</van-checkbox>
             </div>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''" >
+          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>接送机
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
               <van-checkbox-group v-model="jiesongji" direction="horizontal">
-                <van-checkbox name="接机"  type="checkbox" required>接机</van-checkbox>
-                <van-checkbox name="送机"  type="checkbox" required>送机</van-checkbox>
+                <van-checkbox name="接机" type="checkbox" required>接机</van-checkbox>
+                <van-checkbox name="送机" type="checkbox" required>送机</van-checkbox>
               </van-checkbox-group>
             </div>
           </v-row>
@@ -367,7 +369,9 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
-  CollapseItem
+  Swipe,
+  SwipeItem,
+  CollapseItem,
 } from "vant";
 export default {
   name: "TicketIndex",
@@ -384,15 +388,15 @@ export default {
       CountDown: 60,
       tabIndex: 0,
       packageName: "",
-      levelName:"",
-      carName:"",
+      levelName: "",
+      carName: "",
       growth_date: "",
       growth_price: "",
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
         tickets: [],
-        days: []
+        days: [],
       },
       zengpiaoInfo: "",
       goupiaoInfo: "",
@@ -411,7 +415,7 @@ export default {
       workcards: [],
       packageLink: "",
       packageMoney: 0,
-      jiesongji:[],
+      jiesongji: [],
       selling_price: "",
       CarMoney: 0,
       RoomMoney: 0,
@@ -440,12 +444,12 @@ export default {
         needRoom: "",
         roomcode: "",
         workcard: "",
-        yanzhengma: ""
-      }
+        yanzhengma: "",
+      },
     };
   },
-  activated(){
-    if(!this.$route.meta.isBack){
+  activated() {
+    if (!this.$route.meta.isBack) {
       this.form = {
         fullname: "",
         cardtype: 0,
@@ -463,9 +467,10 @@ export default {
         carcode: "",
         needRoom: "",
         workcard: "",
-        yanzhengma: ""
+        yanzhengma: "",
       };
-      this.jiesongji=[];
+      this.agreementPass = false;
+      this.jiesongji = [];
     }
   },
   watch: {
@@ -481,7 +486,7 @@ export default {
         const index = this.include.indexOf(from.name);
         index !== -1 && this.include.splice(index, 1);
       }
-    }, 
+    },
     YZMloading(val) {
       if (val) {
         let cd = setInterval(() => {
@@ -495,6 +500,7 @@ export default {
       }
     },
     tabIndex(val) {
+      this.agreementPass = false;
       if (val == 0) {
         this.action = "赠票";
         this.xieyi = "赠票";
@@ -530,18 +536,18 @@ export default {
         carcode: "",
         needRoom: "",
         workcard: "",
-        yanzhengma: ""
+        yanzhengma: "",
       };
     },
-    "form.playPackage": function(val) {
+    "form.playPackage": function (val) {
       this.GetServiceItems("level", val);
       console.log(val);
     },
-    "form.packageLevel": function(val) {
-      var chose = this.packageLevels.find(t => t.pro_code == val);
-      this.growth_date = chose.growth_date?chose.growth_date:"";
-      this.growth_price = chose.growth_price?chose.growth_price:"";
-      this.selling_price = chose.selling_price?chose.selling_price:"";
+    "form.packageLevel": function (val) {
+      var chose = this.packageLevels.find((t) => t.pro_code == val);
+      this.growth_date = chose.growth_date ? chose.growth_date : "";
+      this.growth_price = chose.growth_price ? chose.growth_price : "";
+      this.selling_price = chose.selling_price ? chose.selling_price : "";
       this.levelName = chose.pro_name;
       this.GetServiceItems("room", val);
       if (new Date(this.growth_date) < new Date()) {
@@ -551,66 +557,68 @@ export default {
       }
       if (this.tabIndex == 2 && !this.guanzhanDialog) this.growthDialog = true;
     },
-    "form.carcode": function(val) {
-      var choseCar = this.carList.find(t => t.pro_code == val);
+    "form.carcode": function (val) {
+      var choseCar = this.carList.find((t) => t.pro_code == val);
       this.CarMoney = choseCar.selling_price;
       this.carName = choseCar.pro_name;
-    }
+    },
   },
   computed: {
     sumMoney() {
-      var mon =this.CarMoney  + this.RoomMoney + this.packageMoney ;
+      var mon = this.CarMoney + this.RoomMoney + this.packageMoney;
       return mon;
-    }
+    },
   },
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
     this.tabIndex = parseInt(this.$route.query.tabIndex);
-    this.$api.commonapi.GetInformationList(31).then(res => {
+    this.$api.commonapi.GetRollingInformation().then((res) => {
       if (res.data.statusCode == "200") {
         me.rollingNotice = res.data.data;
       }
     });
-    this.$api.commonapi.GetInfos().then(res => {
+    this.$api.commonapi.GetInfos().then((res) => {
       if (res.data.statusCode == "200") {
         me.zengpiaoInfo = res.data.data.find(
-          t => t.com_code == "1401"
+          (t) => t.com_code == "1401"
         ).com_value;
-        me.zengpiaoDialog = this.tabIndex==0?true:false;
+        me.zengpiaoDialog = this.tabIndex == 0 ? true : false;
         me.goupiaoInfo = res.data.data.find(
-          t => t.com_code == "1402"
+          (t) => t.com_code == "1402"
         ).com_value;
         me.guanzhanInfo = res.data.data.find(
-          t => t.com_code == "1403"
+          (t) => t.com_code == "1403"
         ).com_value;
       }
     });
-    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
-      if (res.status == "200") {
-        if (res.data.statusCode == "200") {
-          me.exhibition = res.data.data;
-          me.exhibitionDates = [];
-          me.exhibition.days.forEach(t => {
-            var data = t.split("|");
-            me.exhibitionDates.push({
-              label: data[0] + "(" + data[1] + ")",
-              value: data[0]
+    this.$api.exhibitionapi
+      .GetExhibitionDetaile(exhibition_code)
+      .then((res) => {
+        if (res.status == "200") {
+          if (res.data.statusCode == "200") {
+            me.exhibition = res.data.data;
+            me.exhibitionDates = [];
+            me.exhibition.days.forEach((t) => {
+              var data = t.split("|");
+              me.exhibitionDates.push({
+                label: data[0] + "(" + data[1] + ")",
+                value: data[0],
+              });
             });
-          });
-          me.tickets = res.data.data.tickets.filter(t => t.apple_type == 0);
-          me.form.applyDate = me.exhibitionDates[0].value;
-          me.form.TicketCode = me.tickets[0].ticket_code;
+            me.tickets = res.data.data.tickets.filter((t) => t.apple_type == 0);
+            me.form.applyDate = me.exhibitionDates[0].value;
+            me.form.TicketCode = me.tickets[0].ticket_code;
+          }
         }
-      }
-    });
+      });
     me.GetServiceItems("package", "FW1102");
   },
   methods: {
     GetServiceItems(type, code) {
       let exhibition_code = this.$route.params.exhibitionCode;
       var me = this;
-      this.$api.orderapi.GetServiceItems(code, exhibition_code).then(res => {
+      this.$api.orderapi.GetServiceItems(code, exhibition_code).then((res) => {
         if (res.status == "200") {
           if (res.data.statusCode == "200") {
             if (type == "package") {
@@ -620,11 +628,11 @@ export default {
               }
             } else if (type == "level") {
               me.packageLevels = res.data.data.filter(
-                t => t.com_code == "1102"
+                (t) => t.com_code == "1102"
               );
               me.GetServiceItems(
                 "car",
-                res.data.data.find(t => t.com_code == "11").pro_code
+                res.data.data.find((t) => t.com_code == "11").pro_code
               );
               me.form.packageLevel = me.packageLevels[0].pro_code;
               me.packageMoney = me.packageLevels[0].selling_price;
@@ -641,12 +649,12 @@ export default {
       });
     },
     OpenDetailPage(item) {
-       this.$router.push({
-        name:"outHtml",
-        query:{
-          url:item.pro_detail_url,
-          title: item.pro_name
-        }
+      this.$router.push({
+        name: "outHtml",
+        query: {
+          url: item.pro_detail_url,
+          title: item.pro_name,
+        },
       });
       // this.showDetail = true;
       // this.packageName = item.pro_name;
@@ -669,7 +677,7 @@ export default {
       this.YZMloading = true;
       this.$api.commonapi
         .SendIdentifyingCode(this.form.mobile, this.vifcode)
-        .then(res => {
+        .then((res) => {
           if (res.data.statusCode == "200") {
             Toast("发送成功，请注意查收！");
           } else {
@@ -679,11 +687,11 @@ export default {
     },
     ToOutLink(url, title) {
       this.$router.push({
-        name:"outHtml",
-        query:{
-          url:url,
-          title:title
-        }
+        name: "outHtml",
+        query: {
+          url: url,
+          title: title,
+        },
       });
       // this.showDetail = true;
       // this.packageName = title;
@@ -693,14 +701,14 @@ export default {
       this.showAgreement = false;
       this.agreementPass = true;
     },
-    isPhone: function(phone) {
+    isPhone: function (phone) {
       if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone)) {
         return false;
       } else {
         return true;
       }
     },
-    isIDCard: function(idnumber) {
+    isIDCard: function (idnumber) {
       if (!idnumber || idnumber.length < 0) return false;
       if (idnumber.length == 15) return false;
       if (idnumber.length != 18) return false;
@@ -730,7 +738,7 @@ export default {
     changeTicket() {
       var me = this;
       var choseTicket = this.exhibition.tickets.find(
-        t => t.ticket_code == me.form.TicketCode
+        (t) => t.ticket_code == me.form.TicketCode
       );
       this.ticketCost = choseTicket.ticket_cost;
       me.showCardDetail("ticket", choseTicket.remark);
@@ -739,7 +747,7 @@ export default {
     showCardDetail(type, text) {
       var me = this;
       if (type == "card") {
-        var info = this.workcards.find(t => t.pro_code == me.form.workcard);
+        var info = this.workcards.find((t) => t.pro_code == me.form.workcard);
         me.workcardTips = info.purchase_tips;
       }
       if (text) {
@@ -827,25 +835,25 @@ export default {
               Type: this.tabIndex,
               TicketCode: this.form.TicketCode,
               Sex: this.form.sex,
-              TicketCost: this.ticketCost
-            }
+              TicketCost: this.ticketCost,
+            },
           ]),
           type: this.tabIndex,
-          exhibition_id: this.exhibition.exhibition_code
+          exhibition_id: this.exhibition.exhibition_code,
         };
-        this.$api.orderapi.CreateOrder(params).then(res => {
+        this.$api.orderapi.CreateOrder(params).then((res) => {
           if (res.data.statusCode == "200") {
             if (this.tabIndex == 0) {
               this.$router.push({
                 name: "Result",
                 params: {
-                  result: "success"
+                  result: "success",
                 },
                 query: {
                   type: "0",
                   order_code: res.data.data.ordercode,
-                  exhibition_id: this.exhibition.exhibition_code
-                }
+                  exhibition_id: this.exhibition.exhibition_code,
+                },
               });
             } else {
               window.location.href =
@@ -865,31 +873,30 @@ export default {
             this.$router.push({
               name: "Result",
               params: {
-                result: "fail"
+                result: "fail",
               },
               query: {
                 type: this.tabIndex,
                 exhibition_id: this.exhibition.exhibition_code,
-                message: res.data.message
-              }
+                message: res.data.message,
+              },
             });
           }
         });
       } else {
         this.showorderdetail = true;
-        
       }
     },
     SubmitForm() {
       var me = this;
       var is_tran = 0;
-      if(this.jiesongji.length==2){
-        is_tran=3;
-      }else{
-        if(this.jiesongji.indexOf("接机")>-1){
+      if (this.jiesongji.length == 2) {
+        is_tran = 3;
+      } else {
+        if (this.jiesongji.indexOf("接机") > -1) {
           is_tran = 1;
         }
-        if(this.jiesongji.indexOf("送机")>-1){
+        if (this.jiesongji.indexOf("送机") > -1) {
           is_tran = 2;
         }
       }
@@ -903,7 +910,7 @@ export default {
         pro_code: this.form.packageLevel,
         exhibition_date: this.form.applyDate,
         buy_num: 1,
-        jiesongji:is_tran
+        jiesongji: is_tran,
       };
       var other = [];
       if (this.form.needRoom) {
@@ -913,7 +920,7 @@ export default {
         other.push(this.form.carcode);
       }
       params.other = JSON.stringify(other);
-      this.$api.orderapi.CreateProductOrder(params).then(res => {
+      this.$api.orderapi.CreateProductOrder(params).then((res) => {
         if (res.data.statusCode == "200") {
           window.location.href =
             "/appwxpay.aspx?token=" +
@@ -931,17 +938,17 @@ export default {
           this.$router.push({
             name: "Result",
             params: {
-              result: "fail"
+              result: "fail",
             },
             query: {
               type: this.tabIndex,
               message: res.data.message,
-              exhibition_id: this.exhibition.exhibition_code
-            }
+              exhibition_id: this.exhibition.exhibition_code,
+            },
           });
         }
       });
-    }
+    },
   },
   components: {
     airshowCarousel,
@@ -951,13 +958,15 @@ export default {
     [Button.name]: Button,
     [NoticeBar.name]: NoticeBar,
     [Cell.name]: Cell,
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
     [Collapse.name]: Collapse,
     [CollapseItem.name]: CollapseItem,
     [CellGroup.name]: CellGroup,
     [Checkbox.name]: Checkbox,
     [CheckboxGroup.name]: CheckboxGroup,
-    [Popup.name]: Popup
-  }
+    [Popup.name]: Popup,
+  },
 };
 </script>
 <style scoped>
@@ -1057,4 +1066,8 @@ export default {
 .list-right {
   width: calc(100% - 130px);
 }
+ .notice-swipe {
+    height: 25px;
+    line-height: 25px;
+  }
 </style>

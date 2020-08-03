@@ -328,15 +328,15 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = "赠票";
-            me.clientName = detail.aclient_name.substring(0, 1) + "XX";
+            me.clientName = detail.aclient_name.substring(0, 1) + "**";
             me.clientMobile =
               detail.aclient_phone.substring(0, 3) +
-              "XXXX" +
+              "****" +
               detail.aclient_phone.substring(7);
             me.client_idcard =
               detail.aclient_idcard.length == "18"
                 ? detail.aclient_idcard.substring(0, 6) +
-                  "xxxxxxxx" +
+                  "********" +
                   detail.aclient_idcard.substring(14)
                 : detail.aclient_idcard;
             switch (detail.aclient_card_type) {
@@ -362,15 +362,15 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.aticket_date.substring(0, 10);
             me.ticketType = detail.bticket_name;
-            me.clientName = detail.aclient_name.substring(0, 1) + "XX";
+            me.clientName = detail.aclient_name.substring(0, 1) + "**";
             me.clientMobile =
               detail.aclient_phone.substring(0, 3) +
-              "XXXX" +
+              "****" +
               detail.aclient_phone.substring(7);
             me.client_idcard =
               detail.aclient_idcard.length == "18"
                 ? detail.aclient_idcard.substring(0, 6) +
-                  "xxxxxxxx" +
+                  "******" +
                   detail.aclient_idcard.substring(14)
                 : detail.aclient_idcard;
             switch (detail.aclient_card_type) {
@@ -399,10 +399,10 @@ export default {
             me.packageType = res.data.data.parentname;
             var list = res.data.data.pro_name.split("-");
             me.packageLevel = list[list.length - 1];
-            me.clientName = detail.client_name.substring(0, 1) + "XX";
+            me.clientName = detail.client_name.substring(0, 1) + "**";
             me.clientMobile =
               detail.client_phone.substring(0, 3) +
-              "XXXX" +
+              "****" +
               detail.client_phone.substring(7);
             me.client_idcard =
               res.data.data.client_idcard.length == "18"
@@ -432,10 +432,10 @@ export default {
             let detail = res.data.data.details[0];
             me.ticketDate = detail.exhibition_date.substring(0, 10);
             me.workcardType = detail.pro_name.substring(5);
-            me.clientName = detail.client_name.substring(0, 1) + "XX";
+            me.clientName = detail.client_name.substring(0, 1) + "**";
             me.clientMobile =
               detail.client_phone.substring(0, 3) +
-              "XXXX" +
+              "****" +
               detail.client_phone.substring(7);
             me.client_idcard =
               detail.client_idcard.length == "18"
@@ -467,10 +467,10 @@ export default {
           if (res.data.statusCode == "200") {
             let detail = res.data.data;
             me.workcardType = detail.order_type_name;
-            me.clientName = detail.client_name.substring(0, 1) + "XX";
+            me.clientName = detail.client_name.substring(0, 1) + "**";
             me.clientMobile =
               detail.client_phone.substring(0, 3) +
-              "XXXX" +
+              "****" +
               detail.client_phone.substring(7);
             me.carnum = detail.carInfo.car_number;
           }

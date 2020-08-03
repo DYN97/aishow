@@ -184,7 +184,7 @@ export default {
             me.statusText = "待领取";
             break;
           case 0:
-            me.statusText = "待出票";
+            me.statusText = "待审核";
             break;
           case 1:
             me.statusText = "申请失败";

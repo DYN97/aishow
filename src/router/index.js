@@ -34,7 +34,7 @@
      }, {
          path: '/ExhibitionList',
          name: 'ExhibitionList',
-         title: "展会列表",
+         title: "社会公众展会列表",
          component: ExhibitionList
      },
      {
@@ -168,12 +168,12 @@
  });
  router.afterEach((transition) => {
      let title = "聚航 Airshow";
-     let type = transition.query.type ? transition.query.type : "普通";
+     
      let result = transition.params ? transition.params.result : "";
      switch (transition.name) {
          case "ExhibitionList":
 
-             title = type + "展会列表";
+             title =  "社会公众展会列表";
              break;
          case "TicketIndex":
              title = "普通观众订票";

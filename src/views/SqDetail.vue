@@ -2,7 +2,7 @@
   <div class="detailBox">
     <div class="mainPanel" >
       <div
-        style="width:calc(100vw - 60px);height:230px;margin:50px 30px 20px 30px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; overflow-x:hidden"
+        style="width:calc(100vw - 40px);height:230px;margin:40px 20px 20px 20px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; overflow:hidden"
       >
         <ul class="detailList">
           <li>
@@ -601,7 +601,7 @@ ol {
   text-indent: 12%;
 }
 .detailList {
-  padding-left: 10%;
+  padding-left: 7%;
   margin: 15px 0 30px;
 }
 .detailList li {

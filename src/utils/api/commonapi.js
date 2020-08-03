@@ -25,6 +25,9 @@ const commonapi = {
     CheckCode(code, vifcode) {
         return axios.get(`/sms/CheckCode.aspx?code=` + code + "&vifcode=" + vifcode);
     },
+    GetRollingInformation(){
+        return axios.get("/GetRollingInformation.aspx");
+    },
     GetDutys() {
         return axios.get(`/ss/GetDictories.aspx?code=13`);
     },

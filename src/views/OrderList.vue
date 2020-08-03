@@ -174,8 +174,8 @@ export default {
     },
     GetStatusName(type,status){
       switch(status){
-        case "0":return "待出票";
-        case "1":return type=="ticket"?"申请失败": "待出票";
+        case "0":return "待审核";
+        case "1":return type=="ticket"?"申请失败": "待审核";
         case "2":return "待领取";
         case "3":return "已领取";
         case "4":return type=="ticket"?"已激活": "申请失败";

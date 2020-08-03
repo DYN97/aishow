@@ -8,12 +8,14 @@
         <v-tab :key="3" @click="tabIndex=3">工作证预订</v-tab>
       </v-tabs>
       <div style="width:100%;border:1px #ccc solid;">
-        <van-notice-bar
+<van-notice-bar
           left-icon="volume-o"
-          scrollable
-          :text="rollingNotice.information_title"
-          @click="ToOutLink(rollingNotice.information_content,'通知')"
-        />
+          :scrollable="false"
+        >
+          <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
+            <van-swipe-item v-for="item in rollingNotice" :key="item.id" @click="ToOutLink(item.information_content,'通知')">{{item.information_title}}</van-swipe-item>
+          </van-swipe>
+        </van-notice-bar>
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <div v-if="tabIndex==2" style="margin-bottom:20px">
           <van-card
@@ -460,6 +462,8 @@ import {
   Button,
   CollapseItem,
   Checkbox,
+  Swipe,
+  SwipeItem,
   CheckboxGroup
 } from "vant";
 import airshowCarousel from "../components/Carousel";
@@ -575,6 +579,8 @@ export default {
         workcard: "",
         yanzhengma: ""
       };
+      this.agreementPass = false;
+      this.form.invite_code = this.$route.query.invite_code;
       this.jiesongji=[];
     }
   },
@@ -605,7 +611,7 @@ export default {
       }
     },
     tabIndex(val) {
-      this.agreementPass = false;
+     
       if (val == 1) {
         this.action = "购票";
         this.xieyi = "购票";
@@ -642,6 +648,7 @@ export default {
         workcard: "",
         yanzhengma: ""
       };
+      this.agreementPass = false;
       this.form.invite_code = this.$route.query.invite_code;
     },
 
@@ -672,8 +679,8 @@ export default {
   computed: {
     sumMoney() {
       return (
-        parseInt(this.carMoney ? this.carMoney : 0) +
-        parseInt(this.roomMoney ? this.roomMoney : 0) +
+        parseInt(this.CarMoney ? this.CarMoney : 0) +
+        parseInt(this.RoomMoney ? this.RoomMoney : 0) +
         parseInt(this.packageMoney ? this.packageMoney : 0)
       );
     }
@@ -682,7 +689,7 @@ export default {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
     me.form.invite_code = this.$route.query.invite_code;
-    this.$api.commonapi.GetInformationList(31).then(res => {
+    this.$api.commonapi.GetRollingInformation().then(res => {
       if (res.data.statusCode == "200") {
         me.rollingNotice = res.data.data;
       }
@@ -714,6 +721,7 @@ export default {
           me.tickets = res.data.data.tickets.filter(t => t.apple_type == 1);
           me.form.applyDate = me.exhibitionDates[0].value;
           me.form.TicketCode = me.tickets[0].ticket_code;
+          this.ticketCost = me.tickets[0].ticket_cost;
         }
       }
     });
@@ -1120,6 +1128,8 @@ export default {
     [CellGroup.name]: CellGroup,
     [Checkbox.name]: Checkbox,
     [CheckboxGroup.name]: CheckboxGroup,
+    [Swipe.name]:Swipe,
+    [SwipeItem.name]:SwipeItem,
     [Popup.name]: Popup
   }
 };
@@ -1221,4 +1231,9 @@ export default {
 .list-right {
   width: calc(100% - 130px);
 }
+
+ .notice-swipe {
+    height: 25px;
+    line-height: 25px;
+  }
 </style>

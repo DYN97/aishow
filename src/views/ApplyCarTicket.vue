@@ -10,7 +10,7 @@
           :text="rollingNotice.information_title"
           @click="ToOutLink(rollingNotice.information_content,'通知')"
         />
-        
+
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <v-form style="background-color:white">
           <v-row height="46px" no-gutters>
@@ -30,8 +30,8 @@
               ></v-text-field>
             </div>
           </v-row>
-           <v-row no-gutters >
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
+          <v-row no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>申请单位
             </div>
             <div class="am-u-sm-8 list-right">
@@ -46,7 +46,7 @@
               ></v-text-field>
             </div>
           </v-row>
-           <v-row no-gutters>
+          <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe690;</i>申请类型
             </div>
@@ -55,7 +55,7 @@
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.workcard"
               >
-                 <option
+                <option
                   v-for="item in workcards"
                   :key="item.pro_code"
                   :value="item.pro_code"
@@ -63,7 +63,7 @@
               </select>
             </div>
           </v-row>
-          
+
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>车牌号码
@@ -81,16 +81,19 @@
             </div>
           </v-row>
           <v-row height="88px" no-gutters>
-            <div align-self="center" class="tag-name" for="doc-ipt-3" style="height:88px;line-height:88px">
+            <div
+              align-self="center"
+              class="tag-name"
+              for="doc-ipt-3"
+              style="height:88px;line-height:88px"
+            >
               <i class="iconfont">&#xe650;</i>车头照片
             </div>
             <div class="am-u-sm-8 list-right">
-              <van-uploader v-model="fileList" multiple :max-count="1" />
+              <van-uploader v-model="fileList" multiple :max-count="1" :before-read="beforeRead" />
             </div>
           </v-row>
-          
-         
-         
+
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe659;</i>联系电话
@@ -147,8 +150,8 @@
               </v-btn>
             </div>
           </v-row>
-            <v-row no-gutters >
-             <div align-self="center" class="tag-name" for="doc-ipt-3">
+          <v-row no-gutters>
+            <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>备注
             </div>
             <div class="am-u-sm-8 list-right">
@@ -185,7 +188,7 @@
 <script>
 import airshowCarousel from "../components/Carousel";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast, Popup, NoticeBar,Uploader  } from "vant";
+import { Card, Toast, Popup, NoticeBar, Uploader } from "vant";
 export default {
   name: "ApplyCarTicket",
   data() {
@@ -201,9 +204,10 @@ export default {
         exhibition_code: "",
         exhibition_name: "",
         tickets: [],
-        days: []
+        days: [],
       },
-      fileList:[],
+      img:"",
+      fileList: [],
       tickets: [],
       lookUp: "0",
       ticketCost: 0,
@@ -219,14 +223,14 @@ export default {
       workcardDialog: false,
       rollingNotice: [],
       workcardTips: "",
-      
+
       form: {
         fullname: "",
         cardtype: 0,
         sex: 1,
         invite_code: "",
         cardnum: "",
-        carnum:"",
+        carnum: "",
         applyDate: "",
         mobile: "",
         company: "",
@@ -239,8 +243,8 @@ export default {
         needRoom: "",
         roomcode: "",
         workcard: "",
-        yanzhengma: ""
-      }
+        yanzhengma: "",
+      },
     };
   },
   watch: {
@@ -255,29 +259,29 @@ export default {
           }
         }, 1000);
       }
-    }
+    },
   },
   computed: {},
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
     this.exhibition.exhibition_code = exhibition_code;
-    this.$api.commonapi.GetInformationList(31).then(res => {
+    this.$api.commonapi.GetInformationList(31).then((res) => {
       if (res.data.statusCode == "200") {
         me.rollingNotice = res.data.data;
       }
     });
-    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
-      if (res.status == "200") {
-        if (res.data.statusCode == "200") {
-          me.exhibition = res.data.data;
-          me.form.applyDate = res.data.data.days[0];
+    this.$api.exhibitionapi
+      .GetExhibitionDetaile(exhibition_code)
+      .then((res) => {
+        if (res.status == "200") {
+          if (res.data.statusCode == "200") {
+            me.exhibition = res.data.data;
+            me.form.applyDate = res.data.data.days[0];
+          }
         }
-      }
-    });
+      });
     me.GetServiceItems("package", "FW120103");
-
-
   },
   methods: {
     OpenDetailPage(item) {
@@ -288,17 +292,70 @@ export default {
     GetServiceItems(type, code) {
       var me = this;
       let exhibition_code = this.$route.params.exhibitionCode;
-      this.$api.orderapi.GetServiceItems(code, exhibition_code).then(res => {
+      this.$api.orderapi.GetServiceItems(code, exhibition_code).then((res) => {
         if (res.status == "200") {
+          if (res.data.data && res.data.data.length > 0) {
+            me.form.workcard = res.data.data[0].pro_code;
+            me.workcards = res.data.data;
+          }
+        }
+      });
+    },
+    canvasDataURL(path, obj, callback) {
+      var img = new Image();
+      img.src = path;
+      img.onload = function () {
+        var that = this;
+        // 默认按比例压缩
+        var w = that.width,
+          h = that.height,
+          scale = w / h;
+        w = obj.width || w;
+        h = obj.height || w / scale;
+        var quality = 0.7; // 默认图片质量为0.7
+        //生成canvas
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        // 创建属性节点
+        var anw = document.createAttribute("width");
+        anw.nodeValue = w;
+        var anh = document.createAttribute("height");
+        anh.nodeValue = h;
+        canvas.setAttributeNode(anw);
+        canvas.setAttributeNode(anh);
+        ctx.drawImage(that, 0, 0, w, h);
+        // 图像质量
+        if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
+          quality = obj.quality;
+        }
+        // quality值越小，所绘制出的图像越模糊
+        var base64 = canvas.toDataURL("image/jpeg", quality);
+        // 回调函数返回base64的值
+        callback(base64);
+      };
+    },
+    beforeRead(file) {
+      var me = this;
+      return new Promise((resolve, reject) => {
+        if (file.type !== "image/jpeg") {
+          Toast("请上传 jpg 格式图片");
+          reject();
+        } else {
+          var ready = new FileReader();
+          /*开始读取指定的Blob对象或File对象中的内容. 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.同时,result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.*/
+          ready.readAsDataURL(file);
+          ready.onload = function () {
+            var re = this.result;
+            var img = me.canvasDataURL(re,{
+          quality: 0.2
+        },function(base64){
+          me.img = base64;
+        });
+            resolve(img);
+          };
          
-              if (res.data.data && res.data.data.length > 0) {
-                me.form.workcard = res.data.data[0].pro_code;
-                me.workcards =  res.data.data;
-              }
-            } 
-            
           
-        
+        }
       });
     },
     SendIdentifyingCode() {
@@ -318,7 +375,7 @@ export default {
       this.YZMloading = true;
       this.$api.commonapi
         .SendIdentifyingCode(this.form.mobile, this.vifcode)
-        .then(res => {
+        .then((res) => {
           if (res.data.statusCode == "200") {
             Toast("发送成功，请注意查收！");
           } else {
@@ -326,13 +383,13 @@ export default {
           }
         });
     },
-     ToOutLink(url, title) {
+    ToOutLink(url, title) {
       this.$router.push({
-        name:"outHtml",
-        query:{
-          url:url,
-          title:title
-        }
+        name: "outHtml",
+        query: {
+          url: url,
+          title: title,
+        },
       });
       // this.showDetail = true;
       // this.packageName = title;
@@ -342,14 +399,14 @@ export default {
       this.showAgreement = false;
       this.agreementPass = true;
     },
-    isPhone: function(phone) {
+    isPhone: function (phone) {
       if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone)) {
         return false;
       } else {
         return true;
       }
     },
-    isIDCard: function(idnumber) {
+    isIDCard: function (idnumber) {
       if (!idnumber || idnumber.length < 0) return false;
       if (idnumber.length == 15) return false;
       if (idnumber.length != 18) return false;
@@ -389,7 +446,7 @@ export default {
         this.once = true;
         return;
       }
-       if (_company.length < 2) {
+      if (_company.length < 2) {
         Toast("请填写单位名称！");
         this.once = true;
         return;
@@ -401,6 +458,11 @@ export default {
       }
       if (carnum.length == 0) {
         Toast("请填写车牌号码！");
+        this.once = true;
+        return;
+      }
+      if (this.img.length == 0) {
+        Toast("请上传车头图片");
         this.once = true;
         return;
       }
@@ -430,49 +492,48 @@ export default {
           return;
         }
       }
-        let params = {
-          client_name: this.form.fullname,
-          client_idcard: this.form.cardnum,
-          carnum: this.form.carnum,
-          cliend_cardtype: this.form.cardtype,
-          rec_company:this.form.company,
-          sex: this.form.sex,
-          use_type: 3,
-          client_phone: this.form.mobile,
-          pro_code: this.form.workcard,
-          exhibition_date: this.form.applyDate,
-          buy_num: 1,
-          photo:this.fileList[0].content
-        };
-        this.$api.orderapi.CreateProductOrder(params).then(res => {
-          if (res.data.statusCode == "200") {
-             this.$router.push({
-                name: "Result",
-                params: {
-                  result: "success"
-                },
-                query: {
-                  type: "5",
-                  order_code: res.data.data.ordercode,
-                  exhibition_id: this.exhibition.exhibition_code
-                }
-              });
-          } else {
-            this.$router.push({
-              name: "Result",
-              params: {
-                result: "fail"
-              },
-              query: {
-                type: "5",
-                message: res.data.message,
-                  exhibition_id: this.exhibition.exhibition_code
-              }
-            });
-          }
-        });
-      }
-    
+      let params = {
+        client_name: this.form.fullname,
+        client_idcard: this.form.cardnum,
+        carnum: this.form.carnum,
+        cliend_cardtype: this.form.cardtype,
+        rec_company: this.form.company,
+        sex: this.form.sex,
+        use_type: 3,
+        client_phone: this.form.mobile,
+        pro_code: this.form.workcard,
+        exhibition_date: this.form.applyDate,
+        buy_num: 1,
+        photo: this.img,
+      };
+      this.$api.orderapi.CreateProductOrder(params).then((res) => {
+        if (res.data.statusCode == "200") {
+          this.$router.push({
+            name: "Result",
+            params: {
+              result: "success",
+            },
+            query: {
+              type: "5",
+              order_code: res.data.data.ordercode,
+              exhibition_id: this.exhibition.exhibition_code,
+            },
+          });
+        } else {
+          this.$router.push({
+            name: "Result",
+            params: {
+              result: "fail",
+            },
+            query: {
+              type: "5",
+              message: res.data.message,
+              exhibition_id: this.exhibition.exhibition_code,
+            },
+          });
+        }
+      });
+    },
   },
   components: {
     airshowCarousel,
@@ -480,8 +541,8 @@ export default {
     [Card.name]: Card,
     [NoticeBar.name]: NoticeBar,
     [Uploader.name]: Uploader,
-    [Popup.name]: Popup
-  }
+    [Popup.name]: Popup,
+  },
 };
 </script>
 <style scoped>
