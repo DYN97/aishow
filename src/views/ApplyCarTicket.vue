@@ -4,12 +4,14 @@
 
     <v-container class="listbox">
       <div style="width:100%">
-        <van-notice-bar
+       <van-notice-bar
           left-icon="volume-o"
-          scrollable
-          :text="rollingNotice.information_title"
-          @click="ToOutLink(rollingNotice.information_content,'通知')"
-        />
+          :scrollable="false"
+        >
+          <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
+            <van-swipe-item v-for="item in rollingNotice" :key="item.id" @click="ToOutLink(item.information_content,'通知')">{{item.information_title}}</van-swipe-item>
+          </van-swipe>
+        </van-notice-bar>
 
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
         <v-form style="background-color:white">
@@ -188,7 +190,7 @@
 <script>
 import airshowCarousel from "../components/Carousel";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast, Popup, NoticeBar, Uploader } from "vant";
+import { Card, Toast, Popup, NoticeBar, Uploader,Swipe,SwipeItem } from "vant";
 export default {
   name: "ApplyCarTicket",
   data() {
@@ -266,7 +268,8 @@ export default {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
     this.exhibition.exhibition_code = exhibition_code;
-    this.$api.commonapi.GetInformationList(31).then((res) => {
+    me.form.invite_code = this.$route.query.invite_code;
+    this.$api.commonapi.GetRollingInformation().then((res) => {
       if (res.data.statusCode == "200") {
         me.rollingNotice = res.data.data;
       }
@@ -446,7 +449,7 @@ export default {
         this.once = true;
         return;
       }
-      if (_company.length < 2) {
+      if (_company.length < 1) {
         Toast("请填写单位名称！");
         this.once = true;
         return;
@@ -541,6 +544,8 @@ export default {
     [Card.name]: Card,
     [NoticeBar.name]: NoticeBar,
     [Uploader.name]: Uploader,
+    [SwipeItem.name]: SwipeItem,
+    [Swipe.name]: Swipe,
     [Popup.name]: Popup,
   },
 };
@@ -642,4 +647,8 @@ export default {
 .list-right {
   width: calc(100% - 130px);
 }
+ .notice-swipe {
+    height: 25px;
+    line-height: 25px;
+  }
 </style>

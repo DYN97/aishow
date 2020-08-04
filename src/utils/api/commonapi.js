@@ -33,6 +33,9 @@ const commonapi = {
     },
     GetInfos(){
         return axios.get(`/ss/GetDictories.aspx?code=14`);
+    },
+    GetCards(){
+        return axios.get(`/ss/GetDictories.aspx?code=15`);
     }
     // 其他接口…………
 };

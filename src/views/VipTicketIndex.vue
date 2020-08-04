@@ -8,12 +8,13 @@
         <v-tab :key="3" @click="tabIndex=3">工作证预订</v-tab>
       </v-tabs>
       <div style="width:100%;border:1px #ccc solid;">
-<van-notice-bar
-          left-icon="volume-o"
-          :scrollable="false"
-        >
+        <van-notice-bar left-icon="volume-o" :scrollable="false">
           <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
-            <van-swipe-item v-for="item in rollingNotice" :key="item.id" @click="ToOutLink(item.information_content,'通知')">{{item.information_title}}</van-swipe-item>
+            <van-swipe-item
+              v-for="item in rollingNotice"
+              :key="item.id"
+              @click="ToOutLink(item.information_content,'通知')"
+            >{{item.information_title}}</van-swipe-item>
           </van-swipe>
         </van-notice-bar>
         <!-- <v-subheader isnet>{{action}}基本信息</v-subheader> -->
@@ -47,7 +48,7 @@
               ></v-text-field>
             </div>
           </v-row>
-          <v-row height="46px" no-gutters  v-if="tabIndex!=3">
+          <v-row height="46px" no-gutters v-if="tabIndex!=3">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe650;</i>观展日期
             </div>
@@ -123,17 +124,17 @@
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
-              <van-checkbox v-model="form.needRoom"  type="checkbox" required>需要单间(￥{{RoomMoney}})</van-checkbox>
+              <van-checkbox v-model="form.needRoom" type="checkbox" required>需要单间(￥{{RoomMoney}})</van-checkbox>
             </div>
           </v-row>
-          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''" >
+          <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>接送机
             </div>
             <div class="am-u-sm-8 list-right" style="margin-top: 8px">
               <van-checkbox-group v-model="jiesongji" direction="horizontal">
-                <van-checkbox name="接机"  type="checkbox" required>接机</van-checkbox>
-                <van-checkbox name="送机"  type="checkbox" required>送机</van-checkbox>
+                <van-checkbox name="接机" type="checkbox" required>接机</van-checkbox>
+                <van-checkbox name="送机" type="checkbox" required>送机</van-checkbox>
               </van-checkbox-group>
             </div>
           </v-row>
@@ -201,14 +202,16 @@
                 style="width:95%;height:46px;;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.cardtype"
               >
-                <option value="0">身份证</option>
-                <option value="1">护照</option>
-                <option value="2">港澳通行证</option>
+                <option
+                  v-for="item in cardtypes"
+                  :value="item.com_value"
+                  :key="item.com_code"
+                >{{item.com_name}}</option>
               </select>
             </div>
           </v-row>
 
-            <v-row no-gutters>
+          <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe614;</i>证件号码
             </div>
@@ -224,7 +227,7 @@
               ></v-text-field>
             </div>
           </v-row>
-          
+
           <v-row no-gutters v-if="tabIndex==2">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe690;</i>性别
@@ -239,8 +242,6 @@
               </select>
             </div>
           </v-row>
-
-        
 
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
@@ -328,7 +329,7 @@
               ></v-text-field>
             </div>
           </v-row>
-         
+
           <v-row height="46px" no-gutters style="position: relative">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe605;</i>验证码
@@ -397,48 +398,48 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-     <v-dialog v-model="goupiaoDialog" width="500">
-        <v-card>
-          <v-card-title class="headline">购票须知</v-card-title>
-          <v-card-text>{{goupiaoInfo}}</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="goupiaoDialog = false">确认</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="guanzhanDialog" width="500">
-        <v-card>
-          <v-card-title class="headline">预购须知</v-card-title>
-          <v-card-text>{{guanzhanInfo}}</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="guanzhanDialog = false">确认</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-       <v-dialog v-model="growthDialog" width="500">
-        <v-card>
-          <v-card-title class="headline">温馨提示</v-card-title>
-          <v-card-text>该档位于{{growth_date}}前为￥{{packageMoney}}元,之后为￥{{growth_price}}元</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="growthDialog = false">确认</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <v-dialog v-model="goupiaoDialog" width="500">
+      <v-card>
+        <v-card-title class="headline">购票须知</v-card-title>
+        <v-card-text>{{goupiaoInfo}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="goupiaoDialog = false">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="guanzhanDialog" width="500">
+      <v-card>
+        <v-card-title class="headline">预购须知</v-card-title>
+        <v-card-text>{{guanzhanInfo}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="guanzhanDialog = false">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="growthDialog" width="500">
+      <v-card>
+        <v-card-title class="headline">温馨提示</v-card-title>
+        <v-card-text>该档位于{{growth_date}}前为￥{{packageMoney}}元,之后为￥{{growth_price}}元</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="growthDialog = false">确认</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <van-popup v-model="showorderdetail" position="bottom">
       <van-collapse v-model="orderdetail">
         <van-collapse-item title="订单详情" name="1" disabled>
           <van-cell-group>
-              <van-cell title="姓名" :value="form.fullname" />
-              <van-cell title="证件号码" :value="form.cardnum" />
-              <van-cell title="联系电话" :value="form.mobile" />
-              <van-cell :title="'套餐('+levelName+')'" :value="'￥'+packageMoney" />
-              <van-cell v-if="form.carcode" :title="'包车('+carName+')'" :value="'￥'+CarMoney" />
-              <van-cell v-if="form.needRoom" title="单间" :value="'￥'+RoomMoney" />
-              <van-cell v-if="jiesongji.length>0" title="接送机服务" :value="jiesongji.join(',')" />
-            </van-cell-group>
+            <van-cell title="姓名" :value="form.fullname" />
+            <van-cell title="证件号码" :value="form.cardnum" />
+            <van-cell title="联系电话" :value="form.mobile" />
+            <van-cell :title="'套餐('+levelName+')'" :value="'￥'+packageMoney" />
+            <van-cell v-if="form.carcode" :title="'包车('+carName+')'" :value="'￥'+CarMoney" />
+            <van-cell v-if="form.needRoom" title="单间" :value="'￥'+RoomMoney" />
+            <van-cell v-if="jiesongji.length>0" title="接送机服务" :value="jiesongji.join(',')" />
+          </van-cell-group>
           <van-cell-group>
             <van-cell title="总计" :value="'￥'+sumMoney" />
           </van-cell-group>
@@ -464,7 +465,7 @@ import {
   Checkbox,
   Swipe,
   SwipeItem,
-  CheckboxGroup
+  CheckboxGroup,
 } from "vant";
 import airshowCarousel from "../components/Carousel";
 export default {
@@ -477,40 +478,40 @@ export default {
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h5_20190731205844240.jpg",
-          isguanggao: true
+          isguanggao: true,
         },
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h7_20190731205944651.jpg",
-          isguanggao: false
-        }
+          isguanggao: false,
+        },
       ],
       YZMloading: false,
       dutys: [],
       CountDown: 60,
       tabIndex: 1,
       workcardDialog: false,
-      goupiaoDialog:false,
-      guanzhanDialog:false,
-      goupiaoInfo:"",
-       growth_date:"",
-      growth_price:"",      
-      growthDialog:false,
-      guanzhanInfo:"",
-      jiesongji:[],
+      goupiaoDialog: false,
+      guanzhanDialog: false,
+      goupiaoInfo: "",
+      growth_date: "",
+      growth_price: "",
+      growthDialog: false,
+      guanzhanInfo: "",
+      jiesongji: [],
       selling_price: "",
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
         tickets: [],
-        days: []
+        days: [],
       },
       lookUp: "0",
       showDetail: false,
       packageLink: "",
       packageName: "",
-      levelName:"",
-      carName:"",
+      levelName: "",
+      carName: "",
       ticketCost: 0,
       playPackages: [],
       packageLevels: [],
@@ -524,7 +525,7 @@ export default {
       RoomMoney: "",
       showAgreement: false,
       agreementPass: false,
-      firstGuanzhan:true,
+      firstGuanzhan: true,
       carText: "",
       rollingNotice: [],
       exhibitionDates: [],
@@ -552,13 +553,13 @@ export default {
         needRoom: "",
         roomcode: "",
         workcard: "",
-        yanzhengma: ""
-      }
+        yanzhengma: "",
+      },
     };
   },
-  activated(){
-    if(!this.$route.meta.isBack){
-      this.form =  {
+  activated() {
+    if (!this.$route.meta.isBack) {
+      this.form = {
         fullname: "",
         cardtype: 0,
         invite_code: "",
@@ -577,11 +578,11 @@ export default {
         carcode: "",
         needRoom: "",
         workcard: "",
-        yanzhengma: ""
+        yanzhengma: "",
       };
       this.agreementPass = false;
       this.form.invite_code = this.$route.query.invite_code;
-      this.jiesongji=[];
+      this.jiesongji = [];
     }
   },
   watch: {
@@ -597,7 +598,7 @@ export default {
         const index = this.include.indexOf(from.name);
         index !== -1 && this.include.splice(index, 1);
       }
-    }, 
+    },
     YZMloading(val) {
       if (val) {
         let cd = setInterval(() => {
@@ -611,16 +612,15 @@ export default {
       }
     },
     tabIndex(val) {
-     
       if (val == 1) {
         this.action = "购票";
         this.xieyi = "购票";
       } else if (val == 2) {
         this.action = "观展服务";
         this.xieyi = "购买";
-        if(this.firstGuanzhan){
+        if (this.firstGuanzhan) {
           this.guanzhanDialog = true;
-          this.firstGuanzhan = false;       
+          this.firstGuanzhan = false;
         }
       } else {
         this.action = "工作证";
@@ -646,35 +646,35 @@ export default {
         carcode: "",
         needRoom: "",
         workcard: "",
-        yanzhengma: ""
+        yanzhengma: "",
       };
       this.agreementPass = false;
       this.form.invite_code = this.$route.query.invite_code;
     },
 
-    "form.playPackage": function(val) {
+    "form.playPackage": function (val) {
       //
       this.GetServiceItems("level", val);
     },
-    "form.packageLevel": function(val) {
-      var chose = this.packageLevels.find(t=>t.pro_code ==val);
-      this.growth_date = chose.growth_date?chose.growth_date:"";
-      this.growth_price = chose.growth_price?chose.growth_price:"";
-      this.selling_price = chose.selling_price?chose.selling_price:"";
+    "form.packageLevel": function (val) {
+      var chose = this.packageLevels.find((t) => t.pro_code == val);
+      this.growth_date = chose.growth_date ? chose.growth_date : "";
+      this.growth_price = chose.growth_price ? chose.growth_price : "";
+      this.selling_price = chose.selling_price ? chose.selling_price : "";
       this.levelName = chose.pro_name;
       this.GetServiceItems("room", val);
-       if (new Date(this.growth_date) < new Date()) {
+      if (new Date(this.growth_date) < new Date()) {
         this.packageMoney = parseInt(this.growth_price);
       } else {
         this.packageMoney = parseInt(this.selling_price);
       }
-      if(this.tabIndex==2&&!this.guanzhanDialog)this.growthDialog = true;
+      if (this.tabIndex == 2 && !this.guanzhanDialog) this.growthDialog = true;
     },
-    "form.carcode": function(val) {
-      var choseCar = this.carList.find(t => t.pro_code == val);
+    "form.carcode": function (val) {
+      var choseCar = this.carList.find((t) => t.pro_code == val);
       this.CarMoney = choseCar.selling_price;
       this.carName = choseCar.pro_name;
-    }
+    },
   },
   computed: {
     sumMoney() {
@@ -683,71 +683,82 @@ export default {
         parseInt(this.RoomMoney ? this.RoomMoney : 0) +
         parseInt(this.packageMoney ? this.packageMoney : 0)
       );
-    }
+    },
   },
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
     me.form.invite_code = this.$route.query.invite_code;
-    this.$api.commonapi.GetRollingInformation().then(res => {
+    this.$api.commonapi.GetRollingInformation().then((res) => {
       if (res.data.statusCode == "200") {
         me.rollingNotice = res.data.data;
       }
     });
-    this.$api.commonapi.GetDutys().then(res => {
+    this.$api.commonapi.GetDutys().then((res) => {
       if (res.data.statusCode == "200") {
         me.dutys = res.data.data;
       }
     });
-  this.$api.commonapi.GetInfos().then(res=>{
-      if(res.data.statusCode=="200"){
-        me.goupiaoInfo = res.data.data.find(t=>t.com_code=="1402").com_value;
+    this.$api.commonapi.GetCards().then((res) => {
+      if (res.data.statusCode == "200") {
+        me.cardtypes = res.data.data;
+      }
+    });
+    this.$api.commonapi.GetInfos().then((res) => {
+      if (res.data.statusCode == "200") {
+        me.goupiaoInfo = res.data.data.find(
+          (t) => t.com_code == "1402"
+        ).com_value;
         me.goupiaoDialog = true;
-        me.guanzhanInfo = res.data.data.find(t=>t.com_code=="1403").com_value;
+        me.guanzhanInfo = res.data.data.find(
+          (t) => t.com_code == "1403"
+        ).com_value;
       }
     });
-    this.$api.exhibitionapi.GetExhibitionDetaile(exhibition_code).then(res => {
-      if (res.status == "200") {
-        if (res.data.statusCode == "200") {
-          me.exhibition = res.data.data;
-          me.exhibitionDates = [];
-          me.exhibition.days.forEach(t => {
-            var data = t.split("|");
-            me.exhibitionDates.push({
-              label: data[0] + "(" + data[1] + ")",
-              value: data[0]
+    this.$api.exhibitionapi
+      .GetExhibitionDetaile(exhibition_code)
+      .then((res) => {
+        if (res.status == "200") {
+          if (res.data.statusCode == "200") {
+            me.exhibition = res.data.data;
+            me.exhibitionDates = [];
+            me.exhibition.days.forEach((t) => {
+              var data = t.split("|");
+              me.exhibitionDates.push({
+                label: data[0] + "(" + data[1] + ")",
+                value: data[0],
+              });
             });
-          });
-          me.tickets = res.data.data.tickets.filter(t => t.apple_type == 1);
-          me.form.applyDate = me.exhibitionDates[0].value;
-          me.form.TicketCode = me.tickets[0].ticket_code;
-          this.ticketCost = me.tickets[0].ticket_cost;
+            me.tickets = res.data.data.tickets.filter((t) => t.apple_type == 1);
+            me.form.applyDate = me.exhibitionDates[0].value;
+            me.form.TicketCode = me.tickets[0].ticket_code;
+            this.ticketCost = me.tickets[0].ticket_cost;
+          }
         }
-      }
-    });
+      });
     me.GetServiceItems("package", "FW1202");
     me.GetServiceItems("workcard", "FW1201");
   },
   methods: {
     ToOutLink(url, title) {
       this.$router.push({
-        name:"outHtml",
-        query:{
-          url:url,
-          title:title
-        }
+        name: "outHtml",
+        query: {
+          url: url,
+          title: title,
+        },
       });
       // this.showDetail = true;
       // this.packageName = title;
       // this.packageLink = url;
     },
     OpenDetailPage(item) {
-       this.$router.push({
-        name:"outHtml",
-        query:{
-          url:item.pro_detail_url,
-          title: item.pro_name
-        }
+      this.$router.push({
+        name: "outHtml",
+        query: {
+          url: item.pro_detail_url,
+          title: item.pro_name,
+        },
       });
       // this.showDetail = true;
       // this.$route.push("#");
@@ -757,7 +768,7 @@ export default {
     GetServiceItems(type, code) {
       var me = this;
       let exhibition_code = this.$route.params.exhibitionCode;
-      this.$api.orderapi.GetServiceItems(code, exhibition_code).then(res => {
+      this.$api.orderapi.GetServiceItems(code, exhibition_code).then((res) => {
         if (res.status == "200") {
           if (res.data.statusCode == "200") {
             if (type == "package") {
@@ -767,11 +778,11 @@ export default {
               }
             } else if (type == "level") {
               me.packageLevels = res.data.data.filter(
-                t => t.com_code == "1202"
+                (t) => t.com_code == "1202"
               );
               me.GetServiceItems(
                 "car",
-                res.data.data.find(t => t.com_code == "12").pro_code
+                res.data.data.find((t) => t.com_code == "12").pro_code
               );
               if (res.data.data && res.data.data.length > 0) {
                 me.form.packageLevel = res.data.data[0].pro_code;
@@ -785,13 +796,12 @@ export default {
               me.form.roomcode = res.data.data[0].pro_code;
               me.RoomMoney = res.data.data[0].selling_price;
             } else {
-              
               if (res.data.data && res.data.data.length > 0) {
-                me.workcards  = res.data.data.filter(
-                t => t.com_code == "1205"
-              );
+                me.workcards = res.data.data.filter(
+                  (t) => t.com_code == "1205"
+                );
                 me.form.workcard = res.data.data[0].pro_code;
-                
+
                 me.workcardTips = res.data.data[0].purchase_tips;
               }
             }
@@ -803,14 +813,14 @@ export default {
       this.showAgreement = false;
       this.agreementPass = true;
     },
-    isPhone: function(phone) {
+    isPhone: function (phone) {
       if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone)) {
         return false;
       } else {
         return true;
       }
     },
-    isIDCard: function(idnumber) {
+    isIDCard: function (idnumber) {
       if (!idnumber || idnumber.length < 0) return false;
       if (idnumber.length == 15) return false;
       if (idnumber.length != 18) return false;
@@ -851,7 +861,7 @@ export default {
     changeTicket() {
       var me = this;
       var choseTicket = this.exhibition.tickets.find(
-        t => t.ticket_code == me.form.TicketCode
+        (t) => t.ticket_code == me.form.TicketCode
       );
       this.ticketCost = choseTicket.ticket_cost;
       me.showCardDetail("ticket", choseTicket.remark);
@@ -873,7 +883,7 @@ export default {
       this.YZMloading = true;
       this.$api.commonapi
         .SendIdentifyingCode(this.form.link_phone, this.vifcode)
-        .then(res => {
+        .then((res) => {
           if (res.data.statusCode == "200") {
             Toast("发送成功，请注意查收！");
           } else {
@@ -900,7 +910,7 @@ export default {
         this.once = true;
         return;
       }
-      if (_applyDate == ""&&this.tabIndex!=3) {
+      if (_applyDate == "" && this.tabIndex != 3) {
         Toast("请选择观展日期！");
         this.once = true;
         return;
@@ -981,13 +991,13 @@ export default {
               Sex: this.form.sex,
               CompanyName: this.form.company,
               Type: "1",
-              TicketCost: this.ticketCost
-            }
+              TicketCost: this.ticketCost,
+            },
           ]),
           type: 1,
-          exhibition_id: this.exhibition.exhibition_code
+          exhibition_id: this.exhibition.exhibition_code,
         };
-        this.$api.orderapi.CreateOrder(params).then(res => {
+        this.$api.orderapi.CreateOrder(params).then((res) => {
           if (res.data.statusCode == "200") {
             window.location.href =
               "/appwxpay.aspx?token=" +
@@ -1003,12 +1013,12 @@ export default {
             this.$router.push({
               name: "Result",
               params: {
-                result: "fail"
+                result: "fail",
               },
               query: {
                 type: this.tabIndex,
-                message: res.data.message
-              }
+                message: res.data.message,
+              },
             });
           }
         });
@@ -1023,13 +1033,13 @@ export default {
     SubmitForm() {
       var me = this;
       var is_tran = 0;
-      if(this.jiesongji.length==2){
-        is_tran=3;
-      }else{
-        if(this.jiesongji.indexOf("接机")>-1){
+      if (this.jiesongji.length == 2) {
+        is_tran = 3;
+      } else {
+        if (this.jiesongji.indexOf("接机") > -1) {
           is_tran = 1;
         }
-        if(this.jiesongji.indexOf("送机")>-1){
+        if (this.jiesongji.indexOf("送机") > -1) {
           is_tran = 2;
         }
       }
@@ -1050,7 +1060,7 @@ export default {
         pro_code:
           this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
         buy_num: 1,
-        jiesongji:is_tran
+        jiesongji: is_tran,
       };
       var other = [];
       if (this.form.needRoom) {
@@ -1060,18 +1070,18 @@ export default {
         other.push(this.form.carcode);
       }
       params.other = JSON.stringify(other);
-      this.$api.orderapi.CreateProductOrder(params).then(res => {
+      this.$api.orderapi.CreateProductOrder(params).then((res) => {
         if (res.data.statusCode == "200") {
           if (res.data.data.money == "0") {
             this.$router.push({
               name: "Result",
               params: {
-                result: "success"
+                result: "success",
               },
               query: {
                 type: this.tabIndex,
-                order_code: res.data.data.ordercode
-              }
+                order_code: res.data.data.ordercode,
+              },
             });
           } else {
             window.location.href =
@@ -1091,12 +1101,12 @@ export default {
           this.$router.push({
             name: "Result",
             params: {
-              result: "fail"
+              result: "fail",
             },
             query: {
               type: this.tabIndex,
-              message: res.data.message
-            }
+              message: res.data.message,
+            },
           });
         }
       });
@@ -1104,7 +1114,7 @@ export default {
     showCardDetail(type, text) {
       var me = this;
       if (type == "card") {
-        var info = this.workcards.find(t => t.pro_code == me.form.workcard);
+        var info = this.workcards.find((t) => t.pro_code == me.form.workcard);
         me.workcardTips = info.purchase_tips;
       }
       if (text) {
@@ -1112,7 +1122,7 @@ export default {
       }
 
       me.workcardDialog = true;
-    }
+    },
   },
 
   components: {
@@ -1128,10 +1138,10 @@ export default {
     [CellGroup.name]: CellGroup,
     [Checkbox.name]: Checkbox,
     [CheckboxGroup.name]: CheckboxGroup,
-    [Swipe.name]:Swipe,
-    [SwipeItem.name]:SwipeItem,
-    [Popup.name]: Popup
-  }
+    [Swipe.name]: Swipe,
+    [SwipeItem.name]: SwipeItem,
+    [Popup.name]: Popup,
+  },
 };
 </script>
 <style scoped>
@@ -1232,8 +1242,8 @@ export default {
   width: calc(100% - 130px);
 }
 
- .notice-swipe {
-    height: 25px;
-    line-height: 25px;
-  }
+.notice-swipe {
+  height: 25px;
+  line-height: 25px;
+}
 </style>

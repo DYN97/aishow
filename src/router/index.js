@@ -168,12 +168,12 @@
  });
  router.afterEach((transition) => {
      let title = "聚航 Airshow";
-     
+
      let result = transition.params ? transition.params.result : "";
      switch (transition.name) {
          case "ExhibitionList":
 
-             title =  "社会公众展会列表";
+             title = "社会公众展会列表";
              break;
          case "TicketIndex":
              title = "普通观众订票";
@@ -212,6 +212,9 @@
          case "ApplyCarTicket":
              title = "车辆通行证申请";
              break;
+         case "ApplyCommand":
+             title = "管理员申请";
+             break;
          default:
              title = transition.query.title ? transition.query.title : "聚航";
              break;
@@ -228,8 +231,8 @@
      if (/iphone|ipad|ipod/.test(mobile)) {
          var iframe = document.createElement('iframe');
          iframe.style.display = 'none';
-         var iframeCallback = function() {
-             setTimeout(function() {
+         var iframeCallback = function () {
+             setTimeout(function () {
                  iframe.removeEventListener('load', iframeCallback);
                  document.body.removeChild(iframe);
              }, 0);

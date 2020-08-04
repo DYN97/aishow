@@ -171,9 +171,7 @@
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.cardtype"
               >
-                <option value="0">身份证</option>
-                <option value="1">护照</option>
-                <option value="2">港澳通行证</option>
+                <option v-for="item in cardtypes" :value="item.com_value" :key="item.com_code">{{item.com_name}}</option>                
               </select>
             </div>
           </v-row>
@@ -423,6 +421,7 @@ export default {
       agreementPass: false,
       workcardDialog: false,
       rollingNotice: [],
+      cardtypes:[],
       firstGoupiao: true,
       firstGuanzhan: true,
       workcardTips: "",
@@ -590,6 +589,12 @@ export default {
         me.guanzhanInfo = res.data.data.find(
           (t) => t.com_code == "1403"
         ).com_value;
+        
+      }
+    });
+    this.$api.commonapi.GetCards().then(res=>{
+      if (res.data.statusCode == "200") {
+        me.cardtypes = res.data.data;
       }
     });
     this.$api.exhibitionapi

@@ -4,7 +4,7 @@
     <ul class="detailList listbox">
       <!--<li class="clearfix"><b class="name">订单编号:</b><span class="text">{{order_code}}</span></li>-->
       <li class="clearfix">
-        <b class="name">产品类型:</b>
+        <b class="name">{{!isCar?'产品类型':'申请类型'}}:</b>
         <span class="text">{{order_type_name}}</span>
       </li>
       <li class="clearfix">
@@ -135,13 +135,7 @@ export default {
         me.client_idcard = res.data.data.client_idcard;
         me.exhibition_id = res.data.data.exhibition_code;
         me.client_phone = res.data.data.client_phone;
-        me.client_cardtype = "身份证　";
-        
-        if (res.data.data.client_card_type == 1) {
-          me.client_cardtype = "护　照　";
-        } else if (res.data.data.client_card_type ==2) {
-          me.client_cardtype = "港澳通行证";
-        }
+        me.client_cardtype =res.data.data.client_card_type;
         if(res.data.data.com_code=="1206"){
           me.isCar = true;
           var carInfo = res.data.data.carInfo;

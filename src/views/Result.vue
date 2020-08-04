@@ -339,17 +339,7 @@ export default {
                   "********" +
                   detail.aclient_idcard.substring(14)
                 : detail.aclient_idcard;
-            switch (detail.aclient_card_type) {
-              case 0:
-                me.client_cardtype = "身份证　";
-                break;
-              case 1:
-                me.client_cardtype = "护　照　";
-                break;
-              case 2:
-                me.client_cardtype = "港澳通行证";
-                break;
-            }
+                me.client_cardtype = detail.aclient_card_type;
           }
         });
 
@@ -373,17 +363,8 @@ export default {
                   "******" +
                   detail.aclient_idcard.substring(14)
                 : detail.aclient_idcard;
-            switch (detail.aclient_card_type) {
-              case 0:
-                me.client_cardtype = "身份证　";
-                break;
-              case 1:
-                me.client_cardtype = "护　照　";
-                break;
-              case 2:
-                me.client_cardtype = "港澳通行证";
-                break;
-            }
+            
+                me.client_cardtype = detail.aclient_card_type;
             me.ticket_cost = res.data.data.receivable_money;
           }
         });
@@ -410,17 +391,7 @@ export default {
                   "xxxxxxxx" +
                   res.data.data.client_idcard.substring(14)
                 : res.data.data.client_idcard;
-            switch (res.data.data.cliend_cardtype) {
-              case 0:
-                me.client_cardtype = "身份证　";
-                break;
-              case 1:
-                me.client_cardtype = "护　照　";
-                break;
-              case 2:
-                me.client_cardtype = "港澳通行证";
-                break;
-            }
+           me.client_cardtype = res.data.data.cliend_cardtype ;
           }
         });
 
@@ -443,19 +414,10 @@ export default {
                   "xxxxxxxx" +
                   detail.client_idcard.substring(14)
                 : detail.client_idcard;
-            switch (detail.cliend_cardtype) {
-              case 0:
-                me.client_cardtype = "身份证　";
-                break;
-              case 1:
-                me.client_cardtype = "护　照　";
-                break;
-              case 2:
-                me.client_cardtype = "港澳通行证";
-                break;
-            }
+             me.client_cardtype = res.data.data.cliend_cardtype;
+             me.ticket_cost = res.data.data.receivable_money;
           }
-          me.ticket_cost = res.data.data.receivable_money;
+          
         });
         break;
       case "4":
@@ -559,7 +521,10 @@ export default {
       } else {
         if (tab == 5) {
           this.$router.push({
-            name: "ExhibitionList",
+            name: "Invitation",
+            params: {
+              exhibitionCode: this.exhibition_id,
+            },
             query: {
               type: "carTicket",
             },

@@ -2,7 +2,7 @@
   <div class="detailBox">
     <div class="mainPanel" >
       <div
-        style="width:calc(100vw - 40px);height:230px;margin:40px 20px 20px 20px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; overflow:hidden"
+        style="width:calc(100vw - 40px);height:260px;margin:40px 20px 20px 20px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; overflow:hidden"
       >
         <ul class="detailList">
           <li>
@@ -29,6 +29,10 @@
           <li>
             <span class="name">购买时间</span>
             <span class="text">{{apply_time}}</span>
+          </li>
+           <li>
+            <span class="name">性别</span>
+            <span class="text">{{sex}}</span>
           </li>
         </ul>
       </div>
@@ -59,6 +63,16 @@
       />
       <van-cell title="接机" :value="jieji" />
       <van-cell title="送机" :value="songji" />
+    </van-cell-group>
+     <van-cell-group style="margin-top:20px">
+      <van-cell
+        title="订单合计"
+        style="font-size:18px;color:#000"
+        icon="goumai1"
+        icon-prefix="iconfont"
+      />
+      <van-cell title="套餐金额" :value="'￥'+package_money" />
+      <van-cell title="合计金额" :value="'￥'+receivable_money" />
     </van-cell-group>
     <v-row justify="center">
       <v-col cols="4" v-if="pay_status==1&&apply_status==1">
@@ -125,13 +139,16 @@ export default {
       receive_type_name: "",
       receive_time: "",
       addressee: "",
+      receivable_money:"",
       mail_serial_num: "",
       addressee_phone: "",
       statusText: "",
       apply_status:0,
       pay_status:0,
       parentname:"",
-      addre: ""
+      addre: "",
+      package_money:"",
+      sex:""
     };
   },
   components: {
@@ -152,12 +169,7 @@ export default {
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
-        me.client_cardtype = "身份证";
-        if (res.data.data.client_card_type == "1") {
-          me.client_cardtype = "护照";
-        } else if (res.data.data.client_card_type == "2") {
-          me.client_cardtype = "港澳通行证";
-        }
+        me.client_cardtype  =res.data.data.client_card_type ;
         me.client_phone = res.data.data.client_phone;
         me.order_type_name = res.data.data.pro_name.substring(5);
         var list = res.data.data.pro_name.split('-');
@@ -173,7 +185,10 @@ export default {
         me.addressee_phone = res.data.data.addressee_phone;
         me.addre = res.data.data.addre;
         me.apply_status = res.data.data.sp_order_status;
+        me.package_money = res.data.data.one_money;
+        me.receivable_money = res.data.data.receivable_money;
         me.pay_status = res.data.data.pay_status;
+        me.sex = res.data.data.sex=="1"?"男":"女";
         switch(parseInt(res.data.data.is_tran)){
           case 0 :me.jieji = '否';me.songji='否';break;
           case 1 :me.jieji = '是';me.songji='否';break;
@@ -269,7 +284,7 @@ body {
   overflow: auto;
 }
 .mainPanel {
-  height: 300px;
+  height: 330px;
   width: 100vw;
   background-image: linear-gradient(
     0deg,

@@ -113,7 +113,8 @@ export default {
       if (this.type == "carTicket") {
         this.$router.push({
           name: "ApplyCarTicket",
-          params: { exhibitionCode: this.exhibitionCode }
+          params: { exhibitionCode: this.exhibitionCode },
+          query: { invite_code: this.cardnum }
         });
       } else {
         this.$router.push({

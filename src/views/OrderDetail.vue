@@ -60,22 +60,19 @@
         </div>
       </li>
     </ul>
-    <div class="paybtnBox clearfix" style="margin-bottom: 20px;text-align:center">
-      <a @click="mailList" type="button" class="blueBtn button" v-if="apply_status==2">门票邮寄</a>
-      <a
-        id="refund"
-        type="button"
-        @click="payAgain"
-        class="blueBtn button"
-        v-if="apply_status==-1&&pay_status==0"
-      >再次支付</a>
-      <a
-        id="refund"
-        type="button"
-        @click="dialog = true"
-        class="blueBtn button"
-        v-if="apply_status==0&&pay_status==1&&ticket_cost>0"
-      >申请退款</a>
+    <div>
+      <v-row justify="center">
+        <v-col cols="3" v-if="apply_status==2">
+        <van-button type="primary" block @click="mailList">门票邮寄</van-button>
+      </v-col>
+      <v-col cols="3" v-if="apply_status==0&&pay_status==1&&ticket_cost>0">
+        <van-button type="error" block @click="dialog = true">申请退款</van-button>
+      </v-col>
+      <v-col cols="3" v-if="apply_status==-1&&pay_status==0">
+        <van-button type="primary" block @click="payAgain">重新支付</van-button>
+      </v-col>
+    </v-row>
+
     </div>
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
@@ -156,13 +153,8 @@ export default {
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
         me.pay_status = res.data.data.pay_status;
-        me.client_cardtype = "身份证";
+        me.client_cardtype = res.data.data.client_card_type;
         me.ordercode =res.data.data.ordercode;
-        if (res.data.data.client_card_type == "1") {
-          me.client_cardtype = "护照";
-        } else if (res.data.data.client_card_type == "2") {
-          me.client_cardtype = "港澳通行证";
-        }
         me.client_phone = res.data.data.client_phone;
         me.order_type_name = res.data.data.order_type_name;
         me.ticket_date = res.data.data.ticket_date;
