@@ -8,7 +8,15 @@
         <span class="text">{{order_type_name}}</span>
       </li>
       <li class="clearfix" style="text-align:center" v-if="apply_status==2">
-        <vue-qr :text="qrurl" :margin="0" colorDark="#000000" colorLight="#fff"  :logoScale="0.3" :size="180" style="margin:0 auto"></vue-qr>
+        <vue-qr
+          :text="qrurl"
+          :margin="0"
+          colorDark="#000000"
+          colorLight="#fff"
+          :logoScale="0.3"
+          :size="180"
+          style="margin:0 auto"
+        ></vue-qr>
       </li>
       <li class="clearfix">
         <b class="name">门票日期</b>
@@ -62,17 +70,16 @@
     </ul>
     <div>
       <v-row justify="center">
-        <v-col cols="3" v-if="apply_status==2">
-        <van-button type="primary" block @click="mailList">门票邮寄</van-button>
-      </v-col>
-      <v-col cols="3" v-if="apply_status==0&&pay_status==1&&ticket_cost>0">
-        <van-button type="error" block @click="dialog = true">申请退款</van-button>
-      </v-col>
-      <v-col cols="3" v-if="apply_status==-1&&pay_status==0">
-        <van-button type="primary" block @click="payAgain">重新支付</van-button>
-      </v-col>
-    </v-row>
-
+        <v-col cols="4" v-if="apply_status==2">
+          <van-button type="primary" block @click="mailList">门票邮寄</van-button>
+        </v-col>
+        <v-col cols="4" v-if="apply_status==0&&pay_status==1&&ticket_cost>0">
+          <van-button type="warning" block @click="dialog = true">申请退款</van-button>
+        </v-col>
+        <v-col cols="4" v-if="apply_status==-1&&pay_status==0">
+          <van-button type="primary" block @click="payAgain">重新支付</van-button>
+        </v-col>
+      </v-row>
     </div>
     <v-dialog v-model="dialog" max-width="290">
       <v-card>
@@ -92,8 +99,9 @@
   </div>
 </template>
 <script>
-import vueQr from 'vue-qr'
+import vueQr from "vue-qr";
 import airshowCarousel from "../components/Carousel";
+import { Cell, CellGroup, Popup, NoticeBar, Button } from "vant";
 export default {
   name: "OrderDetail",
   data() {
@@ -103,18 +111,18 @@ export default {
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h5_20190731205844240.jpg",
-          isguanggao: true
+          isguanggao: true,
         },
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h7_20190731205944651.jpg",
-          isguanggao: false
-        }
+          isguanggao: false,
+        },
       ],
       ismail: false,
       dialog: false,
       exhibition_name: "",
-      exhibition_code:"",
+      exhibition_code: "",
       detail_id: "",
       client_name: "",
       client_idcard: "",
@@ -130,31 +138,37 @@ export default {
       mail_serial_num: "",
       addressee_phone: "",
       statusText: "",
-      apply_status:"",
-      pay_status:"",
-      ordercode:"",
-      qrurl:"",
-      addre: ""
+      apply_status: "",
+      pay_status: "",
+      ordercode: "",
+      qrurl: "",
+      addre: "",
     };
   },
   components: {
-    airshowCarousel,vueQr
+    airshowCarousel,
+    vueQr,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
+    [NoticeBar.name]: NoticeBar,
+    [Button.name]: Button,
+    [Popup.name]: Popup,
   },
   mounted() {
     var me = this;
     me.detail_id = this.$route.params.id;
 
-    me.$api.orderapi.GetOrderDetail(me.detail_id).then(res => {
+    me.$api.orderapi.GetOrderDetail(me.detail_id).then((res) => {
       if (res.data.statusCode == "200") {
         me.exhibition_name = res.data.data.exhibition_name;
         me.exhibition_code = res.data.data.exhibition_code;
-        me.qrurl =  me.detail_id +'&_t='+ new Date().getTime();
+        me.qrurl = me.detail_id + "&_t=" + new Date().getTime();
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
         me.pay_status = res.data.data.pay_status;
         me.client_cardtype = res.data.data.client_card_type;
-        me.ordercode =res.data.data.ordercode;
+        me.ordercode = res.data.data.ordercode;
         me.client_phone = res.data.data.client_phone;
         me.order_type_name = res.data.data.order_type_name;
         me.ticket_date = res.data.data.ticket_date;
@@ -171,7 +185,9 @@ export default {
           me.ismail = true;
         }
         switch (parseInt(me.apply_status)) {
-          case -1:me.statusText = '待支付';break;
+          case -1:
+            me.statusText = "待支付";
+            break;
           case 2:
             me.statusText = "待领取";
             break;
@@ -202,9 +218,9 @@ export default {
     mailList() {
       this.$router.push({ name: "MailList" });
     },
-    payAgain(){
+    payAgain() {
       var me = this;
-        window.location.href =
+      window.location.href =
         "/appwxpay.aspx?token=" +
         me.$store.state.token +
         "&type=1" +
@@ -218,7 +234,7 @@ export default {
     refundMoney() {
       let detail_id = this.$route.params.id;
       console.log(detail_id);
-      this.$api.orderapi.RefundMoney(detail_id).then(res => {
+      this.$api.orderapi.RefundMoney(detail_id).then((res) => {
         if (res.data.statusCode == "200") {
           alert("退款成功!");
           window.location.reload();
@@ -227,8 +243,8 @@ export default {
           window.location.reload();
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -242,7 +258,6 @@ body {
   overflow: auto;
 }
 input,
-button,
 a,
 textarea {
   text-decoration: none;
@@ -613,36 +628,6 @@ ol {
 }
 .detailList li .sta-content span {
   font-size: 20px;
-}
-.btnBox {
-  height: 60px;
-  width: 100%;
-}
-.btnBox .button {
-  /*width: 38%;*/
-  width: calc(100% - 40px);
-  margin: 0 auto;
-  display: block;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 4px;
-  color: #5eafee;
-  font-size: 18px;
-  border: #5eafee solid 1px;
-  text-align: center;
-}
-
-.paybtnBox .button {
-  width: calc(46% - 20px);
-  margin: 0 auto;
-  display: block;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 4px;
-  color: #5eafee;
-  font-size: 18px;
-  border: #5eafee solid 1px;
-  text-align: center;
 }
 .paybtnBox .blueBtn {
   background: #5eafee;

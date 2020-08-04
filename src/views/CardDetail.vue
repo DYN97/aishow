@@ -135,7 +135,7 @@ export default {
         me.client_idcard = res.data.data.client_idcard;
         me.exhibition_id = res.data.data.exhibition_code;
         me.client_phone = res.data.data.client_phone;
-        me.client_cardtype =res.data.data.client_card_type;
+        me.client_cardtype =res.data.data.cliend_cardtype;
         if(res.data.data.com_code=="1206"){
           me.isCar = true;
           var carInfo = res.data.data.carInfo;

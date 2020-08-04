@@ -1,6 +1,6 @@
 <template>
   <div class="detailBox">
-    <div class="mainPanel" >
+    <div class="mainPanel">
       <div
         style="width:calc(100vw - 40px);height:260px;margin:40px 20px 20px 20px;background:white;display:inline-block;box-shadow: 3px 3px 6px #666; border-radius: 0.3em; overflow:hidden"
       >
@@ -12,6 +12,10 @@
           <li>
             <span class="name">购买人</span>
             <span class="text">{{client_name}}</span>
+          </li>
+          <li>
+            <span class="name">性别</span>
+            <span class="text">{{sex}}</span>
           </li>
           <li>
             <span class="name">联系电话</span>
@@ -29,10 +33,6 @@
           <li>
             <span class="name">购买时间</span>
             <span class="text">{{apply_time}}</span>
-          </li>
-           <li>
-            <span class="name">性别</span>
-            <span class="text">{{sex}}</span>
           </li>
         </ul>
       </div>
@@ -64,7 +64,7 @@
       <van-cell title="接机" :value="jieji" />
       <van-cell title="送机" :value="songji" />
     </van-cell-group>
-     <van-cell-group style="margin-top:20px">
+    <van-cell-group style="margin-top:20px">
       <van-cell
         title="订单合计"
         style="font-size:18px;color:#000"
@@ -82,7 +82,7 @@
         <van-button type="primary" block @click="payAgain">重新支付</van-button>
       </v-col>
     </v-row>
-     <v-dialog v-model="dialog" max-width="290">
+    <v-dialog v-model="dialog" max-width="290">
       <v-card>
         <v-card-title class="headline">提示</v-card-title>
 
@@ -110,13 +110,13 @@ export default {
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h5_20190731205844240.jpg",
-          isguanggao: true
+          isguanggao: true,
         },
         {
           src:
             "http://59.110.175.131:1111/upfiles/2019-07-31/h7_20190731205944651.jpg",
-          isguanggao: false
-        }
+          isguanggao: false,
+        },
       ],
       ismail: false,
       dialog: false,
@@ -126,10 +126,10 @@ export default {
       client_idcard: "",
       client_phone: "",
       order_type_name: "　",
-      levelName:"",
+      levelName: "",
       client_cardtype: "",
-      jieji:"",
-      songji:"",
+      jieji: "",
+      songji: "",
       ticket_date: "",
       ticket_cost: "",
       roomMoney: "",
@@ -139,16 +139,16 @@ export default {
       receive_type_name: "",
       receive_time: "",
       addressee: "",
-      receivable_money:"",
+      receivable_money: "",
       mail_serial_num: "",
       addressee_phone: "",
       statusText: "",
-      apply_status:0,
-      pay_status:0,
-      parentname:"",
+      apply_status: 0,
+      pay_status: 0,
+      parentname: "",
       addre: "",
-      package_money:"",
-      sex:""
+      package_money: "",
+      sex: "",
     };
   },
   components: {
@@ -156,24 +156,24 @@ export default {
     [CellGroup.name]: CellGroup,
     [NoticeBar.name]: NoticeBar,
     [Button.name]: Button,
-    [Popup.name]: Popup
+    [Popup.name]: Popup,
   },
   mounted() {
     var me = this;
     me.order_code = this.$route.params.id;
 
-    me.$api.orderapi.GetServerOrderInfo(me.order_code).then(res => {
+    me.$api.orderapi.GetServerOrderInfo(me.order_code).then((res) => {
       if (res.data.statusCode == "200") {
         me.exhibition_name = res.data.data.exhibition_name;
         me.order_code = res.data.data.sp_order_code;
         me.client_name = res.data.data.client_name;
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
-        me.client_cardtype  =res.data.data.client_card_type ;
+        me.client_cardtype = res.data.data.client_card_type;
         me.client_phone = res.data.data.client_phone;
         me.order_type_name = res.data.data.pro_name.substring(5);
-        var list = res.data.data.pro_name.split('-');
-        me.levelName = list[list.length-1];
+        var list = res.data.data.pro_name.split("-");
+        me.levelName = list[list.length - 1];
         me.ticket_date = res.data.data.ticket_date;
         me.ticket_cost = res.data.data.ticket_cost;
         me.parentname = res.data.data.parentname;
@@ -188,12 +188,24 @@ export default {
         me.package_money = res.data.data.one_money;
         me.receivable_money = res.data.data.receivable_money;
         me.pay_status = res.data.data.pay_status;
-        me.sex = res.data.data.sex=="1"?"男":"女";
-        switch(parseInt(res.data.data.is_tran)){
-          case 0 :me.jieji = '否';me.songji='否';break;
-          case 1 :me.jieji = '是';me.songji='否';break;
-          case 2 :me.jieji = '否';me.songji='是';break;
-          case 3 :me.jieji = '是';me.songji='是';break;
+        me.sex = res.data.data.sex == "1" ? "男" : "女";
+        switch (parseInt(res.data.data.is_tran)) {
+          case 0:
+            me.jieji = "否";
+            me.songji = "否";
+            break;
+          case 1:
+            me.jieji = "是";
+            me.songji = "否";
+            break;
+          case 2:
+            me.jieji = "否";
+            me.songji = "是";
+            break;
+          case 3:
+            me.jieji = "是";
+            me.songji = "是";
+            break;
         }
 
         switch (parseInt(me.apply_status)) {
@@ -222,7 +234,7 @@ export default {
         }
         if (res.data.data.details) {
           var car = res.data.data.details.find(
-            t => t.com_code == "1103" || t.com_code == "1203"
+            (t) => t.com_code == "1103" || t.com_code == "1203"
           );
           if (car) {
             var namelist = car.pro_name.split("-");
@@ -230,7 +242,7 @@ export default {
             me.carMoney = car.one_money;
           }
           var room = res.data.data.details.find(
-            t => t.com_code == "1104" || t.com_code == "1204"
+            (t) => t.com_code == "1104" || t.com_code == "1204"
           );
           if (room) {
             me.roomMoney = room.one_money;
@@ -245,7 +257,7 @@ export default {
     },
     refundMoney() {
       let order_code = this.$route.params.id;
-      this.$api.orderapi.RefundProductMoney(order_code).then(res => {
+      this.$api.orderapi.RefundProductMoney(order_code).then((res) => {
         if (res.data.statusCode == "200") {
           alert("退款成功!");
           window.location.reload();
@@ -255,9 +267,9 @@ export default {
         }
       });
     },
-    payAgain(){
-        var me = this;
-        window.location.href =
+    payAgain() {
+      var me = this;
+      window.location.href =
         "/appwxpay.aspx?token=" +
         me.$store.state.token +
         "&type=2" +
@@ -267,10 +279,9 @@ export default {
         me.ticket_cost +
         "&exhibition_id=" +
         me.exhibition_id;
-
-    }
+    },
   },
-  computed: {}
+  computed: {},
 };
 </script>
 
