@@ -343,6 +343,7 @@
                 class="mainForm"
                 height="30"
                 single-line
+                maxlength="6"
                 regular
               ></v-text-field>
             </div>

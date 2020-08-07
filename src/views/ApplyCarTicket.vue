@@ -126,6 +126,7 @@
                 hide-details="auto"
                 class="mainForm"
                 height="30"
+                maxlength="6"
                 single-line
                 regular
               ></v-text-field>
