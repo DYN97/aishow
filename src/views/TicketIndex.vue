@@ -109,9 +109,9 @@
           </v-row>
           <v-row no-gutters v-if="tabIndex==2" v-show="!form.playPackage==''">
             <div align-self="center" class="tag-name" for="doc-ipt-3">
-              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>单间
+              <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61f;</i>单间
             </div>
-            <div class="am-u-sm-8 list-right" style="margin-top: 8px">
+            <div class="am-u-sm-8 list-right" style="margin-top: 13px">
               <van-checkbox v-model="form.needRoom" type="checkbox" required>需要单间</van-checkbox>
             </div>
           </v-row>
@@ -119,7 +119,7 @@
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="font-size: 18px;font-weight: normal">&#xe61d;</i>接送机
             </div>
-            <div class="am-u-sm-8 list-right" style="margin-top: 8px">
+            <div class="am-u-sm-8 list-right" style="margin-top: 13px">
               <van-checkbox-group v-model="jiesongji" direction="horizontal">
                 <van-checkbox name="接机" type="checkbox" required>接机</van-checkbox>
                 <van-checkbox name="送机" type="checkbox" required>送机</van-checkbox>
