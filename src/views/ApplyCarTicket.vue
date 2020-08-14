@@ -4,12 +4,13 @@
 
     <v-container class="listbox">
       <div style="width:100%">
-       <van-notice-bar
-          left-icon="volume-o"
-          :scrollable="false"
-        >
+        <van-notice-bar left-icon="volume-o" :scrollable="false">
           <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
-            <van-swipe-item v-for="item in rollingNotice" :key="item.id" @click="ToOutLink(item.information_content,'通知')">{{item.information_title}}</van-swipe-item>
+            <van-swipe-item
+              v-for="item in rollingNotice"
+              :key="item.id"
+              @click="ToOutLink(item.information_content,'通知')"
+            >{{item.information_title}}</van-swipe-item>
           </van-swipe>
         </van-notice-bar>
 
@@ -56,6 +57,7 @@
               <select
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.workcard"
+                @change="showCardDetail('card')"
               >
                 <option
                   v-for="item in workcards"
@@ -182,6 +184,16 @@
           </v-row>
         </v-form>
       </div>
+      <v-dialog v-model="workcardDialog" width="500">
+        <v-card>
+          <v-card-title class="headline">温馨提示</v-card-title>
+          <v-card-text>{{workcardTips}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="workcardDialog = false">确认</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <van-popup v-model="showAgreement" position="left" :style="{width:'100%'}">
         <agreementPage :type="xieyi" @closeChoseBox="showAgreement=false" @confirm="agree" />
       </van-popup>
@@ -191,7 +203,15 @@
 <script>
 import airshowCarousel from "../components/Carousel";
 import agreementPage from "../components/agreementPage";
-import { Card, Toast, Popup, NoticeBar, Uploader,Swipe,SwipeItem } from "vant";
+import {
+  Card,
+  Toast,
+  Popup,
+  NoticeBar,
+  Uploader,
+  Swipe,
+  SwipeItem,
+} from "vant";
 export default {
   name: "ApplyCarTicket",
   data() {
@@ -209,7 +229,7 @@ export default {
         tickets: [],
         days: [],
       },
-      img:"",
+      img: "",
       fileList: [],
       tickets: [],
       lookUp: "0",
@@ -301,6 +321,8 @@ export default {
           if (res.data.data && res.data.data.length > 0) {
             me.form.workcard = res.data.data[0].pro_code;
             me.workcards = res.data.data;
+            me.workcardTips = res.data.data[0].purchase_tips;
+            this.workcardDialog = true;
           }
         }
       });
@@ -350,15 +372,17 @@ export default {
           ready.readAsDataURL(file);
           ready.onload = function () {
             var re = this.result;
-            var img = me.canvasDataURL(re,{
-          quality: 0.2
-        },function(base64){
-          me.img = base64;
-        });
+            var img = me.canvasDataURL(
+              re,
+              {
+                quality: 0.2,
+              },
+              function (base64) {
+                me.img = base64;
+              }
+            );
             resolve(img);
           };
-         
-          
         }
       });
     },
@@ -538,6 +562,18 @@ export default {
         }
       });
     },
+    showCardDetail(type, text) {
+      var me = this;
+      if (type == "card") {
+        var info = this.workcards.find((t) => t.pro_code == me.form.workcard);
+        me.workcardTips = info.purchase_tips;
+      }
+      if (text) {
+        me.workcardTips = text;
+      }
+
+      me.workcardDialog = true;
+    },
   },
   components: {
     airshowCarousel,
@@ -648,8 +684,8 @@ export default {
 .list-right {
   width: calc(100% - 130px);
 }
- .notice-swipe {
-    height: 25px;
-    line-height: 25px;
-  }
+.notice-swipe {
+  height: 25px;
+  line-height: 25px;
+}
 </style>

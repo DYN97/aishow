@@ -168,18 +168,18 @@
  });
  router.afterEach((transition) => {
      let title = "聚航 Airshow";
-
+     let type = transition.query.type ? transition.query.type : "普通";
      let result = transition.params ? transition.params.result : "";
      switch (transition.name) {
          case "ExhibitionList":
 
-             title = "社会公众展会列表";
+             title = type=="普通"?"社会公众展会列表":"专业观众展会列表";
              break;
          case "TicketIndex":
              title = "普通观众订票";
              break;
          case "VipTicketIndex":
-             title = "Vip观众订票";
+             title = "专业观众订票";
              break;
          case "Invitation":
              title = "邀请码";
