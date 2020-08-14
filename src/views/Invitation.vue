@@ -30,7 +30,13 @@
         <v-col cols="24" style="text-align:center;color:red" >邀请码使用说明</v-col>
       </v-row>
       <v-row justify="center">
-        <v-col cols="16" style="text-align:center">{{invitecodeInfomation}}</v-col>
+        <v-col cols="16" style="text-align:center" > 
+           <textarea
+            style="border:none;height:60vh;width:65vw"
+            :value="invitecodeInfomation"
+            readonly
+          ></textarea>
+          </v-col>
       </v-row>
     </v-container>
     <v-dialog v-model="passdialog" max-width="290">
@@ -48,7 +54,9 @@
       <v-card>
         <v-card-title class="headline" style="justify-content: center;">温馨提示</v-card-title>
 
-        <v-card-text style="font-size:16px;margin-top:20px">{{errmessage}}</v-card-text>
+        <v-card-text style="font-size:16px;margin-top:20px">
+          {{errmessage}}
+          </v-card-text>
         <v-card-actions style="justify-content: center;">
           <v-btn color="green darken-1" text @click="faildialog = false">确定</v-btn>
         </v-card-actions>
