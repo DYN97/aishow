@@ -193,6 +193,19 @@
               ></v-text-field>
             </div>
           </v-row>
+          <v-row height="88px" no-gutters  v-if="tabIndex==3">
+            <div
+              align-self="center"
+              class="tag-name"
+              for="doc-ipt-3"
+              style="height:88px;line-height:88px"
+            >
+              <i class="iconfont">&#xe650;</i>证件照片
+            </div>
+            <div class="am-u-sm-8 list-right">
+              <van-uploader v-model="fileList" multiple :max-count="1" :before-read="beforeRead" />
+            </div>
+          </v-row>
           <v-row no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe690;</i>证件类型
@@ -464,6 +477,7 @@ import {
   Button,
   CollapseItem,
   Checkbox,
+  Uploader,
   Swipe,
   SwipeItem,
   CheckboxGroup,
@@ -501,6 +515,7 @@ export default {
       guanzhanInfo: "",
       jiesongji: [],
       selling_price: "",
+      fileList: [],
       exhibition: {
         exhibition_code: "",
         exhibition_name: "",
@@ -522,6 +537,7 @@ export default {
       workcards: [],
       orderdetail: ["1"],
       packageMoney: "",
+      img: "",
       CarMoney: "",
       RoomMoney: "",
       showAgreement: false,
@@ -753,6 +769,65 @@ export default {
       // this.packageName = title;
       // this.packageLink = url;
     },
+    beforeRead(file) {
+      var me = this;
+      return new Promise((resolve, reject) => {
+        if (file.type !== "image/jpeg") {
+          Toast("请上传 jpg 格式图片");
+          reject();
+        } else {
+          var ready = new FileReader();
+          /*开始读取指定的Blob对象或File对象中的内容. 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.同时,result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.*/
+          ready.readAsDataURL(file);
+          ready.onload = function () {
+            var re = this.result;
+            var img = me.canvasDataURL(
+              re,
+              {
+                quality: 0.2,
+              },
+              function (base64) {
+                me.img = base64;
+              }
+            );
+            resolve(img);
+          };
+        }
+      });
+    },
+    canvasDataURL(path, obj, callback) {
+      var img = new Image();
+      img.src = path;
+      img.onload = function () {
+        var that = this;
+        // 默认按比例压缩
+        var w = that.width,
+          h = that.height,
+          scale = w / h;
+        w = obj.width || w;
+        h = obj.height || w / scale;
+        var quality = 0.7; // 默认图片质量为0.7
+        //生成canvas
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        // 创建属性节点
+        var anw = document.createAttribute("width");
+        anw.nodeValue = w;
+        var anh = document.createAttribute("height");
+        anh.nodeValue = h;
+        canvas.setAttributeNode(anw);
+        canvas.setAttributeNode(anh);
+        ctx.drawImage(that, 0, 0, w, h);
+        // 图像质量
+        if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
+          quality = obj.quality;
+        }
+        // quality值越小，所绘制出的图像越模糊
+        var base64 = canvas.toDataURL("image/jpeg", quality);
+        // 回调函数返回base64的值
+        callback(base64);
+      };
+    },
     OpenDetailPage(item) {
       this.$router.push({
         name: "outHtml",
@@ -946,6 +1021,11 @@ export default {
         this.once = true;
         return;
       }
+      if (this.tabIndex == "3" && this.img == "") {
+        Toast("请上传证件照片！");
+        this.once = true;
+        return;
+      }
       if (cardtype == 0 && (_idcard.length != 18 || !this.isIDCard(_idcard))) {
         Toast("请填写正确的身份证号！");
         this.once = true;
@@ -1062,6 +1142,7 @@ export default {
           this.tabIndex == 3 ? this.form.workcard : this.form.packageLevel,
         buy_num: 1,
         jiesongji: is_tran,
+        photo:this.img
       };
       var other = [];
       if (this.form.needRoom) {
@@ -1142,6 +1223,7 @@ export default {
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
     [Popup.name]: Popup,
+    [Uploader.name]:Uploader
   },
 };
 </script>
