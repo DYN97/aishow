@@ -16,12 +16,13 @@
     "vue-qr": "^2.2.1",
     "vue-router": "^3.1.5",
     "vuetify": "^2.2.11",
-    "vuex": "^3.1.2"
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",
     "@vue/cli-plugin-eslint": "^4.2.0",
     "@vue/cli-plugin-router": "^4.2.3",
+    "@vue/cli-plugin-vuex": "^4.5.4",
     "@vue/cli-service": "^4.2.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",

@@ -3,11 +3,11 @@
     <airshowCarousel :type="11"></airshowCarousel>
 
     <v-container class="listbox">
-      <v-tabs grow v-model="tabIndex">
+      <!-- <v-tabs grow v-model="tabIndex">
         <v-tab :key="0" @click="tabIndex=0">申请赠票</v-tab>
         <v-tab :key="1" @click="tabIndex=1">购买门票</v-tab>
         <v-tab :key="2" @click="tabIndex=2">观展服务</v-tab>
-      </v-tabs>
+      </v-tabs> -->
       <div style="width:100%">
         <van-notice-bar
           left-icon="volume-o"
@@ -30,7 +30,7 @@
           />
         </div>
         <v-form style="background-color:white">
-          <v-row height="46px" no-gutters>
+          <!-- <v-row height="46px" no-gutters>
             <div align-self="center" class="tag-name" for="doc-ipt-3">
               <i class="iconfont">&#xe650;</i>观展日期
             </div>
@@ -47,7 +47,7 @@
                 >{{date.label}}</option>
               </select>
             </div>
-          </v-row>
+          </v-row> -->
           <v-row height="46px" no-gutters v-if="tabIndex==2">
             <v-col style="color:red" class="tag-name" for="doc-ipt-3">
               <i class="iconfont" style="color:red">&#xe60f;</i>不含观展门票，请另行购买。
@@ -170,6 +170,7 @@
               <select
                 style="width:95%;height:46px;background: url('http://ourjs.github.io/static/2015/arrow.png') no-repeat scroll right center transparent;"
                 v-model="form.cardtype"
+                disabled="disabled"
               >
                 <option v-for="item in cardtypes" :value="item.com_value" :key="item.com_code">{{item.com_name}}</option>                
               </select>
@@ -426,6 +427,7 @@ export default {
       firstGoupiao: true,
       firstGuanzhan: true,
       workcardTips: "",
+      channel:"",
       form: {
         fullname: "",
         cardtype: 0,
@@ -444,7 +446,7 @@ export default {
         needRoom: "",
         roomcode: "",
         workcard: "",
-        yanzhengma: "",
+        yanzhengma: ""
       },
     };
   },
@@ -536,7 +538,8 @@ export default {
         carcode: "",
         needRoom: "",
         workcard: "",
-        yanzhengma: "",
+        yanzhengma: ""
+        
       };
     },
     "form.playPackage": function (val) {
@@ -572,7 +575,8 @@ export default {
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
-    this.tabIndex = parseInt(this.$route.query.tabIndex);
+    this.channel = this.$route.query.channel?this.$route.query.channel:"airshow";
+    this.tabIndex = 1;
     this.$api.commonapi.GetRollingInformation().then((res) => {
       if (res.data.statusCode == "200") {
         me.rollingNotice = res.data.data;
@@ -765,7 +769,7 @@ export default {
     async submit() {
       var me = this;
       let _name = this.form.fullname,
-        _applyDate = this.form.applyDate,
+        // _applyDate = this.form.applyDate,
         _TicketCode = this.form.TicketCode,
         _playPackage = this.form.playPackage,
         _tel = this.form.mobile,
@@ -788,11 +792,11 @@ export default {
         this.once = true;
         return;
       }
-      if (_applyDate == "") {
-        Toast("请选择观展日期！");
-        this.once = true;
-        return;
-      }
+      // if (_applyDate == "") {
+      //   Toast("请选择观展日期！");
+      //   this.once = true;
+      //   return;
+      // }
       if (cardtype == 0 && (_idcard.length != 18 || !this.isIDCard(_idcard))) {
         Toast("请填写正确的身份证号！");
         this.once = true;
@@ -846,6 +850,7 @@ export default {
           ]),
           type: this.tabIndex,
           exhibition_id: this.exhibition.exhibition_code,
+          channel:this.channel
         };
         this.$api.orderapi.CreateOrder(params).then((res) => {
           if (res.data.statusCode == "200") {
