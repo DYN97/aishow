@@ -17,11 +17,11 @@
         style="width:80vw;margin:0 auto;box-shadow: 0px 6px 9.4px 0.6px rgba(4, 0, 0, 0.07);border-radius:6px;background:#ffffff"
       >
         <div v-if="actionCode==1">
-          <v-row justify="center">
+          <!-- <v-row justify="center">
             <v-col cols="10" align-self="center">
               <span>观展日期：{{ticketDate}}</span>
             </v-col>
-          </v-row>
+          </v-row> -->
           <v-row justify="center">
             <v-col cols="10" align-self="center">
               <span>门票类型：{{ticketType}}</span>
@@ -39,7 +39,7 @@
           </v-row>
           <v-row justify="center">
             <v-col cols="10" align-self="center">
-              <span v-html="client_cardtype+'：'+client_idcard"></span>
+              <span v-html="'身份证　：'+client_idcard"></span>
             </v-col>
           </v-row>
           <v-row justify="center">
@@ -175,14 +175,14 @@
         justify="space-around"
         style="width:100vw"
       >
-        <v-col cols="3" style="text-align:center" align-self="center">
+        <!-- <v-col cols="3" style="text-align:center" align-self="center">
           <v-btn
             block
             color="#ff9000"
             style="color:white"
             @click="reOrder(2)"
           >{{way=='vip'?'继续购买':'观展服务'}}</v-btn>
-        </v-col>
+        </v-col> -->
         <v-col cols="3" style="text-align:center" align-self="center" v-if="way!='vip'">
           <v-btn block color="green" style="color:white" @click="reOrder(1)">继续购买</v-btn>
         </v-col>

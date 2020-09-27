@@ -167,7 +167,7 @@ export default {
         me.client_idcard = res.data.data.client_idcard;
         me.client_phone = res.data.data.client_phone;
         me.pay_status = res.data.data.pay_status;
-        me.client_cardtype = res.data.data.client_card_type;
+        me.client_cardtype = "身份证";
         me.ordercode = res.data.data.ordercode;
         me.client_phone = res.data.data.client_phone;
         me.order_type_name = res.data.data.order_type_name;
