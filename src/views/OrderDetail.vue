@@ -70,12 +70,12 @@
     </ul>
     <div>
       <v-row justify="center">
-        <v-col cols="4" v-if="apply_status==2">
+        <!-- <v-col cols="4" v-if="apply_status==2">
           <van-button type="primary" block @click="mailList">门票邮寄</van-button>
         </v-col>
         <v-col cols="4" v-if="apply_status==0&&pay_status==1&&ticket_cost>0">
           <van-button type="warning" block @click="dialog = true">申请退款</van-button>
-        </v-col>
+        </v-col> -->
         <v-col cols="4" v-if="apply_status==-1&&pay_status==0">
           <van-button type="primary" block @click="payAgain">重新支付</van-button>
         </v-col>
