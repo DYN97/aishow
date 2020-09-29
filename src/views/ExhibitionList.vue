@@ -52,7 +52,8 @@ export default {
       ],
       items: [],
       dialog: false,
-      type:"normal"
+      type:"normal",
+      channel:""
     };
   },
   components:{
@@ -61,6 +62,8 @@ export default {
   mounted() {
     var me = this;
     me.type = me.$route.query.type;   
+    this.channel = this.$route.query.channel?this.$route.query.channel:"airshow";
+    localStorage.setItem("channel", this.channel);
     this.$api.exhibitionapi.GetExhibitionList().then(res => {
       if (res.status == "200") {
         if (res.data.statusCode == "200") {

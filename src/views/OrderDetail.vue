@@ -18,10 +18,10 @@
           style="margin:0 auto"
         ></vue-qr>
       </li>
-      <li class="clearfix">
+      <!-- <li class="clearfix">
         <b class="name">门票日期</b>
         <span class="text">{{ticket_date}}</span>
-      </li>
+      </li> -->
       <li class="clearfix">
         <b class="name" v-html="'申请人　'"></b>
         <span class="text">{{client_name}}</span>
@@ -252,10 +252,12 @@ export default {
 <style scoped>
 body {
   background: #fff;
+  overflow-x: hidden;
 }
 .listbox {
   /*height: calc(100vh - 150px);*/
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 input,
 a,
@@ -568,7 +570,8 @@ ol {
   right: 0;
   bottom: 0;
   top: 0;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: #fff;
 }
 .detailBox .tip {

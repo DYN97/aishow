@@ -575,7 +575,7 @@ export default {
   mounted() {
     var me = this;
     let exhibition_code = this.$route.params.exhibitionCode;
-    this.channel = this.$route.query.channel?this.$route.query.channel:"airshow";
+    this.channel = localStorage.getItem("channel");
     this.tabIndex = 1;
     this.$api.commonapi.GetRollingInformation().then((res) => {
       if (res.data.statusCode == "200") {
@@ -619,7 +619,7 @@ export default {
             me.tickets = res.data.data.tickets.filter((t) => t.apple_type == 0);
             me.form.applyDate = me.exhibitionDates[0].value;
             me.form.TicketCode = me.tickets[0].ticket_code;
-            me.ticket_cost = me.tickets[0].ticket_cost;
+            me.ticketCost = me.tickets[0].ticket_cost;
           }
         }
       });
